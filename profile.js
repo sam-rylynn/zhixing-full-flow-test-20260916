@@ -248,7 +248,7 @@
       if(paidSeals.has(key))return;
       const result=await root.ZxPaidReports.read(item.report_id);
       if(!unchanged(epoch,account)||!usable(item)||!usable(result)||result.report_id!==item.report_id)return;
-      const master=dayMasterSeal(result.snapshot?.input,root.BaziEngine);
+      const master=dayMasterSeal(root.ZX_TEST_SIMULATION&&result.simulation===true?result.input:result.snapshot?.input,root.BaziEngine);
       if(master)paidSeals.set(key,master);
     }));
     if(unchanged(epoch,account))renderLibrary();

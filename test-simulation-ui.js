@@ -30,7 +30,7 @@
     const url=new URL(target,base);for(const [key,value] of Object.entries(selection))url.searchParams.set(key,value);
     location.assign(url.href);
   }
-  async function switchRole(role,target){boot.setRole(role);await sim().login(role);await seed(role);location.assign(new URL(target||'profile.html',base));}
+  async function switchRole(role,target){boot.setRole(role);await sim().login(role);location.assign(new URL(target||'profile.html',base));}
   function menu(){
     const modal=dialog('测试工具');
     modal.append(el('p','所有操作均为模拟，不会扣款。记录只保存在当前浏览器；报告与问星使用固定示例内容。'));
@@ -71,6 +71,7 @@
     const bar=el('aside',null,'sim-bar');bar.setAttribute('aria-label','模拟测试状态');
     const label=el('strong','测试站 · 不实际扣款');const nav=el('nav');const role=el('span','身份 '+boot.role(),'sim-desktop');const toggle=el('button','测试工具');toggle.id='simTools';toggle.onclick=menu;nav.append(role,toggle);bar.append(label,nav);document.body.prepend(bar);
     for(const node of document.querySelectorAll('[data-sim-enter]'))node.onclick=()=>enter(node.dataset.simEnter);
+    for(const node of document.querySelectorAll('[data-sim-start]'))node.onclick=()=>enter(node.dataset.simStart,false);
     for(const node of document.querySelectorAll('[data-sim-login]'))node.onclick=async()=>{
       const incoming=[];
       if(!sim().getState().role)for(const key of ['zx_private_gift_return_v1','zx_private_profile_return_v1']){
@@ -85,6 +86,6 @@
       const raw=new URLSearchParams(location.search).get('return');let target=new URL('profile.html',base);try{const candidate=new URL(raw);if(candidate.origin===location.origin&&candidate.pathname.startsWith(new URL(base).pathname)&&/\/(?:app|profile|report|synastry|checkout|account)\.html$/.test(candidate.pathname))target=candidate;}catch(_){}
       target.searchParams.set('wechat_bind','success');location.replace(target.href);
     };
-    if(location.pathname.endsWith('/report.html')){const info=el('div','演示报告与预置回答 · 用于体验流程','sim-sample-note');info.style.cssText='max-width:960px;margin:12px auto;padding:0 20px;color:#c9b477;font:13px/1.6 system-ui';bar.after(info);}
+    if(location.pathname.endsWith('/report.html')){const info=el('div','报告示例 · 内容使用预置盘，保存的资料保持原样','sim-sample-note');info.style.cssText='max-width:960px;margin:12px auto;padding:0 20px;color:#c9b477;font:13px/1.6 system-ui';bar.after(info);}
   });
 })();

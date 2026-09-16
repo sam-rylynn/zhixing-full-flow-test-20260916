@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-BvR2bOARYQaI/gX9L65kpoBA5Q0EM5ugwgNojrwZE1o=' 'sha256-F3r/YhvAjBgAFx+egNy23FrQNltWul5vLP/+4VVZkQM=' 'sha256-4tV3PEdWa4XgUr/IDBHSDCVO9Mhev3qHEmtikafwan4=' 'sha256-BfcJQ68rYwf89ew44Y3qbCSoSM4oiayi/WRY6PW8V4Y='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; worker-src 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-BvR2bOARYQaI/gX9L65kpoBA5Q0EM5ugwgNojrwZE1o=' 'sha256-PRYfb2JkNUGKi9MVXt+03RMhrQ7MeieWG9gz9RSKH68=' 'sha256-4tV3PEdWa4XgUr/IDBHSDCVO9Mhev3qHEmtikafwan4=' 'sha256-mtGeerPEP1oEFuWYJdTgLJzMF17/nnMUrvklOD5ztFM='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; worker-src 'none';">
 <meta name="robots" content="noindex,nofollow">
 <link rel="stylesheet" href="./test-simulation-ui.css?v=b6b50a83e516">
 <script src="./test-simulation-bootstrap.js?v=2810cda6917b"></script>
 <script src="./test-simulation-fixtures.js?v=f8683e1cccc9"></script>
-<script src="./test-simulation-api.js?v=fb4b721e444c"></script>
-<script src="./test-simulation-ui.js?v=f8eb5c74849d"></script>
+<script src="./test-simulation-api.js?v=711d3f64fa83"></script>
+<script src="./test-simulation-ui.js?v=110245a7337c"></script>
 <script>window.ZX_PRIVATE_REPORT_BUILD=true;</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -67,7 +67,7 @@
     show();
   }, true);
   document.addEventListener('DOMContentLoaded', show, {once:true});
-})(["./public-config.js?v=7751013955c9","./privacy-consent.js?v=e9d931611689","./minimum-age.js?v=96cd776ebf44","./member.js?v=d9b22aa237d2","./chart-vault.js?v=000920572654","./display-profile.js?v=642992651d04","./paid-reports.js?v=d7056ff086e1","./profile-purchase.js?v=f109ff9f9e79","./bazi-engine.js?v=2f507cc27577","./birth-location-picker.js?v=3d149d3ae64c","./content-home-v1.js?v=ee4855e88ba1","./home-decade-preview.js?v=48311f4d9963","./home-charts.js?v=7d1b18692ea7"]);</script>
+})(["./public-config.js?v=7751013955c9","./privacy-consent.js?v=e9d931611689","./minimum-age.js?v=96cd776ebf44","./member.js?v=d9b22aa237d2","./chart-vault.js?v=000920572654","./display-profile.js?v=642992651d04","./paid-reports.js?v=d7056ff086e1","./profile-purchase.js?v=f109ff9f9e79","./bazi-engine.js?v=2f507cc27577","./birth-location-picker.js?v=3d149d3ae64c","./content-home-v1.js?v=ee4855e88ba1","./home-decade-preview.js?v=48311f4d9963","./home-charts.js?v=970a2d73baa9"]);</script>
 <link rel="preload" as="script" href="./vendor/qrcode-generator.js?v=79ec86f82856" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./share-qr.js?v=037fb5917da3" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./public-config.js?v=7751013955c9" data-zx-runtime-preload>
@@ -84,7 +84,7 @@
 <link rel="preload" as="script" href="./content-home-v1.js?v=ee4855e88ba1" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./home-decade-preview.js?v=48311f4d9963" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./chart-ritual.js?v=ab2b6c25bb54" data-zx-runtime-preload>
-<link rel="preload" as="script" href="./home-charts.js?v=7d1b18692ea7" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./home-charts.js?v=970a2d73baa9" data-zx-runtime-preload>
 <style id="zx-frame-guard">html{visibility:hidden!important}</style>
 <script>(function(){var guard=document.getElementById('zx-frame-guard');if(window.self===window.top){guard.remove();return;}document.documentElement.setAttribute('aria-hidden','true');window.addEventListener('DOMContentLoaded',function(){document.body.replaceChildren();});})();</script>
 <meta name="referrer" content="no-referrer">
@@ -1573,7 +1573,7 @@ function renderHomeReportExcerpt(excerpt){
 async function loadPrivateHomePreview(){
   if(!privateReportMode()||!CUR)return;
   if(CUR.ownedReport){
-    const excerpt=CUR.ownedReport.snapshot&&CUR.ownedReport.snapshot.preview&&CUR.ownedReport.snapshot.preview.excerpt;
+    const excerpt=window.ZX_TEST_SIMULATION&&CUR.ownedReport.simulation===true?window.ZhixingHomeDecadePreview?.buildTeaser(CUR.chart):CUR.ownedReport.snapshot&&CUR.ownedReport.snapshot.preview&&CUR.ownedReport.snapshot.preview.excerpt;
     renderHomeReportExcerpt(excerpt||null);
     $('reportPurchaseBtn').disabled=false;
     $('reportPurchaseBtn').textContent='阅读已购深度报告';
@@ -1921,7 +1921,7 @@ window.ZxHomeChartBridge={
   privateMode:privateReportMode
 };
 </script>
-<script src="./home-charts.js?v=7d1b18692ea7"></script>
+<script src="./home-charts.js?v=970a2d73baa9"></script>
 
 </body>
 </html>

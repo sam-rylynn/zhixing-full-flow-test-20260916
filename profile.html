@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-BvR2bOARYQaI/gX9L65kpoBA5Q0EM5ugwgNojrwZE1o=' 'sha256-9j+EDZ6NSLLy5LIkSlrWglJGFyHvWOkfp865SBJU52o=' 'sha256-4tV3PEdWa4XgUr/IDBHSDCVO9Mhev3qHEmtikafwan4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; worker-src 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-BvR2bOARYQaI/gX9L65kpoBA5Q0EM5ugwgNojrwZE1o=' 'sha256-js3a/h8I/HrLLuONxRmKcVib/Vx3DPEUluREpIIalHQ=' 'sha256-4tV3PEdWa4XgUr/IDBHSDCVO9Mhev3qHEmtikafwan4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; worker-src 'none';">
 <meta name="robots" content="noindex,nofollow">
 <link rel="stylesheet" href="./test-simulation-ui.css?v=b6b50a83e516">
 <script src="./test-simulation-bootstrap.js?v=2810cda6917b"></script>
 <script src="./test-simulation-fixtures.js?v=f8683e1cccc9"></script>
-<script src="./test-simulation-api.js?v=fb4b721e444c"></script>
-<script src="./test-simulation-ui.js?v=f8eb5c74849d"></script>
+<script src="./test-simulation-api.js?v=711d3f64fa83"></script>
+<script src="./test-simulation-ui.js?v=110245a7337c"></script>
 <script>window.ZX_PRIVATE_REPORT_BUILD=true;</script>
   
   <meta charset="utf-8">
@@ -68,7 +68,7 @@
     show();
   }, true);
   document.addEventListener('DOMContentLoaded', show, {once:true});
-})(["./public-config.js?v=7751013955c9","./minimum-age.js?v=96cd776ebf44","./privacy-consent.js?v=e9d931611689","./member.js?v=d9b22aa237d2","./display-profile.js?v=642992651d04","./paid-reports.js?v=d7056ff086e1","./paid-h5.js?v=2983f9adf0f9","./bazi-engine.js?v=2f507cc27577","./birth-location-picker.js?v=3d149d3ae64c","./chart-vault.js?v=000920572654","./profile-purchase.js?v=f109ff9f9e79","./profile-recharge.js?v=9ed98193c27a","./synastry-policy.js?v=a56f5400e4ec","./profile-gift.js?v=0949b4f7c89e","./synastry-opening.js?v=7a0b7689ab85","./profile-social.js?v=1ab630b5ac3b","./profile-managed-synastry.js?v=743e89933f77","./profile.js?v=2f569e29f1d1"]);</script>
+})(["./public-config.js?v=7751013955c9","./minimum-age.js?v=96cd776ebf44","./privacy-consent.js?v=e9d931611689","./member.js?v=d9b22aa237d2","./display-profile.js?v=642992651d04","./paid-reports.js?v=d7056ff086e1","./paid-h5.js?v=2983f9adf0f9","./bazi-engine.js?v=2f507cc27577","./birth-location-picker.js?v=3d149d3ae64c","./chart-vault.js?v=000920572654","./profile-purchase.js?v=f109ff9f9e79","./profile-recharge.js?v=9ed98193c27a","./synastry-policy.js?v=a56f5400e4ec","./profile-gift.js?v=0949b4f7c89e","./synastry-opening.js?v=7a0b7689ab85","./profile-social.js?v=1ab630b5ac3b","./profile-managed-synastry.js?v=743e89933f77","./profile.js?v=6e04cc8e6864"]);</script>
 <link rel="preload" as="script" href="./public-config.js?v=7751013955c9" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./minimum-age.js?v=96cd776ebf44" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./privacy-consent.js?v=e9d931611689" data-zx-runtime-preload>
@@ -86,7 +86,7 @@
 <link rel="preload" as="script" href="./synastry-opening.js?v=7a0b7689ab85" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./profile-social.js?v=1ab630b5ac3b" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./profile-managed-synastry.js?v=743e89933f77" data-zx-runtime-preload>
-<link rel="preload" as="script" href="./profile.js?v=2f569e29f1d1" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./profile.js?v=6e04cc8e6864" data-zx-runtime-preload>
 <meta name="referrer" content="no-referrer">
 <style id="zx-frame-guard">html{visibility:hidden!important}</style>
 <script>(function(){var guard=document.getElementById('zx-frame-guard');if(window.self===window.top){guard.remove();return;}document.documentElement.setAttribute('aria-hidden','true');window.addEventListener('DOMContentLoaded',function(){document.body.replaceChildren();});})();</script>
@@ -289,6 +289,6 @@
   <script src="./synastry-opening.js?v=7a0b7689ab85"></script>
   <script src="./profile-social.js?v=1ab630b5ac3b"></script>
   <script src="./profile-managed-synastry.js?v=743e89933f77"></script>
-  <script src="./profile.js?v=2f569e29f1d1"></script>
+  <script src="./profile.js?v=6e04cc8e6864"></script>
 </body>
 </html>

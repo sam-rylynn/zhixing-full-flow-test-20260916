@@ -86,14 +86,17 @@
     if (root.zxMember?.me) await root.zxMember.me().catch(() => {});
     return account(value);
   }
-  function normalizedInput(input) {
+  function normalizedInput(input, { minimumAge = 18, allowUnspecifiedGender = false } = {}) {
     if (!input || typeof input !== 'object') fail('BIRTH_INPUT_INVALID');
     const clean = { d: String(input.d || ''), t: String(input.t || ''), c: String(input.c || '').trim(), g: String(input.g || '') };
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(clean.d) || clean.t && !/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(clean.t) || !clean.c || !['男', '女', '其他'].includes(clean.g)) fail('BIRTH_INPUT_INVALID');
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(clean.d) || clean.t && !/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(clean.t) || !clean.c || !(allowUnspecifiedGender ? ['', '男', '女', '其他'] : ['男', '女', '其他']).includes(clean.g)) fail('BIRTH_INPUT_INVALID');
     const date = new Date(clean.d + 'T00:00:00Z');
     if (!Number.isFinite(date.getTime()) || date.toISOString().slice(0, 10) !== clean.d) fail('BIRTH_INPUT_INVALID');
-    const adult = new Date(); adult.setUTCFullYear(adult.getUTCFullYear() - 18);
-    if (date > adult || date.getUTCFullYear() < 1900) fail('PARTICIPANT_INELIGIBLE');
+    // Age boundaries use the same Beijing calendar day as the public age gate.
+    const today = new Date(Date.now() + 8 * 3600000);
+    const age = today.getUTCFullYear() - date.getUTCFullYear() -
+      (today.getUTCMonth() < date.getUTCMonth() || today.getUTCMonth() === date.getUTCMonth() && today.getUTCDate() < date.getUTCDate() ? 1 : 0);
+    if (age < minimumAge || date.getUTCFullYear() < 1900) fail('PARTICIPANT_INELIGIBLE');
     return clean;
   }
   const fixtures = () => root.ZXTestFixtures || {};
@@ -101,6 +104,27 @@
     const source = fixtures().reports;
     const list = Array.isArray(source) ? source : Object.values(source || {});
     return list.find(item => JSON.stringify(item.input) === JSON.stringify(input)) || list[role === 'B' ? 1 : 0] || list[0] || null;
+  }
+  function publicPreview(input, role) {
+    const missingCriticalInput = [!input.t && 'birth_time', !['男', '女'].includes(input.g) && 'gender'].filter(Boolean);
+    if (typeof root.BaziEngine?.computeChart === 'function' && typeof root.ZhixingHomeDecadePreview?.buildTeaser === 'function') {
+      const [y, m, d] = input.d.split('-').map(Number);
+      const [hh, mm] = input.t ? input.t.split(':').map(Number) : [undefined, undefined];
+      const chart = root.BaziEngine.computeChart({ y, m, d, hh, mm, city: input.c, gender: input.g });
+      const excerpt = root.ZhixingHomeDecadePreview.buildTeaser(chart);
+      return { excerpt: excerpt ? clone(excerpt) : null, missingCriticalInput, simulation: true, isPreset: false,
+        preview_source: 'public_runtime', simulation_note: '年度节选按当前输入由公开排盘与节选程序生成；完整报告仍为固定示例。' };
+    }
+    const fixture = fixtureReport(input, role);
+    const excerpt = !missingCriticalInput.length && fixture?.snapshot?.preview?.excerpt ? clone(fixture.snapshot.preview.excerpt) : null;
+    if (excerpt) {
+      excerpt.title = '示例 · ' + excerpt.title;
+      excerpt.label = excerpt.stage = '预置示例 · ' + (excerpt.label || excerpt.stage || '年度节选');
+      excerpt.body = '【预置示例，未按当前资料生成】' + excerpt.body;
+      excerpt.source = '固定虚构资料示例；' + (excerpt.source || '');
+    }
+    return { excerpt, missingCriticalInput, simulation: true, isPreset: true, preview_source: 'fixture',
+      simulation_note: '公开排盘或节选程序尚未加载，当前仅展示固定虚构资料示例，不代表自填资料的年度分析。' };
   }
   function prepare(value, role, body) {
     if (body.transfer_confirmed !== true || body.storage_confirmed !== true) fail('REPORT_STORAGE_CONFIRMATION_REQUIRED');
@@ -266,8 +290,8 @@
     if (p === '/synastry/gifts/inspect' && method === 'POST') return visibleGift(value, roleOf(value), giftByToken(value, body.token), true);
     if (p === '/report-preview' && method === 'POST') {
       if (body.transfer_confirmed !== true) fail('REPORT_TRANSFER_CONFIRMATION_REQUIRED');
-      const input = normalizedInput(body.input), fixture = fixtureReport(input, roleOf(value) || 'A');
-      return { preview: clone(fixture?.snapshot?.preview || {}), simulation: true };
+      const input = normalizedInput(body.input, { minimumAge: 14, allowUnspecifiedGender: true });
+      return publicPreview(input, roleOf(value) || 'A');
     }
     // Only deep asks send an access token in JSON. Gift/invitation tokens are capabilities.
     const role = requireRole(value, { ...options, accessToken: p === '/ai/deep' ? body.token : null });

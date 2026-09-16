@@ -14,7 +14,7 @@
   }
   function reportInput(result,id,ageAllowed,now=Date.now()){
     if(!REPORT.test(id)||!readable(result,now)||result.report_id!==id||!result.snapshot)return null;
-    return safeInput(result.snapshot.input,ageAllowed);
+    return safeInput(root.ZX_TEST_SIMULATION&&result.simulation===true?result.input:result.snapshot.input,ageAllowed);
   }
   function legacyInput(record,{privateMode=false,now=Date.now(),ageAllowed,homePath,reportPath}){
     if(!record)return null;
