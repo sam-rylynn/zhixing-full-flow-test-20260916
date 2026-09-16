@@ -62,6 +62,12 @@
   const invokePayment=params=>new Promise((resolve,reject)=>{try{payment(params,result=>resolve({outcome:result.err_msg==='get_brand_wcpay_request:ok'?'submitted':'cancelled'}));}catch(error){reject(error);}});
   window.ZXTestUI=Object.freeze({enter,switchRole,seed,menu,notice,invokePayment});
   document.addEventListener('DOMContentLoaded',()=>{
+    window.addEventListener('hashchange',()=>setTimeout(()=>{
+      const invite=/^#invite=([a-f0-9]{64})$/.exec(location.hash)?.[1];
+      const gift=/^#gift=([a-f0-9]{64})$/.exec(location.hash)?.[1];
+      if(invite&&location.pathname.endsWith('/profile.html'))window.ZxProfileSocial?.showIncoming(invite);
+      if(gift&&location.pathname.endsWith('/synastry.html')){history.replaceState(history.state,'',location.pathname+location.search+'#gift');window.ZxProfileGift?.showIncoming(gift);}
+    },0));
     const bar=el('aside',null,'sim-bar');bar.setAttribute('aria-label','模拟测试状态');
     const label=el('strong','测试站 · 不实际扣款');const nav=el('nav');const role=el('span','身份 '+boot.role(),'sim-desktop');const toggle=el('button','测试工具');toggle.id='simTools';toggle.onclick=menu;nav.append(role,toggle);bar.append(label,nav);document.body.prepend(bar);
     for(const node of document.querySelectorAll('[data-sim-enter]'))node.onclick=()=>enter(node.dataset.simEnter);
@@ -79,7 +85,6 @@
       const raw=new URLSearchParams(location.search).get('return');let target=new URL('profile.html',base);try{const candidate=new URL(raw);if(candidate.origin===location.origin&&candidate.pathname.startsWith(new URL(base).pathname)&&/\/(?:app|profile|report|synastry|checkout|account)\.html$/.test(candidate.pathname))target=candidate;}catch(_){}
       target.searchParams.set('wechat_bind','success');location.replace(target.href);
     };
-    const state=sim()?.getState?.();
     if(location.pathname.endsWith('/report.html')){const info=el('div','演示报告与预置回答 · 用于体验流程','sim-sample-note');info.style.cssText='max-width:960px;margin:12px auto;padding:0 20px;color:#c9b477;font:13px/1.6 system-ui';bar.after(info);}
   });
 })();
