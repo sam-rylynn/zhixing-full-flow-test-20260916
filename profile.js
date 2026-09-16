@@ -155,7 +155,7 @@
   function render() {
     const selected=choice(), entry=selectedEntry(), record=selectedReport(), item=record&&usable(record)?record:null;
     currentId=item?item.report_id:'';
-    if($('report-purchase'))$('report-purchase').hidden=!(selected&&selected.kind==='report'&&selected.id===params.get('report'));
+    if($('report-purchase')&&location.hash!=='#report-purchase')$('report-purchase').hidden=!(selected&&selected.kind==='report'&&selected.id===params.get('report'));
     const localChart=hasChart(), access=localChart||reports.length>0;
     $('profile-gate').hidden=access;$('profile-content').hidden=false;
     txt('profile-status',entry?'基础图谱':record?(usable(record)?'已购图谱':'待解锁图谱'):localChart?'尚未保存':'还没有图谱');
@@ -296,6 +296,8 @@
   }
   function openRequestedEntry(){
     if(requestedEntryOpened)return;
+    const pair=params.getAll('pair'),resume=root.ZxPaidReports?.pairPurchase?.();
+    if(pair.length===1&&/^[a-f0-9]{64}$/.test(pair[0])&&resume?.pairId===pair[0]){requestedEntryOpened=true;return root.ZxProfileSocial?.open({pairId:pair[0],reportId:resume.reportId});}
     const values=params.getAll('open');
     if(values.length!==1||!['managed','invitations'].includes(values[0]))return;
     if(values[0]==='managed')return openManaged();
@@ -304,7 +306,7 @@
   function mount(){
     if(!$('profile-content'))return;mountStars();openAccountTarget();root.addEventListener('hashchange',openAccountTarget);
     if(root.ZxPaidReports&&root.ZxPaidReports.mountAccount)root.ZxPaidReports.mountAccount().then(()=>{
-      const selected=choice();if($('report-purchase'))$('report-purchase').hidden=!(selected&&selected.kind==='report'&&selected.id===params.get('report'));
+      const selected=choice();if($('report-purchase')&&location.hash!=='#report-purchase')$('report-purchase').hidden=!(selected&&selected.kind==='report'&&selected.id===params.get('report'));
       openAccountTarget();const section=$((location.hash||'').slice(1));if(section&&!section.hidden&&['#account-status','#order-center','#report-purchase'].includes(location.hash)&&section.scrollIntoView)section.scrollIntoView({block:'start'});
     });
     if(params.getAll('return').length===1&&params.get('return')==='synastry'&&root.ZxPaidReports&&root.ZxPaidReports.synastryUrl){

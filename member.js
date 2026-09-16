@@ -889,6 +889,7 @@
         ai_disclosure_version:REPORT_PAYMENT_VERSIONS.aiDisclosureVersion,purchase_notice_version:REPORT_PAYMENT_VERSIONS.purchaseNoticeVersion
       }});
     },
+    paidReportCatalog: function () { return privateReportApi('/report/products'); },
     paidReportProducts: function (id, kind) {
       if (kind !== undefined && kind !== 'report' && kind !== 'ask') return Promise.reject(reportClientError('REPORT_REQUEST_INVALID'));
       return privateReportApi('/' + (kind === 'ask' ? 'ask' : 'report') + '/products?report_id=' + checkedPaidReportId(id));

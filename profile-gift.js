@@ -8,7 +8,7 @@
     GIFT_UNAVAILABLE:'这份礼物已过期或当前不可领取。',GIFT_NOT_FOUND:'这份礼物当前不可查看。',GIFT_ALREADY_CLAIMED:'这份礼物已经领取。',GIFT_SELF_CLAIM:'请把礼物发给朋友，不能领取自己送出的报告。',
     GIFT_USE_EXISTING_REPORT:'这张图谱已有报告或订单，请重新确认需要领取的资料。',PARTICIPANT_INELIGIBLE:'领取人须已满 18 周岁。',
     REPORT_ACCOUNT_CHANGED:'账号已切换，请重新打开自己的记录。',AUTH_REQUIRED:'请重新登录后继续。',WECHAT_AUTHENTICATION_REQUIRED:'请先登录微信账号。',
-    PRIVACY_CONSENT_REQUIRED:'请先同意启用账号功能。',WECHAT_BROWSER_REQUIRED:'请在微信中打开后继续。',DISPLAY_NAME_INVALID:'请先到我的资料设置昵称。',
+    PRIVACY_CONSENT_REQUIRED:'请先同意启用账号功能。',WECHAT_BROWSER_REQUIRED:'请在微信中打开后继续。',DISPLAY_NAME_INVALID:'请填写对方看到的署名（1–20字，不含特殊控制字符）。',
     GIFT_REFUND_REQUIRES_REVIEW:'已领取的礼物请通过我的资料联系售后。',GIFT_REFUND_PENDING:'退款正在处理中。',PAYMENT_NOT_VERIFIED:'付款结果尚未确认，请刷新订单。',
     POLICY_UNAVAILABLE:'购买规则暂未载入，请刷新重试。',BIRTH_INPUT_INVALID:'请核对出生日期、时间和出生地点。',BIRTH_LOCATION_REQUIRED:'请从地点建议中确认完整的市州或区县。',
     PAYMENT_CONSENT_REQUIRED:'请确认成年及购买规则。',REPORT_TRANSFER_CONFIRMATION_REQUIRED:'请确认上传并保存本次出生资料。',CONSENT_REQUIRED:'请确认领取报告并同意合盘。',
@@ -56,6 +56,7 @@
   function showGift(ctx,value,payment){const gift=readGift(value);ctx.giftId=gift.id;start(ctx,LABELS[gift.status]);
     const payer=ctx.mode==='purchase'||ORDER.test(gift.orderId||'');if(gift.status!=='created'){const pending=stored(PENDING);if(pending?.giftId===gift.id)drop(PENDING);}if(gift.status==='delivered')drop(CLAIM);
     const line={created:'赠送深度报告 · ¥19.90',funded:'礼物已备好，发给你想了解的人。',claimed:'领取已确认，正在准备报告。',delivery_failed:'领取已确认，报告暂未生成成功。',delivered:payer?'朋友的报告已交付。':'你的深度报告已准备好。',expired:'领取时间已过，未领取的付款将原路退回。',refund_requested:'退款申请已提交。',refund_pending:'正在原路退款。',refunded:'退款已完成。',cancelled:'这笔订单已关闭。'}[gift.status];ctx.body.append(el('p',line,'gift-lead'));
+    if(payer&&gift.senderName)ctx.body.append(el('p','赠送署名：'+gift.senderName,'gift-note'));
     if(gift.status==='created'&&payer){
       const waiting=stored(PENDING);
       if(waiting?.giftId===gift.id&&waiting.submittedAt&&Date.now()-waiting.submittedAt<60000)notify(ctx,'正在确认付款，请稍后刷新订单。');
@@ -91,10 +92,16 @@
     if(ctx.options.fromRecords)ctx.body.append(action(ctx,'返回赠送记录',openRecords));
   }
   function purchase(ctx){start(ctx,'送一份深度报告');ctx.body.append(el('p','一份写给 TA 的自我探索。','gift-lead'),el('p','¥19.90 · 深度报告 + 1 次问星','gift-price'));
-    if(!ctx.options.senderName?.trim()){ctx.body.append(el('p',MESSAGES.DISPLAY_NAME_INVALID,'gift-note'),profileLink());return;}
+    const prior=stored(PENDING),locked=prior&&prior.senderReportId===(ctx.options.senderReportId||null)&&ORDER.test(prior.key||'');
+    const label=el('label','对方看到的署名','gift-field'),signature=el('input');signature.type='text';signature.maxLength=160;signature.setAttribute('aria-label','对方看到的署名');
+    signature.value=locked?prior.senderName:ctx.options.senderName||'';signature.readOnly=!!locked;label.append(signature);ctx.body.append(label,el('p',locked?'正在恢复上次赠送，署名已固定，重试不会重复建单。':'只用于这次赠送，不会修改图谱昵称。','gift-note'));
+
     const adult=check('我已满 18 周岁'),agree=check('我已阅读并同意购买与合盘规则');ctx.body.append(adult.label,agree.label,rules());
     ctx.body.append(action(ctx,'确认赠送 ¥19.90',async()=>{if(!adult.input.checked||!agree.input.checked)throw error('PAYMENT_CONSENT_REQUIRED');if(!member().paidReportPurchaseReady?.())throw error('REPORT_SALES_NOT_APPROVED');
-      const versions=member().giftPaymentVersions(),p=policy(),senderReportId=ctx.options.senderReportId||null,senderName=ctx.options.senderName.trim();
+      const senderName=signature.value.normalize('NFC').trim();
+      if(!senderName||(typeof Intl.Segmenter==='function'?[...new Intl.Segmenter('zh',{granularity:'grapheme'}).segment(senderName)].length:Array.from(senderName).length)>20||/[<>{}\u0000-\u001f\u007f-\u009f\u202a-\u202e\u2066-\u2069]/u.test(senderName)){signature.focus();throw error('DISPLAY_NAME_INVALID');}
+      const versions=member().giftPaymentVersions(),p=policy(),senderReportId=ctx.options.senderReportId||null;
+      ctx.options.senderName=senderName;signature.readOnly=true;
       let pending=stored(PENDING);if(!pending||pending.senderReportId!==senderReportId||pending.senderName!==senderName||!ORDER.test(pending.key||''))pending={key:randomKey(),senderReportId,senderName};
       save(PENDING,pending);const response=await call(ctx,'/synastry/gifts/orders',{senderReportId,senderName,idempotencyKey:pending.key,consent:true,adultConfirmed:true,...versions,synastryConsent:{confirmed:true,version:p.VERSION}});
       const result=checkedOrder(response);save(PENDING,{...pending,giftId:result.gift.id});showGift(ctx,result.gift,response);
@@ -103,7 +110,7 @@
   function birth(ctx,preview){start(ctx,'领取你的深度报告');ctx.body.append(el('p','请确认你自己的出生资料。','gift-lead'));
     const form=el('form');form.addEventListener('submit',e=>e.preventDefault());const field=(text,type)=>{const label=el('label',text,'gift-field'),input=el('input');input.type=type;input.setAttribute('aria-label',text);label.append(input);form.append(label);return input;};
     const d=field('出生日期','date'),t=field('出生时间（不知道可留空）','time'),c=field('出生地点','text'),label=el('label','性别','gift-field'),g=el('select');g.setAttribute('aria-label','性别');[['','请选择'],['男','男'],['女','女'],['其他','其他']].forEach(([value,text])=>{const option=el('option',text);option.value=value;g.append(option);});label.append(g);form.append(label);c.setAttribute('data-birth-location','');
-    const transfer=check('我确认这是本人的资料，同意上传并保存用于生成报告。'),claim=check('领取报告并同意合盘');form.append(transfer.label,claim.label,rules());
+    const transfer=check('我确认这是本人的资料，同意传至独立测试服务生成报告，处理后服务端不保存；测试记录仅保存在当前浏览器。'),claim=check('领取报告并同意合盘');form.append(transfer.label,claim.label,rules());
     const inputs=[d,t,c,g,transfer.input,claim.input];let prepared=null,claimStarted=false;
     const submit=action(ctx,'领取报告并同意合盘',async()=>{
       if(!transfer.input.checked)throw error('REPORT_TRANSFER_CONFIRMATION_REQUIRED');if(!claim.input.checked)throw error('CONSENT_REQUIRED');
@@ -135,7 +142,7 @@
     ctx.body.append(action(ctx,'领取礼物',async()=>{if(!await identity(ctx))return;const checked=readGift(await call(ctx,'/synastry/gifts/inspect',{token:ctx.token}));if(checked.self)throw error('GIFT_SELF_CLAIM');if(checked.status!=='funded'){await loadGift(ctx,checked.id);return;}birth(ctx,checked);} ,'gift-button primary'));
   }
   async function open(options={}){const ctx=make('purchase',{senderReportId:options.senderReportId||null,senderName:options.senderName||''});try{if(ctx.options.senderReportId&&!REPORT.test(ctx.options.senderReportId))throw error('ORDER_RESPONSE_INVALID');if(!await identity(ctx))return;
-      const pending=stored(PENDING);if(pending?.giftId&&ID.test(pending.giftId)&&pending.senderReportId===ctx.options.senderReportId&&pending.senderName===ctx.options.senderName.trim()){await loadGift(ctx,pending.giftId,true);return;}purchase(ctx);
+      const pending=stored(PENDING);if(pending?.giftId&&ID.test(pending.giftId)&&pending.senderReportId===ctx.options.senderReportId){await loadGift(ctx,pending.giftId,true);return;}purchase(ctx);
     }catch(e){handle(ctx,e);}}
   async function showIncoming(token){const ctx=make('incoming',{token});try{if(!ID.test(token||''))throw error('GIFT_NOT_FOUND');await incoming(ctx);}catch(e){handle(ctx,e);}}
   async function openGift(id,options={}){const ctx=make('gift',{giftId:id,fromRecords:options.fromRecords===true});try{if(!ID.test(id||''))throw error('GIFT_NOT_FOUND');if(!await identity(ctx))return;await loadGift(ctx,id);}catch(e){handle(ctx,e);}}

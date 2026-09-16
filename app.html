@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-BvR2bOARYQaI/gX9L65kpoBA5Q0EM5ugwgNojrwZE1o=' 'sha256-PRYfb2JkNUGKi9MVXt+03RMhrQ7MeieWG9gz9RSKH68=' 'sha256-4tV3PEdWa4XgUr/IDBHSDCVO9Mhev3qHEmtikafwan4=' 'sha256-mtGeerPEP1oEFuWYJdTgLJzMF17/nnMUrvklOD5ztFM='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; worker-src 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-BvR2bOARYQaI/gX9L65kpoBA5Q0EM5ugwgNojrwZE1o=' 'sha256-UEXiEg3+MWEz2UfZdIP8nYeidponiR+ABszK3h6rd1s=' 'sha256-4tV3PEdWa4XgUr/IDBHSDCVO9Mhev3qHEmtikafwan4=' 'sha256-EjrBh2hhZBxYfVLYKSl2WPhL8nBZfOmdx+TEODET0Yk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://zhixng.cn/__test_reports_20260916; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; worker-src 'none';">
 <meta name="robots" content="noindex,nofollow">
-<link rel="stylesheet" href="./test-simulation-ui.css?v=b6b50a83e516">
-<script src="./test-simulation-bootstrap.js?v=2810cda6917b"></script>
+<link rel="stylesheet" href="./test-simulation-ui.css?v=a335787da9c8">
+<script src="./test-remote-report-client.js?v=2823f09e9689"></script><script src="./test-simulation-bootstrap.js?v=294c2f705d59"></script>
 <script src="./test-simulation-fixtures.js?v=f8683e1cccc9"></script>
-<script src="./test-simulation-api.js?v=711d3f64fa83"></script>
-<script src="./test-simulation-ui.js?v=110245a7337c"></script>
+<script src="./test-simulation-api.js?v=4bfdd65a7fcc"></script>
+<script src="./test-simulation-ui.js?v=3f2241bd39c0"></script>
 <script>window.ZX_PRIVATE_REPORT_BUILD=true;</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -67,18 +67,18 @@
     show();
   }, true);
   document.addEventListener('DOMContentLoaded', show, {once:true});
-})(["./public-config.js?v=7751013955c9","./privacy-consent.js?v=e9d931611689","./minimum-age.js?v=96cd776ebf44","./member.js?v=d9b22aa237d2","./chart-vault.js?v=000920572654","./display-profile.js?v=642992651d04","./paid-reports.js?v=d7056ff086e1","./profile-purchase.js?v=f109ff9f9e79","./bazi-engine.js?v=2f507cc27577","./birth-location-picker.js?v=3d149d3ae64c","./content-home-v1.js?v=ee4855e88ba1","./home-decade-preview.js?v=48311f4d9963","./home-charts.js?v=970a2d73baa9"]);</script>
+})(["./public-config.js?v=7751013955c9","./privacy-consent.js?v=e9d931611689","./minimum-age.js?v=96cd776ebf44","./member.js?v=2212e56a2c7f","./chart-vault.js?v=000920572654","./display-profile.js?v=642992651d04","./paid-reports.js?v=293818756006","./profile-purchase.js?v=6d0523ef8908","./bazi-engine.js?v=2f507cc27577","./birth-location-picker.js?v=3d149d3ae64c","./content-home-v1.js?v=ee4855e88ba1","./home-decade-preview.js?v=48311f4d9963","./home-charts.js?v=970a2d73baa9"]);</script>
 <link rel="preload" as="script" href="./vendor/qrcode-generator.js?v=79ec86f82856" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./share-qr.js?v=037fb5917da3" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./public-config.js?v=7751013955c9" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./privacy-consent.js?v=e9d931611689" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./analytics.js?v=2986447e1859" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./minimum-age.js?v=96cd776ebf44" data-zx-runtime-preload>
-<link rel="preload" as="script" href="./member.js?v=d9b22aa237d2" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./member.js?v=2212e56a2c7f" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./chart-vault.js?v=000920572654" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./display-profile.js?v=642992651d04" data-zx-runtime-preload>
-<link rel="preload" as="script" href="./paid-reports.js?v=d7056ff086e1" data-zx-runtime-preload>
-<link rel="preload" as="script" href="./profile-purchase.js?v=f109ff9f9e79" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./paid-reports.js?v=293818756006" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./profile-purchase.js?v=6d0523ef8908" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./bazi-engine.js?v=2f507cc27577" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./birth-location-picker.js?v=3d149d3ae64c" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./content-home-v1.js?v=ee4855e88ba1" data-zx-runtime-preload>
@@ -721,7 +721,7 @@
       <p class="report-preview-source" id="reportPreviewSource"></p>
       <div class="report-offer" aria-labelledby="reportOfferTitle">
         <h4 id="reportOfferTitle">继续读懂你的完整双盘</h4>
-        <p>一次购买，反复阅读。</p>
+        <p>一次付费，报告成功交付后可在线阅读6个月，保存期内可下载。</p>
         <button class="btn gold" id="reportPurchaseBtn" type="button" disabled aria-describedby="reportOfferStatus">购买完整报告</button>
         <p class="offer-status" id="reportOfferStatus" role="status" aria-live="polite">购买暂未开放，不会发起扣款。</p>
         <button class="btn ghost" id="reportPreviewRetry" type="button" hidden>重新读取节选</button>
@@ -806,11 +806,11 @@
 <script src="./privacy-consent.js?v=e9d931611689"></script>
 <script src="./analytics.js?v=2986447e1859"></script>
 <script src="./minimum-age.js?v=96cd776ebf44"></script>
-<script src="./member.js?v=d9b22aa237d2"></script>
+<script src="./member.js?v=2212e56a2c7f"></script>
 <script src="./chart-vault.js?v=000920572654"></script>
 <script src="./display-profile.js?v=642992651d04"></script>
-<script src="./paid-reports.js?v=d7056ff086e1"></script>
-<script src="./profile-purchase.js?v=f109ff9f9e79"></script>
+<script src="./paid-reports.js?v=293818756006"></script>
+<script src="./profile-purchase.js?v=6d0523ef8908"></script>
 <script src="./bazi-engine.js?v=2f507cc27577"></script>
 <script src="./birth-location-picker.js?v=3d149d3ae64c"></script>
 <script src="./content-home-v1.js?v=ee4855e88ba1"></script>
@@ -1801,10 +1801,8 @@ function openPosterLayer(){
   $('posterLayer').hidden=false;
   document.body.style.overflow='hidden';
   setModalBackgroundInert(true);
-  requestAnimationFrame(()=>{
-    $('posterLayer').scrollTop=0;
-    $('posterClose').focus({preventScroll:true});
-  });
+  $('posterLayer').scrollTop=0;
+  $('posterClose').focus({preventScroll:true});
 }
 function closePosterLayer(){
   $('posterLayer').hidden=true;

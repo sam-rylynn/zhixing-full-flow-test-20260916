@@ -159,7 +159,7 @@
       if (before && (cursors.has(before) || cursors.size >= 200)) throw new Error('Invalid report pagination');
       if (before) cursors.add(before);
     } while (before);
-    return items.filter(usableReport);
+    return items;
   }
   function details(parent, summary, text) {
     const node=el('details',undefined,'social-note');
@@ -191,7 +191,7 @@
       option.value = report.report_id;
       reports.append(option);
     });
-    reports.value = ctx.reports.some(report => report.report_id === ctx.reportId) ? ctx.reportId : '';
+    reports.value = ctx.reports.some(report => usableReport(report) && report.report_id === ctx.reportId) ? ctx.reportId : '';
     label.append(reports);
     const consentLabel = el('label',undefined,'social-check');
     const consent = el('input'); consent.type = 'checkbox';
@@ -390,6 +390,45 @@
     catch (error) {handleError(ctx,error,view);}
   }
 
+  async function offerMissingReport(ctx,id,view){
+    const api=window.ZxPaidReports;
+    ctx.body.append(el('p','你还需要一份可用于合盘的个人报告。补齐后会回到当前邀请，再由你确认参与。','social-note'));
+    for(const report of ctx.reports){
+      if(!REPORT_ID.test(report.report_id||''))continue;
+      const draft=report.entitlement_status==='unpaid';
+      const waiting=report.entitlement_status==='active'&&['queued','running','pending','failed'].includes(report.delivery_status);
+      const label=draft?'继续购买已有报告':waiting?'查看报告生成进度':null;
+      if(label)ctx.body.append(action(ctx,button(label),()=>{api.rememberPairPurchase(id,report.report_id);if(draft)api.checkoutReport(report.report_id);else location.assign(api.reportUrl(report.report_id));}));
+      else ctx.body.append(el('p',(report.title||'已有报告')+'目前不可用于合盘，请核对到期或权益状态。','social-note'));
+    }
+    const entries=window.ZxChartVault?.list?.()||[];
+    if(entries.length){
+      const label=el('label','选择要补齐报告的图谱','social-field'),picker=el('select');picker.setAttribute('aria-label','选择要补齐报告的图谱');
+      const blank=el('option','请选择图谱');blank.value='';picker.append(blank);
+      entries.forEach(entry=>{const option=el('option',entry.name||'未命名图谱');option.value=entry.id;picker.append(option);});label.append(picker);ctx.body.append(label);
+      const buy=button('正在读取报告价格');buy.disabled=true;ctx.body.append(buy);
+      try{
+        const catalog=await window.zxMember.paidReportCatalog();check(ctx,view);
+        const product=(catalog.products||[]).find(item=>item.product_code==='deep_report_v1'),price=api.priceLabel(product);
+        const allowed=catalog.payment_available===true&&product?.payment_available===true&&window.zxMember.paidReportPurchaseReady?.();
+        buy.textContent=allowed&&price?'补齐我的报告 · '+price:'报告购买暂未开放';
+        picker.addEventListener('change',()=>{buy.disabled=!allowed||!price||!entries.some(e=>e.id===picker.value);});
+        action(ctx,buy,()=>{
+          const entry=window.ZxChartVault.get(picker.value);if(!entry)throw Object.assign(new Error(),{code:'REPORT_UNAVAILABLE'});
+          const account=ctx.owner;
+          const copy={...entry,input:{...entry.input}};if(copy.accountRef!==account){delete copy.reportId;delete copy.accountRef;}
+          api.rememberPairPurchase(id,copy.reportId);
+          ctx.dialog.close();
+          window.ZxProfilePurchase.open({entry:copy,returnLabel:'返回共同解读',onReturn:()=>open({pairId:id}),onPrepared:async reportId=>{
+            if(snapshot().accountRef!==account||!snapshot().authenticated)throw Object.assign(new Error(),{code:'REPORT_ACCOUNT_CHANGED'});
+            await window.ZxChartVault.bindReport(entry.id,reportId,account,copy.input);api.rememberPairPurchase(id,reportId);
+          }});
+        });
+      }catch(error){handleError(ctx,error,view);buy.textContent='报告价格暂时无法读取';}
+    }else{
+      ctx.body.append(action(ctx,button('填写我的资料并继续'),()=>{api.rememberPairPurchase(id);const url=new URL(api.homeUrl());url.searchParams.set('new-chart','1');url.hash='formCard';location.assign(url.href);}));
+    }
+  }
   async function readPair(ctx, id) {
     if (!ID.test(id || '')) throw Object.assign(new Error(),{code:'NOT_FOUND'});
     const view=startView(ctx,'共同解读');
@@ -400,6 +439,7 @@
     toolbar.append(action(ctx,button('返回合盘记录'),()=>showRecords(ctx,'records')),action(ctx,button('刷新状态'),()=>readPair(ctx,id)));
     ctx.body.append(toolbar);
     notice(ctx,status(result.status)+(date(result.expiresAt) ? ' · '+date(result.expiresAt)+'到期' : ''));
+    if(['ready','removed','unavailable'].includes(result.status))window.ZxPaidReports?.clearPairPurchase?.(id);
     if (result.status==='ready' && result.report && Array.isArray(result.report.chapters)) {
       const opening=window.ZxSynastryOpening?.create(result.report.opening);
       if(opening)ctx.body.append(opening);
@@ -428,13 +468,16 @@
       if (result.report.disclaimer) ctx.body.append(el('p',result.report.disclaimer,'social-note'));
     } else if (result.status==='waiting_reports') {
       ctx.body.append(el('p','双方都选定自己的有效报告并分别确认后，才会生成共同解读。','social-note'));
+      ctx.reports=await allReports(ctx,view);
+      const hasReport=ctx.reports.some(usableReport);
+      if(!hasReport)await offerMissingReport(ctx,id,view);
       const form=approvalForm(ctx,ctx.body,true);
       const select=action(ctx,button('使用所选报告并确认'),async currentView => {
         const body=form.value(); form.disable(true);
         try { await call(ctx,'/synastry/pairs/'+id+'/report',body,currentView); await readPair(ctx,id); }
         finally { if (isCurrent(ctx,currentView)) form.disable(false); }
       });
-      ctx.body.append(select);
+      select.disabled=!hasReport;ctx.body.append(select);
     } else {
       const states={queued:'共同解读正在等待生成，可稍后刷新。',running:'共同解读正在生成，可稍后刷新。',failed:'本次生成未完成。',unavailable:'报告可能已到期、变更或停止共享。请核对自己的报告状态。',removed:'共同阅读已解除。'};
       ctx.body.append(el('p',states[result.status] || '当前没有可阅读的共同解读。','social-note'));
@@ -500,6 +543,7 @@
       ctx.profile={name:String(results[0]?.name || '知星用户'),code:String(results[0]?.code || '')}; ctx.reports=results[1];
       if(ctx.senderOwner&&ctx.senderOwner!==ctx.owner)ctx.senderName='';
       if (options.token) await incoming(ctx,options.token);
+      else if(ID.test(options.pairId||''))await readPair(ctx,options.pairId);
       else if(options.compose) createInvitation(ctx);
       else await showRecords(ctx,options.kind==='records' ? 'records' : 'invitations');
     } catch(error) { handleError(ctx,error); }

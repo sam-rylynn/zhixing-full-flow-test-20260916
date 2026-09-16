@@ -100,10 +100,11 @@
     return clean;
   }
   const fixtures = () => root.ZXTestFixtures || {};
+  const localReports = () => root.ZXTestRemoteReports || (root.location.hostname === '127.0.0.1' ? root.ZXTestLocalReports : null);
   function fixtureReport(input, role) {
     const source = fixtures().reports;
     const list = Array.isArray(source) ? source : Object.values(source || {});
-    return list.find(item => JSON.stringify(item.input) === JSON.stringify(input)) || list[role === 'B' ? 1 : 0] || list[0] || null;
+    return list.find(item => ['d','t','c','g'].every(key => item.input[key] === input[key])) || null;
   }
   function publicPreview(input, role) {
     const missingCriticalInput = [!input.t && 'birth_time', !['男', '女'].includes(input.g) && 'gender'].filter(Boolean);
@@ -115,7 +116,7 @@
       return { excerpt: excerpt ? clone(excerpt) : null, missingCriticalInput, simulation: true, isPreset: false,
         preview_source: 'public_runtime', simulation_note: '年度节选按当前输入由公开排盘与节选程序生成；完整报告仍为固定示例。' };
     }
-    const fixture = fixtureReport(input, role);
+    const fixture = fixtureReport(input, role) || fixtures().reports?.[0];
     const excerpt = !missingCriticalInput.length && fixture?.snapshot?.preview?.excerpt ? clone(fixture.snapshot.preview.excerpt) : null;
     if (excerpt) {
       excerpt.title = '示例 · ' + excerpt.title;
@@ -130,10 +131,12 @@
     if (body.transfer_confirmed !== true || body.storage_confirmed !== true) fail('REPORT_STORAGE_CONFIRMATION_REQUIRED');
     if (typeof body.subject_is_self !== 'boolean' || !body.subject_is_self && body.permission_confirmed !== true) fail('REPORT_SUBJECT_PERMISSION_REQUIRED');
     const input = normalizedInput(body.input);
+    const fixture = fixtureReport(input, role);
+    if(!fixture&&!localReports())fail('SIM_INPUT_NOT_SUPPORTED',409,'静态演示只支持预置资料；自填资料请使用本地报告测试服务，不会套用其他人的盘面。');
     const old = Object.values(value.reports).find(r => r.owner === role && !r.deleted && JSON.stringify(r.input) === JSON.stringify(input));
     if (old) return old;
-    const id = hex(48), fixture = fixtureReport(input, role);
-    const report = { id, owner: role, input, fixtureKey: fixture?.key || (role === 'B' ? 'B' : 'A'), title: value.users[role].name + ' · 示例报告',
+    const id = hex(48);
+    const report = { id, owner: role, input, fixtureKey: fixture?.key || null, title: value.users[role].name + (localReports()?' · 测试深度报告':' · 示例报告'),
       createdAt: Date.now() + value.serial, deliveredAt: null, expiresAt: null, entitlement: 'unpaid', delivery: 'pending',
       giftCredits: 0, purchasedCredits: 0, subjectIsSelf: body.subject_is_self, revision: 1 };
     value.reports[id] = report;
@@ -154,7 +157,8 @@
     if (withSnapshot && readable) {
       const source = fixtures().reports;
       const list = Array.isArray(source) ? source : Object.values(source || {});
-      const fixture = list.find(item => item.key === report.fixtureKey) || fixtureReport(report.input, report.owner);
+      const fixture = fixtureReport(report.input, report.owner);
+      if(!fixture)fail('REPORT_SNAPSHOT_IDENTITY_MISMATCH',409,'该旧订单曾使用不匹配的示例报告。请使用本地报告测试服务按原资料读取。');
       if (!fixture?.snapshot) fail('SIM_FIXTURES_NOT_READY', 503, '示例报告素材尚未加载，请刷新模拟页面。');
       result.snapshot = clone(fixture.snapshot);
       result.simulation_note = '固定虚构资料的示例内容，用于测试交付与阅读，不是真实新生成的个人分析。';
@@ -217,18 +221,20 @@
       revisions: Object.fromEntries(ids.filter(Boolean).map(id => [id, value.reports[id].revision])), expiresAt: Date.now() + 180 * DAY };
     value.pairs[pair.id] = pair; pairStatus(value, pair); return pair;
   }
-  function pairResult(value, role, pair) {
+  async function pairResult(value, role, pair) {
     if (!pair.roles.includes(role)) fail('NOT_FOUND', 404);
     const result = { id: pair.id, status: pairStatus(value, pair), reportIds: pair.reportIds, expiresAt: pair.expiresAt, attempts: 1, simulation: true };
     if (result.status === 'ready') {
-      const pairKeys = pair.reportIds.map(id => value.reports[id]?.fixtureKey);
+      const pairKeys = pair.reportIds.map(id => fixtureReport(value.reports[id]?.input,role)?.key);
       const source = fixtures().synastry;
       const list = Array.isArray(source) ? source : source ? [source] : [];
-      const fixture = list.find(item => pairKeys.every(key => item.reportKeys?.includes(key))) || list[0];
-      const raw = fixture?.report || fixture;
+      const fixture = list.find(item => pairKeys.every(Boolean)&&JSON.stringify([...pairKeys].sort())===JSON.stringify([...(item.reportKeys||[])].sort()));
+      const generated=localReports()?await localReports().pair(pair.reportIds.map(id=>value.reports[id].input),new Date(pair.createdAt).toISOString()):null;
+      if(!generated&&!fixture)fail('REPORT_SNAPSHOT_IDENTITY_MISMATCH',409,'两份报告没有对应的示例合盘，请使用本地报告测试服务。');
+      const raw = generated || fixture?.report || fixture;
       const view = { headline: '示例：先说清各自的节奏', advice: '以下是虚构样本的互动示例，用于检查阅读功能。', actions: { own: '说出一个具体需要。', other: '确认自己听到的意思。', together: '约定一件小事并回看。' }, reminder: '这是模拟内容。' };
       result.report = raw?.chapters ? clone(raw) : { chapters: ['看见彼此', '互动节奏', '分歧与回应', '一起行动'].map(title => ({ title, scene: '模拟场景', shared: '先核对具体发生了什么。', sourceIds: [], views: { 'person-a': view, 'person-b': view } })), disclaimer: '固定虚构样本，仅用于流程模拟。' };
-      if (fixture?.reportKeys?.[0] !== pairKeys[0]) result.report.chapters.forEach(chapter => { if (chapter.views) { const a = chapter.views['person-a']; chapter.views['person-a'] = chapter.views['person-b']; chapter.views['person-b'] = a; } });
+      if (!generated && fixture?.reportKeys?.[0] !== pairKeys[0]) result.report.chapters.forEach(chapter => { if (chapter.views) { const a = chapter.views['person-a']; chapter.views['person-a'] = chapter.views['person-b']; chapter.views['person-b'] = a; } });
       if (!pair.managed) result.report.chapters.forEach(chapter => { chapter.view = chapter.views?.[pair.roles.indexOf(role) === 1 ? 'person-b' : 'person-a'] || chapter.view || view; delete chapter.views; });
     }
     return result;
@@ -273,9 +279,13 @@
     const url = new URL(path, root.location.origin);
     const method = String(options.method || 'GET').toUpperCase();
     const body = options.body || {};
-    const value = load();
     const marker = url.pathname.indexOf(PREFIX + '/');
     const p = marker >= 0 ? url.pathname.slice(marker + PREFIX.length) : url.pathname;
+    if(localReports()&&method==='POST'&&(p==='/paid-reports/prepare'||p==='/synastry/gift-claims/prepare'||/^\/paid-reports\/[a-f0-9]{48}\/correct$/.test(p))&&body.transfer_confirmed===true&&body.storage_confirmed===true){
+      const owner=requireRole(load(),options);await localReports().validate(normalizedInput(body.input));
+      if(requireRole(load(),options)!==owner)fail('REPORT_ACCOUNT_CHANGED',409);
+    }
+    const value = load();
     const mutation = result => { publish(value, method + ' ' + p); return clone(result); };
     if (['/auth/session', '/account/me'].includes(p) && method === 'GET') return account(value);
     if (p === '/auth/session/refresh' && method === 'POST') return tokens(value);
@@ -300,7 +310,10 @@
       if (method === 'GET') return { profile_name: value.users[role].name, account_ref: REF[role] };
       if (method === 'POST') { const name = String(body.profile_name || '').trim(); if (!name || name.length > 24) fail('DISPLAY_NAME_INVALID'); value.users[role].name = name; return mutation({ profile_name: name }); }
     }
-    if (p === '/paid-reports/prepare' && method === 'POST') return mutation(publicReport(prepare(value, role, body)));
+    if (p === '/paid-reports/prepare' && method === 'POST') {
+      const report=prepare(value,role,body);
+      return mutation(publicReport(report));
+    }
     if (p === '/paid-reports' && method === 'GET') {
       const before = Number(url.searchParams.get('before') || Infinity);
       const rows = Object.values(value.reports).filter(r => r.owner === role && !r.deleted && r.createdAt < before).sort((a, b) => b.createdAt - a.createdAt);
@@ -309,12 +322,22 @@
     let match = p.match(/^\/paid-reports\/([a-f0-9]{48})(?:\/(retry|correct))?$/);
     if (match) {
       const report = ownedReport(value, role, match[1]);
-      if (method === 'GET' && !match[2]) return publicReport(report, url.searchParams.get('view') !== 'status');
+      if (method === 'GET' && !match[2]) {
+        const status=publicReport(report);
+        if(url.searchParams.get('view')!=='status'&&status.readable&&localReports()){
+          status.snapshot=await localReports().report(report.input,new Date(report.deliveredAt).toISOString());
+          status.localGenerated=true;status.remoteGenerated=!!root.ZXTestRemoteReports;status.simulation_note='报告按本次资料生成；支付为模拟，问星仍为预置回答。';
+          return status;
+        }
+        return publicReport(report,url.searchParams.get('view')!=='status');
+      }
       if (method === 'POST' && match[2] === 'retry') return publicReport(report, false);
       if (method === 'DELETE' && !match[2]) { consent(body); report.deleted = true; return mutation({ deleted: true }); }
       if (method === 'POST' && match[2] === 'correct') {
         if (body.discard_previous_confirmed !== true || body.transfer_confirmed !== true || body.storage_confirmed !== true) fail('REPORT_CORRECTION_CONFIRMATION_REQUIRED');
-        const input = normalizedInput(body.input); report.input = input; report.revision++; report.fixtureKey = fixtureReport(input, role)?.key || report.fixtureKey;
+        const input = normalizedInput(body.input);
+        if(!localReports()&&!fixtureReport(input,role))fail('SIM_INPUT_NOT_SUPPORTED',409);
+        report.input = input; report.revision++; report.fixtureKey = fixtureReport(input, role)?.key || null;
         return mutation(publicReport(report));
       }
     }
@@ -382,19 +405,19 @@
     match = p.match(/^\/synastry\/invitations\/([a-f0-9]{64})\/revoke$/);
     if (match && method === 'POST') { const item = value.invitations[match[1]]; if (!item || item.sender !== role) fail('NOT_FOUND', 404); if (item.status !== 'active') fail('USE_PAIR_UNLINK', 409); item.status = 'revoked'; return mutation({ revoked: true }); }
     if (p === '/synastry/records' && method === 'GET') return { pairs: Object.values(value.pairs).filter(pair => !pair.managed && pair.roles.includes(role)).slice(0, 20).map(pair => ({ id: pair.id, status: pairStatus(value, pair), expiresAt: pair.expiresAt })), invitations: Object.values(value.invitations).filter(item => item.sender === role || item.target === role).slice(0, 20).map(item => ({ ...item, direction: item.sender === role ? 'sent' : 'received' })), hasMore: false, nextCursor: null };
-    if (p === '/synastry/managed-pairs' && method === 'GET') return listPage(Object.values(value.pairs).filter(pair => pair.managed && pair.roles[0] === role).map(pair => pairResult(value, role, pair)), url);
+    if (p === '/synastry/managed-pairs' && method === 'GET') return listPage(await Promise.all(Object.values(value.pairs).filter(pair => pair.managed && pair.roles[0] === role).map(pair => pairResult(value, role, pair))), url);
     if (p === '/synastry/managed-pairs' && method === 'POST') {
       consent(body.consent); const ids = body.reportIds;
       if (!Array.isArray(ids) || ids.length !== 2 || ids[0] === ids[1]) fail('MANAGED_DISTINCT_REPORTS_REQUIRED');
       const reports = ids.map(id => ownedReport(value, role, id, true));
       if (JSON.stringify(reports[0].input) === JSON.stringify(reports[1].input)) fail('MANAGED_DISTINCT_REPORTS_REQUIRED');
-      return mutation(pairResult(value, role, createPair(value, [role, role], ids, true)));
+      const pair=createPair(value,[role,role],ids,true);mutation({});return pairResult(value,role,pair);
     }
     match = p.match(/^\/synastry\/(pairs|managed-pairs)\/([a-f0-9]{64})(?:\/(report|retry|unlink|remove|support))?$/);
     if (match) {
       const pair = value.pairs[match[2]]; if (!pair || !pair.roles.includes(role) || pair.managed !== (match[1] === 'managed-pairs')) fail('NOT_FOUND', 404);
       if (method === 'GET' && !match[3]) return pairResult(value, role, pair);
-      if (method === 'POST' && match[3] === 'report') { consent(body.consent); ownedReport(value, role, body.reportId, true); if (['removed', 'unavailable'].includes(pair.status)) fail('PAIR_UNAVAILABLE', 409); pair.reportIds[pair.roles.indexOf(role)] = body.reportId; pair.revisions[body.reportId] = value.reports[body.reportId].revision; return mutation(pairResult(value, role, pair)); }
+      if (method === 'POST' && match[3] === 'report') { consent(body.consent); ownedReport(value, role, body.reportId, true); if (['removed', 'unavailable'].includes(pair.status)) fail('PAIR_UNAVAILABLE', 409); pair.reportIds[pair.roles.indexOf(role)] = body.reportId; pair.revisions[body.reportId] = value.reports[body.reportId].revision; mutation({});return pairResult(value, role, pair); }
       if (method === 'POST' && ['unlink', 'remove'].includes(match[3])) { consent(body); pair.status = 'removed'; return mutation({ id: pair.id, status: pair.status }); }
       if (method === 'POST' && match[3] === 'retry') return pairResult(value, role, pair);
       if (method === 'POST' && match[3] === 'support') return { id: pair.id, status: pairStatus(value, pair), supportRequired: false, simulation: true };

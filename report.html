@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-BvR2bOARYQaI/gX9L65kpoBA5Q0EM5ugwgNojrwZE1o=' 'sha256-8Ojc3B63hSvTR0UI2v/REdAaH4i7zmTbPVqPU5avwlQ=' 'sha256-4tV3PEdWa4XgUr/IDBHSDCVO9Mhev3qHEmtikafwan4=' 'sha256-Qtm7PgAN8+EjNcVuwPpCWMEykLJBpqFP28oxJBj9kX0='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; worker-src 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-BvR2bOARYQaI/gX9L65kpoBA5Q0EM5ugwgNojrwZE1o=' 'sha256-QsYxzNwBj1lLgiErchEc88ZsUA3ck37JA9fxDvt46d8=' 'sha256-4tV3PEdWa4XgUr/IDBHSDCVO9Mhev3qHEmtikafwan4=' 'sha256-0eUP5jbV0ItLZEo8sOd5J1FiaffP0HjNwMwl+VZCils='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://zhixng.cn/__test_reports_20260916; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; worker-src 'none';">
 <meta name="robots" content="noindex,nofollow">
-<link rel="stylesheet" href="./test-simulation-ui.css?v=b6b50a83e516">
-<script src="./test-simulation-bootstrap.js?v=2810cda6917b"></script>
+<link rel="stylesheet" href="./test-simulation-ui.css?v=a335787da9c8">
+<script src="./test-remote-report-client.js?v=2823f09e9689"></script><script src="./test-simulation-bootstrap.js?v=294c2f705d59"></script>
 <script src="./test-simulation-fixtures.js?v=f8683e1cccc9"></script>
-<script src="./test-simulation-api.js?v=711d3f64fa83"></script>
-<script src="./test-simulation-ui.js?v=110245a7337c"></script>
+<script src="./test-simulation-api.js?v=4bfdd65a7fcc"></script>
+<script src="./test-simulation-ui.js?v=3f2241bd39c0"></script>
 <script>window.ZX_PRIVATE_REPORT_BUILD=true;</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
@@ -67,7 +67,7 @@
     show();
   }, true);
   document.addEventListener('DOMContentLoaded', show, {once:true});
-})(["./minimum-age.js?v=96cd776ebf44","./public-config.js?v=7751013955c9","./privacy-consent.js?v=e9d931611689","./member.js?v=d9b22aa237d2","./paid-h5.js?v=2983f9adf0f9","./paid-reports.js?v=d7056ff086e1","./report-download.js?v=5e9d071a3ee9","./bazi-engine.js?v=2f507cc27577","./birth-location-picker.js?v=3d149d3ae64c","./content-home-v1.js?v=ee4855e88ba1"]);</script>
+})(["./minimum-age.js?v=96cd776ebf44","./public-config.js?v=7751013955c9","./privacy-consent.js?v=e9d931611689","./member.js?v=2212e56a2c7f","./paid-h5.js?v=2983f9adf0f9","./paid-reports.js?v=293818756006","./report-download.js?v=5e9d071a3ee9","./bazi-engine.js?v=2f507cc27577","./birth-location-picker.js?v=3d149d3ae64c","./content-home-v1.js?v=ee4855e88ba1"]);</script>
 <meta name="referrer" content="no-referrer">
 <style id="zx-frame-guard">html{visibility:hidden!important}</style>
 <script>(function(){var guard=document.getElementById('zx-frame-guard');if(window.self===window.top){guard.remove();return;}document.documentElement.setAttribute('aria-hidden','true');window.addEventListener('DOMContentLoaded',function(){document.body.replaceChildren();});})();</script>
@@ -736,9 +736,9 @@
 <script src="./public-config.js?v=7751013955c9"></script>
 <script src="./privacy-consent.js?v=e9d931611689"></script>
 <script src="./analytics.js?v=2986447e1859"></script>
-<script src="./member.js?v=d9b22aa237d2"></script>
+<script src="./member.js?v=2212e56a2c7f"></script>
 <script src="./paid-h5.js?v=2983f9adf0f9"></script>
-<script src="./paid-reports.js?v=d7056ff086e1"></script>
+<script src="./paid-reports.js?v=293818756006"></script>
 <script src="./report-download.js?v=5e9d071a3ee9"></script>
 <script src="./bazi-engine.js?v=2f507cc27577"></script>
 <script src="./birth-location-picker.js?v=3d149d3ae64c"></script>
@@ -2191,9 +2191,7 @@ function deepArchiveNotice(){
 
 /* 支持连续追问，下一问会带上最近几轮问答摘要。每次提交独立消耗 1 次。 */
 function deepUpsell(){
-  const remaining=Number.isInteger(PAID_ASK_STATE.remaining)?PAID_ASK_STATE.remaining:null;
-  const balance=remaining===null?'次数以服务端最新记录为准':`当前剩余 ${remaining} 次`;
-  return `<div class="da-more">可以继续追问，每次追问消耗 1 次；${balance}。建议补一条具体背景，比如时间、对象、代价或你最纠结的点。</div>`;
+  return `<div class="da-more">每次追问消耗 1 次，可用次数见提问区。建议补一条具体背景，比如时间、对象、代价或你最纠结的点。</div>`;
 }
 function moveDeepComposerAfterAnswer(){
   const composer = $('deepComposer');
@@ -2788,12 +2786,12 @@ function renderPrivateAskStatus(){
   const pending=readPrivatePending(),remaining=PAID_ASK_STATE.remaining;
   const loaded=PAID_ASK_STATE.loaded&&Number.isSafeInteger(remaining)&&remaining>=0;
   const gifts=Number(PAID_ASK_STATE.gift_remaining)||0,purchases=Number(PAID_ASK_STATE.purchased_remaining)||0;
-  const title=loaded?`本报告赠送 ${gifts} 次 · 已购买 ${purchases} 次`:'暂时无法确认问星次数';
+  const title=loaded?`剩余 ${remaining} 次 · 本报告赠送 ${gifts} 次 · 已购买 ${purchases} 次`:'暂时无法确认问星次数';
   const body=deepComposerAvailable()?(loaded?'首问与追问各消耗 1 次。用完后可选择 ¥2.90/次，或 ¥6/3次。':'请刷新次数后再提交。'):'问星服务尚未开放，报告可以继续阅读。';
   box.innerHTML=`<div class="member-title">${esc(title)}</div><p class="member-copy">${esc(body)}</p><div class="member-actions"><button id="privateAskRefresh" type="button" class="ghost">刷新次数</button><a id="privateAskPurchaseClosed" class="ghost" href="${esc(window.ZxPaidReports.profileUrl(PRIVATE_REPORT_ID))}#ask-section">问星充值</a><a id="privateAskHistory" href="#deepEcho">查看本盘问答</a></div>`;
   $('privateAskRefresh').onclick=()=>refreshPrivateAskState();
   button.disabled=PRIVATE_LIFECYCLE_BUSY||deepRequestInFlight||!deepComposerAvailable()||!(pending||(loaded&&PAID_ASK_STATE.allowed&&remaining>0));
-  button.textContent=pending?'恢复上一问 · 不重复扣次':(button.disabled?'问星暂不可用':PRIVATE_ASK_IDS.length?'继续追问 · 消耗 1 次':'提交本次问星 · 消耗 1 次');
+  button.textContent=pending?'恢复上一问 · 不重复扣次':(deepRequestInFlight?'正在整理回答…':!deepComposerAvailable()?'问星服务暂不可用':loaded&&remaining===0?'次数已用完':button.disabled?'正在确认可用次数':PRIVATE_ASK_IDS.length?'继续追问 · 消耗 1 次':'提交本次问星 · 消耗 1 次');
 }
 function privateAnswerHtml(item){return `<section class="private-answer" data-answer-id="${item.result_id}">${renderDeep(item.answer,item.question)}<p class="da-more">完整答案已保存到账户。</p><div class="private-answer-actions"><button type="button" class="ghost" data-delete-private-answer="${item.result_id}">删除这条答案</button></div></section>`;}
 function wirePrivateAnswerDeletes(){

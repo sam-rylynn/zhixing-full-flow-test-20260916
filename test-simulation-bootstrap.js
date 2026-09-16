@@ -19,7 +19,7 @@
   const resetStorage=()=>{for(const storage of [localStorage,sessionStorage])for(const key of ownKeys(storage))raw.remove.call(storage,key);};
   window.ZX_TEST_SIMULATION=true;
   window.ZX_TEST_SIMULATION_BUILD=BUILD;
-  window.ZX_TEST_SIMULATION_BUILD_ID='zhixing-online-simulation-20260916-v1';
+  window.ZX_TEST_SIMULATION_BUILD_ID='zhixing-online-simulation-20260916-remote-v2';
   window.ZX_PRIVATE_REPORT_BUILD=true;
   window.ZXTestBootstrap=Object.freeze({build:BUILD,baseUrl,apiBase:baseUrl+'__test_api__',role,setRole(value){if(value==='A'||value==='B')raw.set.call(sessionStorage,roleKey,value);},resetStorage});
   // A test page may never send a request to an actual account, model or payment service.

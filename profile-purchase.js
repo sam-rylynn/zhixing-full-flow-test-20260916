@@ -64,7 +64,7 @@
   function style() {
     if (document.getElementById('profile-purchase-style')) return;
     const sheet = node('style'); sheet.id = 'profile-purchase-style';
-    sheet.textContent = '.profile-purchase-dialog{box-sizing:border-box;width:min(460px,calc(100vw - 28px));max-height:calc(100dvh - 36px);padding:24px;border:1px solid #c9a85c55;border-radius:18px;background:#131b2b;color:#e8e4d8;overflow:auto;font:14px/1.7 system-ui,-apple-system,sans-serif}.profile-purchase-dialog::backdrop{background:#050916b8;backdrop-filter:blur(5px)}.profile-purchase-top{display:flex;align-items:center;justify-content:space-between;gap:14px}.profile-purchase-title{margin:0;font-size:23px;font-family:Songti SC,STSong,serif;color:#e4cf97}.profile-purchase-close{border:0;padding:8px;min-width:44px;min-height:44px;background:none;color:#b9c2d2;font:inherit;cursor:pointer}.profile-purchase-price{margin:18px 0 8px;color:#e4cf97;font-size:30px}.profile-purchase-note,.profile-purchase-status{color:#b4bfd0;font-size:13px}.profile-purchase-chart{margin:18px 0;padding:13px 15px;border-radius:10px;background:#0c1321;border:1px solid #c9a85c28;overflow-wrap:anywhere}.profile-purchase-chart strong,.profile-purchase-chart span{display:block}.profile-purchase-chart span{margin-top:5px;color:#b4bfd0;font-size:13px}.profile-purchase-benefits{margin:12px 0;padding-left:19px;color:#d1d8e4;font-size:13px}.profile-purchase-field{display:block;margin:16px 0 12px}.profile-purchase-select{display:block;box-sizing:border-box;width:100%;height:44px;margin-top:6px;padding:8px;border:1px solid #677184;border-radius:8px;background:#0c1321;color:#e8e4d8;font:inherit}.profile-purchase-check{display:flex;align-items:flex-start;gap:9px;margin:12px 0;color:#c4cedd;font-size:12px}.profile-purchase-check input{flex:none;width:18px;height:18px;min-height:18px;padding:0;margin:3px 0 0;accent-color:#c9a85c}.profile-purchase-button{display:block;width:100%;min-height:46px;margin-top:16px;padding:10px 12px;border:1px solid #c9a85c88;border-radius:10px;background:#c9a85c16;color:#e4cf97;font:inherit;cursor:pointer}.profile-purchase-button:disabled{opacity:.5;cursor:default}.profile-purchase-link{display:inline-block;margin:8px 14px 0 0;color:#d6c391;text-underline-offset:4px}.profile-purchase-dialog :focus-visible{outline:2px solid #f1d38a;outline-offset:3px}.profile-purchase-status{overflow-wrap:anywhere}.profile-purchase-dialog [hidden]{display:none!important}@media(max-width:380px){.profile-purchase-dialog{padding:18px}.profile-purchase-title{font-size:21px}}';
+    sheet.textContent = '.profile-purchase-dialog{position:fixed;inset:0;margin:auto;box-sizing:border-box;width:min(460px,calc(100vw - 28px));max-height:calc(100dvh - 36px);padding:24px;border:1px solid #c9a85c55;border-radius:18px;background:#131b2b;color:#e8e4d8;overflow:auto;font:14px/1.7 system-ui,-apple-system,sans-serif}.profile-purchase-dialog::backdrop{background:#050916b8;backdrop-filter:blur(5px)}.profile-purchase-top{display:flex;align-items:center;justify-content:space-between;gap:14px}.profile-purchase-title{margin:0;font-size:23px;font-family:Songti SC,STSong,serif;color:#e4cf97}.profile-purchase-close{border:0;padding:8px;min-width:44px;min-height:44px;background:none;color:#b9c2d2;font:inherit;cursor:pointer}.profile-purchase-price{margin:18px 0 8px;color:#e4cf97;font-size:30px}.profile-purchase-note,.profile-purchase-status{color:#b4bfd0;font-size:13px}.profile-purchase-chart{margin:18px 0;padding:13px 15px;border-radius:10px;background:#0c1321;border:1px solid #c9a85c28;overflow-wrap:anywhere}.profile-purchase-chart strong,.profile-purchase-chart span{display:block}.profile-purchase-chart span{margin-top:5px;color:#b4bfd0;font-size:13px}.profile-purchase-benefits{margin:12px 0;padding-left:19px;color:#d1d8e4;font-size:13px}.profile-purchase-field{display:block;margin:16px 0 12px}.profile-purchase-select{display:block;box-sizing:border-box;width:100%;height:44px;margin-top:6px;padding:8px;border:1px solid #677184;border-radius:8px;background:#0c1321;color:#e8e4d8;font:inherit}.profile-purchase-check{display:flex;align-items:flex-start;gap:9px;margin:12px 0;color:#c4cedd;font-size:12px}.profile-purchase-check input{flex:none;width:18px;height:18px;min-height:18px;padding:0;margin:3px 0 0;accent-color:#c9a85c}.profile-purchase-button{display:block;width:100%;min-height:46px;margin-top:16px;padding:10px 12px;border:1px solid #c9a85c88;border-radius:10px;background:#c9a85c16;color:#e4cf97;font:inherit;cursor:pointer}.profile-purchase-button:disabled{opacity:.5;cursor:default}.profile-purchase-link{display:inline-block;margin:8px 14px 0 0;color:#d6c391;text-underline-offset:4px}.profile-purchase-dialog :focus-visible{outline:2px solid #f1d38a;outline-offset:3px}.profile-purchase-status{overflow-wrap:anywhere}.profile-purchase-dialog [hidden]{display:none!important}@media(max-width:380px){.profile-purchase-dialog{padding:18px}.profile-purchase-title{font-size:21px}}';
     document.head.append(sheet);
   }
   function current(view) { return active === view && view.dialog.open && view.epoch === sequence; }
@@ -96,6 +96,7 @@
     else root.location.assign(route('account', id, 'report-purchase'));
   }
   function statusMessage(error) {
+    if(error?.code==='SIM_INPUT_NOT_SUPPORTED')return '静态演示只支持预置资料。自填资料请使用本地报告测试服务，不会套用其他盘面。';
     const code = String(error && error.code || '');
     if (/AUTH|SESSION|TOKEN|ACCOUNT_CHANGED|PRIVACY_CONSENT/.test(code)) return '登录状态已变化，请关闭后登录原微信账号再继续。';
     if (/EXPIRED|CONTENT_DELETED/.test(code)) return '这份报告已到期或内容已删除，请先到报告与订单中确认状态。';
@@ -158,8 +159,8 @@
     });
     subject.setAttribute('aria-label', '这张盘的资料属于'); field.append(subject); view.body.append(field);
     const permission = check(view, '我已获得资料主体授权，可为其上传、保存出生资料并购买本报告。'); permission.wrap.hidden = true;
-    const transfer = check(view, '我同意将上方出生日期、时间、地点及排盘性别传至知星服务端，用于准备这张盘的报告。');
-    const storage = check(view, '我同意在当前账号中保存必要出生资料与报告草稿。未购买草稿保存24小时；购买并成功交付后，报告与相关问答保存6个北京时间日历月。');
+    const transfer = check(view, '我同意将上方出生日期、时间、地点及排盘性别传至独立测试服务，用于生成本次报告；资料处理后不在服务端保存。');
+    const storage = check(view, '我同意在当前浏览器保存测试出生资料、报告草稿与模拟订单。清除浏览器数据或重置测试后会丢失，不能跨设备恢复。');
     view.body.append(node('p', '下一步将核对正式条款与购买人年满18周岁的确认，再进入支付。首次使用 AI 问星另行确认。', 'note'));
     const live = node('p', record.phase === 'unknown' ? '上次准备结果尚未确认。继续核对会恢复同一盘面，请勿换一张盘重复操作。' : '', 'status');
     live.setAttribute('role', 'status'); view.body.append(live);
@@ -231,7 +232,7 @@
     chart.append(node('strong', entry.name || '当前选中的图谱'), node('span', entry.input.d + ' · ' + (entry.input.t || '时间待补全') + ' · ' + (entry.input.g || '排盘性别待补全')), node('span', entry.input.c));
     body.append(node('p', '¥19.90 / 盘', 'price'), node('p', '完整五章报告 · 成功交付赠1次本盘问星', 'note'), chart);
     const benefits = node('ul', null, 'benefits');
-    ['围绕这张盘展开人格、关系、行动与时间解读。', '成功交付后保存6个北京时间日历月，保存期内可下载全文。', '每份已购报告可免费更正一次出生资料，保存期限不重置。'].forEach(text => benefits.append(node('li', text)));
+    ['围绕这张盘展开人格、关系、行动与时间解读。', '一次付费，报告成功交付后可在线阅读6个月，保存期内可下载全文。', '每份已购报告可免费更正一次出生资料，保存期限不重置。'].forEach(text => benefits.append(node('li', text)));
     body.append(benefits, link('购买须知', route('purchase-notice')), link('隐私与保存说明', route('privacy')));
     if (!entry.input.t || !['男', '女'].includes(entry.input.g)) {
       const edit = new URL(route('home')); edit.searchParams.set('edit-chart', entry.id);

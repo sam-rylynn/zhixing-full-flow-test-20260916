@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-BvR2bOARYQaI/gX9L65kpoBA5Q0EM5ugwgNojrwZE1o=' 'sha256-LnngpelqcGZHuQWmf1xr40rW2AKivTRhA2KjRs8KGC4=' 'sha256-4tV3PEdWa4XgUr/IDBHSDCVO9Mhev3qHEmtikafwan4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; worker-src 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-BvR2bOARYQaI/gX9L65kpoBA5Q0EM5ugwgNojrwZE1o=' 'sha256-jsio/fpkco5G7uRHJRmfsBAuN9IWv42/4Ie/firWzMI=' 'sha256-4tV3PEdWa4XgUr/IDBHSDCVO9Mhev3qHEmtikafwan4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://zhixng.cn/__test_reports_20260916; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; worker-src 'none';">
 <meta name="robots" content="noindex,nofollow">
-<link rel="stylesheet" href="./test-simulation-ui.css?v=b6b50a83e516">
-<script src="./test-simulation-bootstrap.js?v=2810cda6917b"></script>
+<link rel="stylesheet" href="./test-simulation-ui.css?v=a335787da9c8">
+<script src="./test-remote-report-client.js?v=2823f09e9689"></script><script src="./test-simulation-bootstrap.js?v=294c2f705d59"></script>
 <script src="./test-simulation-fixtures.js?v=f8683e1cccc9"></script>
-<script src="./test-simulation-api.js?v=711d3f64fa83"></script>
-<script src="./test-simulation-ui.js?v=110245a7337c"></script>
+<script src="./test-simulation-api.js?v=4bfdd65a7fcc"></script>
+<script src="./test-simulation-ui.js?v=3f2241bd39c0"></script>
 <script>window.ZX_PRIVATE_REPORT_BUILD=true;</script>
   
   <meta charset="utf-8">
@@ -68,22 +68,23 @@
     show();
   }, true);
   document.addEventListener('DOMContentLoaded', show, {once:true});
-})(["./public-config.js?v=7751013955c9","./minimum-age.js?v=96cd776ebf44","./privacy-consent.js?v=e9d931611689","./member.js?v=d9b22aa237d2","./display-profile.js?v=642992651d04","./paid-reports.js?v=d7056ff086e1","./paid-h5.js?v=2983f9adf0f9","./chart-vault.js?v=000920572654","./bazi-engine.js?v=2f507cc27577","./birth-location-picker.js?v=3d149d3ae64c","./synastry-policy.js?v=a56f5400e4ec","./synastry-engine.js?v=cface8bdbb48","./profile-gift.js?v=0949b4f7c89e","./synastry-opening.js?v=7a0b7689ab85","./profile-social.js?v=1ab630b5ac3b","./synastry-poster.js?v=889f1cea1d1e","./synastry.js?v=0f8a448bfe08"]);</script>
+})(["./public-config.js?v=7751013955c9","./minimum-age.js?v=96cd776ebf44","./privacy-consent.js?v=e9d931611689","./member.js?v=2212e56a2c7f","./display-profile.js?v=642992651d04","./paid-reports.js?v=293818756006","./paid-h5.js?v=2983f9adf0f9","./chart-vault.js?v=000920572654","./bazi-engine.js?v=2f507cc27577","./birth-location-picker.js?v=3d149d3ae64c","./synastry-policy.js?v=a56f5400e4ec","./synastry-engine.js?v=cface8bdbb48","./profile-gift.js?v=89cc29329fcc","./synastry-opening.js?v=7a0b7689ab85","./profile-purchase.js?v=6d0523ef8908","./profile-social.js?v=faf8b5ebf0fa","./synastry-poster.js?v=889f1cea1d1e","./synastry.js?v=0f8a448bfe08"]);</script>
 <link rel="preload" as="script" href="./public-config.js?v=7751013955c9" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./minimum-age.js?v=96cd776ebf44" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./privacy-consent.js?v=e9d931611689" data-zx-runtime-preload>
-<link rel="preload" as="script" href="./member.js?v=d9b22aa237d2" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./member.js?v=2212e56a2c7f" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./display-profile.js?v=642992651d04" data-zx-runtime-preload>
-<link rel="preload" as="script" href="./paid-reports.js?v=d7056ff086e1" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./paid-reports.js?v=293818756006" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./paid-h5.js?v=2983f9adf0f9" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./chart-vault.js?v=000920572654" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./bazi-engine.js?v=2f507cc27577" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./birth-location-picker.js?v=3d149d3ae64c" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./synastry-policy.js?v=a56f5400e4ec" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./synastry-engine.js?v=cface8bdbb48" data-zx-runtime-preload>
-<link rel="preload" as="script" href="./profile-gift.js?v=0949b4f7c89e" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./profile-gift.js?v=89cc29329fcc" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./synastry-opening.js?v=7a0b7689ab85" data-zx-runtime-preload>
-<link rel="preload" as="script" href="./profile-social.js?v=1ab630b5ac3b" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./profile-purchase.js?v=6d0523ef8908" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./profile-social.js?v=faf8b5ebf0fa" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./synastry-poster.js?v=889f1cea1d1e" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./synastry.js?v=0f8a448bfe08" data-zx-runtime-preload>
 <meta name="referrer" content="no-referrer">
@@ -112,18 +113,19 @@
   <script src="./public-config.js?v=7751013955c9"></script>
   <script src="./minimum-age.js?v=96cd776ebf44"></script>
   <script src="./privacy-consent.js?v=e9d931611689"></script>
-  <script src="./member.js?v=d9b22aa237d2"></script>
+  <script src="./member.js?v=2212e56a2c7f"></script>
   <script src="./display-profile.js?v=642992651d04"></script>
-  <script src="./paid-reports.js?v=d7056ff086e1"></script>
+  <script src="./paid-reports.js?v=293818756006"></script>
   <script src="./paid-h5.js?v=2983f9adf0f9"></script>
   <script src="./chart-vault.js?v=000920572654"></script>
   <script src="./bazi-engine.js?v=2f507cc27577"></script>
   <script src="./birth-location-picker.js?v=3d149d3ae64c"></script>
   <script src="./synastry-policy.js?v=a56f5400e4ec"></script>
   <script src="./synastry-engine.js?v=cface8bdbb48"></script>
-  <script src="./profile-gift.js?v=0949b4f7c89e"></script>
+  <script src="./profile-gift.js?v=89cc29329fcc"></script>
   <script src="./synastry-opening.js?v=7a0b7689ab85"></script>
-  <script src="./profile-social.js?v=1ab630b5ac3b"></script>
+  <script src="./profile-purchase.js?v=6d0523ef8908"></script>
+  <script src="./profile-social.js?v=faf8b5ebf0fa"></script>
   <script src="./synastry-poster.js?v=889f1cea1d1e"></script>
   <script src="./synastry.js?v=0f8a448bfe08"></script>
 </body>
