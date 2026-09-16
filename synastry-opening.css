@@ -1,0 +1,51 @@
+/* Shared opening for type recommendations and both account-owned report readers. */
+.synastry-opening{--opening-line:#c9a85c35;--opening-serif:"Noto Serif SC","Songti SC",STSong,serif;margin:20px 0 32px;color:#e8e4d8;overflow-wrap:anywhere;font-size:15px;line-height:1.95;text-align:left}
+.synastry-opening *{box-sizing:border-box}
+.synastry-opening p,.synastry-opening h2,.synastry-opening h3,.synastry-opening h4{margin:0}
+.synastry-opening__hero{position:relative;isolation:isolate;overflow:hidden;text-align:center;padding:32px 18px 28px;border-block:1px solid var(--opening-line)}
+.synastry-opening__hero:before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:linear-gradient(180deg,#11172680,#11172620 42%,#111726),url('./media/synastry/pair-orbit.webp') center/cover;opacity:.27;mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent)}
+.synastry-opening .synastry-opening__names{font-size:12px;color:#c7cad2;margin-bottom:19px;letter-spacing:.09em}
+.synastry-opening__badge{display:inline-flex;gap:14px;align-items:center;max-width:100%;padding:5px 19px;border:1px solid #c9a85c70;border-radius:99px;background:#141d2bed}
+.synastry-opening__badge span{font-size:11px;letter-spacing:.13em;color:#b4b8c0;white-space:nowrap}
+.synastry-opening__badge strong{font:500 22px/1.65 var(--opening-serif);color:#e8ce8f;letter-spacing:.1em}
+.synastry-opening .synastry-opening__english{font-size:9px;letter-spacing:.22em;color:#b6a984;margin-top:8px}
+.synastry-opening .synastry-opening__title{font:500 clamp(30px,7vw,46px)/1.55 var(--opening-serif);letter-spacing:.18em;padding-left:.18em;color:#f1dfae;margin:18px 0 10px;text-shadow:0 0 30px #dac48322}
+.synastry-opening .synastry-opening__tagline{font:18px/1.9 var(--opening-serif);color:#e3dccb;white-space:pre-line}
+.synastry-opening .synastry-opening__summary{font-size:13px;line-height:1.9;color:#c6b690;max-width:42em;margin:18px auto 0;white-space:pre-line}
+.synastry-opening__reasons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:30px;padding:28px 0}
+.synastry-opening__reason+.synastry-opening__reason{border-left:1px solid var(--opening-line);padding-left:29px}
+.synastry-opening .synastry-opening__eyebrow{font-size:10px;letter-spacing:.15em;color:#b6a679;margin-bottom:9px}
+.synastry-opening .synastry-opening__reason-title{font:500 23px/1.7 var(--opening-serif);color:#e8ce8f}
+.synastry-opening .synastry-opening__identity{font-size:12px;color:#a0acbd;margin:8px 0 15px}
+.synastry-opening .synastry-opening__lead{font:17px/1.95 var(--opening-serif);color:#e2dfd5;white-space:pre-line}
+.synastry-opening .synastry-opening__paragraph{font-size:14px;line-height:2;color:#bdc8d9;margin-top:13px;white-space:pre-line}
+.synastry-opening__balance{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:30px;padding:23px;background:#131b29bb;border:1px solid var(--opening-line);border-radius:9px}
+.synastry-opening__balance h3,.synastry-opening__balance h4{font:500 12px/1.8 var(--opening-serif);letter-spacing:.06em;color:#c8b993;margin:0 0 11px}
+.synastry-opening__balance p{font-size:14px;line-height:1.95;color:#d4d9e1;white-space:pre-line}
+.synastry-opening__basis{border-top:1px solid var(--opening-line);margin-top:23px;color:#aab5c6;font-size:12px}
+.synastry-opening__basis summary{display:list-item;min-height:44px;padding:12px 0;cursor:pointer;color:#c5b78f;font-size:12px}
+.synastry-opening__basis p{margin:0 0 10px;font-size:12px;line-height:1.9}
+.synastry-opening__basis summary:focus-visible{outline:2px solid #e8ce8f;outline-offset:3px}
+.synastry-opening--compact{margin:0}
+.synastry-opening--compact .synastry-opening__hero{border-top:0;padding-top:24px}
+.synastry-opening--compact .synastry-opening__title{font-size:38px}
+/* Account dialogs are a reading column at every viewport width. */
+#social-detail .synastry-opening__reasons,.managed-synastry-dialog .synastry-opening__reasons{grid-template-columns:1fr;gap:23px}
+#social-detail .synastry-opening__reason+.synastry-opening__reason,.managed-synastry-dialog .synastry-opening__reason+.synastry-opening__reason{border-left:0;border-top:1px solid var(--opening-line);padding:23px 0 0}
+#social-detail .synastry-opening__balance,.managed-synastry-dialog .synastry-opening__balance{grid-template-columns:1fr;gap:20px}
+#social-detail .synastry-opening__balance>div+div,.managed-synastry-dialog .synastry-opening__balance>div+div{border-top:1px solid var(--opening-line);padding-top:20px}
+@media(max-width:620px){
+  .synastry-opening{font-size:14px;margin-top:16px}
+  .synastry-opening__hero{padding:27px 8px 23px}
+  .synastry-opening__badge{padding:4px 16px;gap:12px}
+  .synastry-opening__badge strong{font-size:20px}
+  .synastry-opening .synastry-opening__title,.synastry-opening--compact .synastry-opening__title{font-size:36px}
+  .synastry-opening .synastry-opening__tagline{font-size:17px}
+  .synastry-opening .synastry-opening__summary{font-size:13px}
+  .synastry-opening__reasons{grid-template-columns:1fr;gap:23px;padding:25px 0}
+  .synastry-opening__reason+.synastry-opening__reason{border-left:0;border-top:1px solid var(--opening-line);padding:23px 0 0}
+  .synastry-opening .synastry-opening__reason-title{font-size:23px}
+  .synastry-opening__balance{grid-template-columns:1fr;gap:20px;padding:20px 18px}
+  .synastry-opening__balance>div+div{border-top:1px solid var(--opening-line);padding-top:20px}
+}
+@media(max-width:359px){.synastry-opening .synastry-opening__title,.synastry-opening--compact .synastry-opening__title{font-size:31px}.synastry-opening .synastry-opening__tagline{font-size:16px}}

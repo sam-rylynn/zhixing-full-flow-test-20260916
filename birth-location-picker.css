@@ -1,0 +1,20 @@
+/* Shared birthplace control; full labels stay readable in narrow forms. */
+.zx-location-picker{position:relative;display:block;min-width:0;width:100%;text-align:left;letter-spacing:normal;text-indent:0}
+.zx-location-picker>input{box-sizing:border-box;width:100%;min-width:0;margin-bottom:0;font-size:16px}
+.zx-location-picker .zx-location-status{display:block;margin:7px 0 0;color:#aeb8c7;font-family:var(--sans,"PingFang SC",sans-serif);font-size:12px;font-weight:400;line-height:1.7;letter-spacing:normal;text-indent:0;overflow-wrap:anywhere;white-space:normal}
+.zx-location-picker[data-location-state="matched"] .zx-location-status{color:#c9c5b8}
+.zx-location-picker[data-location-state="province"] .zx-location-status,.zx-location-picker[data-location-state="unmatched"] .zx-location-status{color:#dec58e}
+.zx-location-picker .zx-location-options{position:absolute;z-index:150;top:56px;left:0;display:block;width:100%;max-height:min(340px,45vh);overflow-y:auto;overscroll-behavior:contain;border:1px solid #aa9057;border-radius:9px;background:#172030;box-shadow:0 12px 32px #0008;color:#e8e4d8;padding:4px;box-sizing:border-box;text-align:left;scroll-padding:5px}
+.zx-location-picker .zx-location-options[hidden]{display:none!important}
+.zx-location-picker .zx-location-option{display:block;box-sizing:border-box;min-height:52px;margin:0;padding:10px 11px;border:0;border-radius:5px;color:inherit;background:transparent;cursor:pointer;text-align:left;white-space:normal;letter-spacing:normal;text-indent:0;line-height:1.5}
+.zx-location-picker .zx-location-option+.zx-location-option{border-top:1px solid #e8e4d812}
+.zx-location-picker .zx-location-option:hover,.zx-location-picker .zx-location-option[aria-selected="true"]{background:#c9a85c26;outline:1px solid #c9a85c88;outline-offset:-1px}
+.zx-location-picker .zx-location-name{display:block;color:#eee8d9;font-size:14px;font-weight:500;line-height:1.6;overflow-wrap:anywhere}
+.zx-location-picker .zx-location-level{display:block;margin-top:2px;color:#afb9c9;font-size:11px;font-weight:400;line-height:1.5}
+#editRow>.zx-location-picker{flex:1 1 100%;width:100%;min-width:0}
+#editRow>.zx-location-picker>input{width:100%;min-height:48px}
+#editRow .zx-location-options{top:50px}
+.gift-profile-fields>.birth-location-field{grid-column:1/-1}
+.correction-fields>.birth-location-field{grid-column:1/-1}
+.correction-fields .zx-location-options{top:50px}
+@media(max-width:480px){.zx-location-picker .zx-location-options{max-height:42vh}.zx-location-picker .zx-location-name{font-size:14px}.zx-location-picker .zx-location-status{font-size:12px}}

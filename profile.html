@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-BvR2bOARYQaI/gX9L65kpoBA5Q0EM5ugwgNojrwZE1o=' 'sha256-9j+EDZ6NSLLy5LIkSlrWglJGFyHvWOkfp865SBJU52o=' 'sha256-4tV3PEdWa4XgUr/IDBHSDCVO9Mhev3qHEmtikafwan4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; worker-src 'none';">
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="./test-simulation-ui.css?v=b6b50a83e516">
+<script src="./test-simulation-bootstrap.js?v=2810cda6917b"></script>
+<script src="./test-simulation-fixtures.js?v=f8683e1cccc9"></script>
+<script src="./test-simulation-api.js?v=fb4b721e444c"></script>
+<script src="./test-simulation-ui.js?v=cb0320981fdc"></script>
+<script>window.ZX_PRIVATE_REPORT_BUILD=true;</script>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+<script data-zx-runtime-load-guard>(function runtimeLoadGuard(required) {
+  'use strict';
+  const allowed = new Set(required.map(src => new URL(src, location.href).href));
+  const failed = new Set();
+  let panel, message, button, busy = false;
+  function show() {
+    if (panel || !document.body || !failed.size) return;
+    panel = document.createElement('dialog');
+    panel.id = 'zx-runtime-load-error';
+    panel.setAttribute('aria-labelledby', 'zx-runtime-load-title');
+    panel.style.cssText = 'width:min(380px,calc(100vw - 40px));box-sizing:border-box;padding:24px;border:1px solid #C9A85C;border-radius:16px;background:#0E1220;color:#E8E4D8;font:16px/1.7 system-ui,sans-serif;box-shadow:0 12px 60px #0008';
+    const title = document.createElement('h2');
+    title.id = 'zx-runtime-load-title';
+    title.textContent = '页面未能完整加载';
+    title.style.cssText = 'margin:0 0 8px;font-size:20px';
+    message = document.createElement('p');
+    message.textContent = '请重新加载后继续。';
+    message.style.cssText = 'margin:0 0 20px';
+    button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = '重新加载';
+    button.style.cssText = 'min-height:44px;width:100%;padding:10px 20px;border:0;border-radius:24px;background:#C9A85C;color:#0E1220;font:inherit;cursor:pointer';
+    button.addEventListener('click', async () => {
+      if (busy) return;
+      busy = true; button.disabled = true; button.textContent = '正在重试…';
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 8000);
+      try {
+        // WebKit can retain a failed preload across a normal reload. Re-fetching
+        // the exact failed URL first clears that cache without changing the URL,
+        // chart selection, consent, account state or any stored business action.
+        await Promise.all([...failed].map(async url => {
+          const response = await fetch(url, {method:'GET', cache:'reload', credentials:'omit', redirect:'error', mode:'same-origin', signal:controller.signal});
+          if (!response.ok) throw new Error('STATIC_SCRIPT_UNAVAILABLE');
+          await response.arrayBuffer();
+        }));
+        location.reload();
+      } catch (_) {
+        controller.abort();
+        message.textContent = '仍未加载成功，请稍后重试。';
+        busy = false; button.disabled = false; button.textContent = '重新加载';
+      } finally { clearTimeout(timer); }
+    });
+    panel.addEventListener('cancel', event => event.preventDefault());
+    panel.append(title, message, button);
+    document.body.append(panel);
+    panel.showModal();
+  }
+  window.addEventListener('error', event => {
+    const target = event.target;
+    if (!target || target.tagName !== 'SCRIPT' || !allowed.has(target.src)) return;
+    failed.add(target.src);
+    show();
+  }, true);
+  document.addEventListener('DOMContentLoaded', show, {once:true});
+})(["./public-config.js?v=7751013955c9","./minimum-age.js?v=96cd776ebf44","./privacy-consent.js?v=e9d931611689","./member.js?v=d9b22aa237d2","./display-profile.js?v=642992651d04","./paid-reports.js?v=d7056ff086e1","./paid-h5.js?v=2983f9adf0f9","./bazi-engine.js?v=2f507cc27577","./birth-location-picker.js?v=3d149d3ae64c","./chart-vault.js?v=000920572654","./profile-purchase.js?v=f109ff9f9e79","./profile-recharge.js?v=9ed98193c27a","./synastry-policy.js?v=a56f5400e4ec","./profile-gift.js?v=0949b4f7c89e","./synastry-opening.js?v=7a0b7689ab85","./profile-social.js?v=1ab630b5ac3b","./profile-managed-synastry.js?v=743e89933f77","./profile.js?v=2f569e29f1d1"]);</script>
+<link rel="preload" as="script" href="./public-config.js?v=7751013955c9" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./minimum-age.js?v=96cd776ebf44" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./privacy-consent.js?v=e9d931611689" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./member.js?v=d9b22aa237d2" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./display-profile.js?v=642992651d04" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./paid-reports.js?v=d7056ff086e1" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./paid-h5.js?v=2983f9adf0f9" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./bazi-engine.js?v=2f507cc27577" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./birth-location-picker.js?v=3d149d3ae64c" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./chart-vault.js?v=000920572654" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./profile-purchase.js?v=f109ff9f9e79" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./profile-recharge.js?v=9ed98193c27a" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./synastry-policy.js?v=a56f5400e4ec" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./profile-gift.js?v=0949b4f7c89e" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./synastry-opening.js?v=7a0b7689ab85" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./profile-social.js?v=1ab630b5ac3b" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./profile-managed-synastry.js?v=743e89933f77" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./profile.js?v=2f569e29f1d1" data-zx-runtime-preload>
+<meta name="referrer" content="no-referrer">
+<style id="zx-frame-guard">html{visibility:hidden!important}</style>
+<script>(function(){var guard=document.getElementById('zx-frame-guard');if(window.self===window.top){guard.remove();return;}document.documentElement.setAttribute('aria-hidden','true');window.addEventListener('DOMContentLoaded',function(){document.body.replaceChildren();});})();</script>
+  <meta name="theme-color" content="#0e1220">
+  <meta name="description" content="查看与修改知星昵称，管理你的图谱、问星次数、合盘和邀请。">
+  <title>我的资料｜知星</title>
+  <link rel="stylesheet" href="./profile.css?v=32c134ed08ae">
+  <link rel="stylesheet" href="./profile-managed-synastry.css?v=179ee47c2899">
+  <link rel="stylesheet" href="./synastry-opening.css?v=3753255138a4">
+  <link rel="stylesheet" href="./profile-gift.css?v=3af8d5af1cf3">
+  <link rel="stylesheet" href="./birth-location-picker.css?v=544f244a033d">
+</head>
+<body>
+  <canvas id="profile-starfield" aria-hidden="true"></canvas>
+  <a class="skip-link" href="#main">跳到我的资料</a>
+  <div class="profile-shell">
+    <nav class="topbar" aria-label="页面导航">
+      <a class="brand" href="./app.html#result" data-home-link aria-label="知星，返回日主页">
+        <svg viewBox="0 0 128 128" aria-hidden="true" focusable="false"><path d="M26 38A47 47 0 1 0 102 38" fill="none" stroke="currentColor" stroke-width="4"/><path d="M64 12V33M53 23H75M21 64H36M92 64H107M64 91V108" fill="none" stroke="currentColor" stroke-width="3"/><path d="M64 38L85 84L64 74L43 84Z" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/><circle cx="64" cy="62" r="5" fill="currentColor"/></svg>
+        <span>知星</span>
+      </a>
+      <a class="back-link" href="./app.html#result" data-home-link><span aria-hidden="true">←</span> 返回日主页</a>
+    </nav>
+
+    <main id="main">
+      <header class="page-heading">
+        <h1>我的资料</h1>
+        <button class="profile-refresh" id="refresh-profile" type="button" aria-label="刷新资料">刷新 <span aria-hidden="true">↻</span></button>
+      </header>
+
+      <section class="identity" id="profile-identity" aria-label="当前图谱">
+        <span class="avatar" id="profile-avatar" aria-hidden="true">星</span>
+        <div class="identity-copy">
+          <span class="identity-label">当前图谱</span>
+          <h2 id="profile-name">尚未设置昵称</h2>
+          <p id="profile-status">正在读取你的资料…</p>
+        </div>
+        <button class="text-button" type="button" id="edit-profile-name">修改昵称 <span aria-hidden="true">↗</span></button>
+        <p class="identity-note" id="profile-name-note"></p>
+      </section>
+
+      <p class="notice" id="profile-notice" role="status" aria-live="polite" hidden></p>
+
+      <section class="empty-state" id="profile-gate" aria-labelledby="profile-gate-title" hidden>
+        <span class="empty-symbol" aria-hidden="true">✦</span>
+        <h2 id="profile-gate-title">先建立你的基础图谱</h2>
+        <p>保存你的图谱，随时回来查看。</p>
+        <a class="button primary" href="./app.html" data-home-link>去填写资料</a>
+      </section>
+
+      <div id="profile-content" hidden>
+        <section class="panel chart-library" aria-labelledby="chart-library-title">
+          <div class="section-heading"><h2 id="chart-library-title">我的图谱</h2><span class="small-label" id="chart-capacity">基础图谱 0 / 2</span></div>
+          <details class="storage-rules"><summary>保存说明</summary><p class="section-description" id="chart-library-note">免费保存2张基础图谱，主动删除前一直保留。已购报告另行保存，不占名额。</p></details>
+          <div id="chart-library-list" class="chart-library-list"></div>
+          <div class="chart-library-footer"><a id="add-chart-action" class="button" href="./app.html?new-chart=1">添加图谱</a><a id="save-current-chart" class="text-button" href="./app.html?save-last=1" hidden>保存当前临时图谱</a></div>
+          <p class="quiet" id="chart-capacity-help"></p>
+        </section>
+        <div class="overview-grid">
+          <section class="panel report-panel" aria-labelledby="report-title">
+            <div class="section-heading">
+              <h2 id="report-title">深度报告</h2>
+              <span class="state-tag" id="report-state">正在读取</span>
+            </div>
+            <div class="base-chart" hidden><span id="base-chart-label">正在读取图谱状态</span></div>
+            <p class="quiet" id="chart-summary"></p>
+            <div class="report-detail">
+              <p id="report-description">正在确认你的报告状态…</p>
+            </div>
+            <a class="button" id="report-action" href="#purchase-report">购买深度报告 <span aria-hidden="true">→</span></a>
+          </section>
+
+          <section class="panel ask-panel" id="ask-section" aria-labelledby="ask-title">
+            <div class="section-heading">
+              <h2 id="ask-title">问星次数</h2>
+            </div>
+            <label class="report-picker" id="report-select-field" for="report-select" hidden>选择报告
+              <select id="report-select" aria-describedby="ask-detail"></select>
+            </label>
+            <div class="credit-value"><strong id="ask-count">0</strong><span>次可用</span></div>
+            <p id="ask-detail">正在读取可用次数…</p>
+            <div class="actions">
+              <a class="button" id="ask-action" href="./report.html#deep">去问星</a>
+              <a class="text-button" id="recharge-action" href="#ask-section">问星充值 <span aria-hidden="true">→</span></a>
+            </div>
+          </section>
+        </div>
+
+        <section class="panel relationship-panel" aria-labelledby="synastry-title">
+          <div class="section-heading">
+            <h2 id="synastry-title">合盘与邀请</h2>
+            <span class="state-tag" id="synastry-state">正在读取</span>
+          </div>
+          <p class="section-description" id="synastry-description">在这里查看你与他人的合盘记录。</p>
+          <div id="synastry-records" class="record-list"></div>
+          <button class="menu-row managed-synastry-entry" type="button" id="managed-synastry-action">
+            <span class="row-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="8" cy="10" r="5"/><circle cx="16" cy="14" r="5"/><path d="M11 7l2 2M11 15l2 2"/></svg></span>
+            <span class="row-copy"><strong>选择两张图谱合盘</strong></span><span class="row-arrow" aria-hidden="true">→</span>
+          </button>
+          <button class="menu-row" type="button" id="gift-records-action" hidden><span class="row-copy"><strong>赠送记录</strong></span><span class="row-arrow" aria-hidden="true">→</span></button>
+          <div class="relationship-links">
+            <button class="menu-row" type="button" id="synastry-action">
+              <span class="row-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 4H5v16h14V4h-3M9 3h6v4H9zM8 12h8M8 16h5"/></svg></span>
+              <span class="row-copy"><strong>合盘记录</strong></span>
+              <span class="row-arrow" aria-hidden="true">→</span>
+            </button>
+            <button class="menu-row" type="button" id="invite-action">
+              <span class="row-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 6h18v13H3zM3 6l9 7 9-7M3 19l6-6M21 19l-6-6"/></svg></span>
+              <span class="row-copy"><strong>我的邀请</strong></span>
+              <span class="row-arrow" aria-hidden="true">→</span>
+            </button>
+          </div>
+          <p class="section-footnote" id="invite-description">可以先查看邀请；生成合盘需要双方的深度报告与各自同意。</p>
+        </section>
+
+        <section class="discovery" aria-labelledby="discovery-title">
+          <h2 class="group-label" id="discovery-title">更多探索</h2>
+          <a class="menu-row guanzhai-link" href="https://sam-rylynn.github.io/guanzhai/?from=zhixing" target="_blank" rel="noopener noreferrer">
+            <span class="row-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8M5 9v12h14V9M9 21v-8h6v8"/></svg></span>
+            <span class="row-copy"><strong>观宅 <span class="row-subtitle">· 看看居住空间</span></strong><small>资料独立保存，跳转不传递出生信息。</small></span>
+            <span class="row-arrow" aria-hidden="true">↗</span>
+          </a>
+        </section>
+
+        <details class="account-center" id="profile-account">
+          <summary><span id="account-center-title">账号、订单与售后</span><span class="account-summary-state" id="profile-account-label">恢复已购记录</span></summary>
+          <a class="text-button" id="return-synastry" href="./synastry.html" hidden>返回合盘 →</a>
+          <section class="panel" id="account-status" aria-labelledby="accountTitle">
+            <div class="section-heading"><h3 id="accountTitle">正在读取账号状态</h3><span class="state-tag" id="accountBadge">正在读取</span></div>
+            <p class="state-body" id="accountBody">你的本机图谱可以继续使用。</p><div class="actions" id="accountActions"></div>
+          </section>
+          <section class="panel" id="order-center" aria-labelledby="orderTitle">
+            <div class="section-heading"><h3 id="orderTitle">我的订单</h3><span class="state-tag" id="orderBadge">待登录</span></div>
+            <h4 id="orderStateTitle">登录后查看订单</h4><p class="state-body" id="orderStateBody">在这里查询支付、交付与退款进度。</p>
+            <div class="actions" id="orderActions"></div><p class="live" id="orderLive" role="status"></p><div class="order-list" id="orderList"></div><div id="orderServiceLinks"></div>
+          </section>
+          <details class="account-security"><summary>账号与安全</summary>
+            <section class="panel" id="delete-account" aria-labelledby="deleteTitle" hidden>
+              <h3 id="deleteTitle">注销账号</h3><p class="state-body" id="deleteBody">注销前先处理退款，确认后云端记录将无法恢复。</p>
+              <div class="actions" id="deleteActions"></div><p class="live" id="deleteLive" role="status"></p>
+            </section>
+            <p class="quiet">本机图谱可在上方逐张删除。<a href="./privacy.html">隐私与资料管理</a></p>
+          </details>
+        </details>
+      </div>
+
+      <noscript><p class="notice">请开启浏览器的 JavaScript，以查看资料与记录。<a href="./app.html">返回知星</a></p></noscript>
+    </main>
+
+    <footer class="page-footer">
+      <a href="./app.html#result" data-home-link>返回日主页</a>
+      <span aria-hidden="true">·</span>
+      <a href="./privacy.html">隐私政策</a>
+      <p>以易理观己，以星盘为证。</p>
+    <p class="filing-note">贵州天云稀泉科技有限公司 · <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">黔ICP备2026013593号-1</a></p></footer>
+  </div>
+
+  <dialog id="profile-name-dialog" aria-labelledby="profile-name-title" aria-describedby="profile-name-help">
+    <form class="dialog-body" id="profile-name-form">
+      <p class="eyebrow">我的资料</p>
+      <h2 id="profile-name-title">修改昵称</h2>
+      <p class="dialog-copy" id="profile-name-help">修改当前图谱的昵称，最多20字。仅保存在本浏览器。</p>
+      <label class="field-label" for="profile-name-input">怎么称呼你</label>
+      <input id="profile-name-input" name="displayName" autocomplete="nickname" maxlength="80" placeholder="输入昵称，最多 20 字" aria-describedby="profile-name-error" autofocus>
+      <p class="field-error" id="profile-name-error" role="alert"></p>
+      <div class="dialog-actions">
+        <button class="button" id="profile-name-cancel" type="button">取消</button>
+        <button class="button primary" type="submit">保存昵称</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="remove-chart-dialog" aria-labelledby="remove-chart-title">
+    <div class="dialog-body"><h2 id="remove-chart-title">删除这张本机图谱？</h2><p class="dialog-copy" id="remove-chart-copy"></p><p class="field-error" id="remove-chart-error" role="alert"></p>
+      <div class="dialog-actions"><button type="button" class="button" id="remove-chart-cancel">取消</button><button type="button" class="button" id="remove-chart-confirm">确认删除本机图谱</button></div>
+    </div>
+  </dialog>
+
+  <dialog id="social-detail" aria-labelledby="social-title">
+    <div class="dialog-body">
+      <div class="section-heading"><h2 id="social-title">合盘记录</h2><button class="close-button" type="button" id="social-close" aria-label="关闭">×</button></div>
+      <div id="social-body" class="social-body"></div>
+    </div>
+  </dialog>
+
+  <script src="./public-config.js?v=7751013955c9"></script>
+  <script src="./minimum-age.js?v=96cd776ebf44"></script>
+  <script src="./privacy-consent.js?v=e9d931611689"></script>
+  <script src="./member.js?v=d9b22aa237d2"></script>
+  <script src="./display-profile.js?v=642992651d04"></script>
+  <script src="./paid-reports.js?v=d7056ff086e1"></script>
+  <script src="./paid-h5.js?v=2983f9adf0f9"></script>
+  <script src="./bazi-engine.js?v=2f507cc27577"></script>
+  <script src="./birth-location-picker.js?v=3d149d3ae64c"></script>
+  <script src="./chart-vault.js?v=000920572654"></script>
+  <script src="./profile-purchase.js?v=f109ff9f9e79"></script>
+  <script src="./profile-recharge.js?v=9ed98193c27a"></script>
+  <script src="./synastry-policy.js?v=a56f5400e4ec"></script>
+  <script src="./profile-gift.js?v=0949b4f7c89e"></script>
+  <script src="./synastry-opening.js?v=7a0b7689ab85"></script>
+  <script src="./profile-social.js?v=1ab630b5ac3b"></script>
+  <script src="./profile-managed-synastry.js?v=743e89933f77"></script>
+  <script src="./profile.js?v=2f569e29f1d1"></script>
+</body>
+</html>

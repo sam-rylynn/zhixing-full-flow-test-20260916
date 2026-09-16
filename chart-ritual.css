@@ -1,0 +1,19 @@
+/* One brief, skippable entrance into the already calculated chart. */
+.zx-cr{position:relative;isolation:isolate;width:100%;max-width:640px;margin:0 auto;color:#e8e4d8;text-align:center;contain:layout paint}
+.zx-cr__scene{position:relative;width:100%;height:clamp(300px,95vw,440px);overflow:hidden;background:radial-gradient(ellipse at 50% 48%,rgba(201,168,92,.055),transparent 65%)}
+.zx-cr__canvas{display:block;width:100%;height:100%;pointer-events:none}
+.zx-cr__identity{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:24px 18px 50px;pointer-events:none}
+.zx-cr__source{font-family:var(--sans,"PingFang SC",sans-serif);color:#c7b787;font-size:.875rem;line-height:1.5;letter-spacing:.16em;margin:0 0 12px}
+.zx-cr__master{display:block;max-width:100%;font-family:var(--serif,"Songti SC",serif);font-size:clamp(54px,18vw,88px);font-weight:600;line-height:1.25;letter-spacing:.12em;text-indent:.12em;color:#f2ddab;text-shadow:0 0 26px rgba(201,168,92,.22);overflow-wrap:anywhere}
+.zx-cr__sun{font-family:var(--sans,"PingFang SC",sans-serif);color:#d4cbb6;font-size:.875rem;line-height:1.7;margin:13px 0 0;max-width:90%;overflow-wrap:anywhere}
+.zx-cr__footer{position:relative;margin-top:-14px;padding:0 16px 12px}
+.zx-cr__stage{margin:0;color:#e8e4d8;font-family:var(--serif,"Songti SC",serif);font-size:1.0625rem;line-height:1.7;letter-spacing:.18em;text-indent:.18em}
+.zx-cr__skip{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-width:116px;min-height:44px;margin-top:12px;padding:8px 16px;border:1px solid rgba(201,168,92,.45);border-radius:999px;background:transparent;color:#d5c7a4;font:inherit;font-size:.8125rem;line-height:1.5;cursor:pointer;touch-action:manipulation;transition:background-color 150ms ease-out,color 150ms ease-out}
+.zx-cr__skip::after{content:"→";font-family:system-ui,sans-serif;font-size:1rem}
+.zx-cr__skip:hover{background:rgba(201,168,92,.1);color:#f2ddab}
+.zx-cr__skip:active{background:rgba(201,168,92,.17)}
+.zx-cr__skip:focus-visible{outline:2px solid #f2ddab;outline-offset:4px}
+.zx-cr--static .zx-cr__scene{height:240px}
+.zx-cr--static .zx-cr__canvas{visibility:hidden}
+@media(max-width:359px){.zx-cr__scene{height:310px}.zx-cr__master{font-size:64px}}
+@media(prefers-reduced-motion:reduce){.zx-cr__skip{transition:none}.zx-cr__identity{transform:none!important;opacity:1!important}.zx-cr__scene{height:240px}}

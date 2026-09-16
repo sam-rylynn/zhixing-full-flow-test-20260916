@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-BvR2bOARYQaI/gX9L65kpoBA5Q0EM5ugwgNojrwZE1o=' 'sha256-LnngpelqcGZHuQWmf1xr40rW2AKivTRhA2KjRs8KGC4=' 'sha256-4tV3PEdWa4XgUr/IDBHSDCVO9Mhev3qHEmtikafwan4='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; worker-src 'none';">
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="./test-simulation-ui.css?v=b6b50a83e516">
+<script src="./test-simulation-bootstrap.js?v=2810cda6917b"></script>
+<script src="./test-simulation-fixtures.js?v=f8683e1cccc9"></script>
+<script src="./test-simulation-api.js?v=fb4b721e444c"></script>
+<script src="./test-simulation-ui.js?v=cb0320981fdc"></script>
+<script>window.ZX_PRIVATE_REPORT_BUILD=true;</script>
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+<script data-zx-runtime-load-guard>(function runtimeLoadGuard(required) {
+  'use strict';
+  const allowed = new Set(required.map(src => new URL(src, location.href).href));
+  const failed = new Set();
+  let panel, message, button, busy = false;
+  function show() {
+    if (panel || !document.body || !failed.size) return;
+    panel = document.createElement('dialog');
+    panel.id = 'zx-runtime-load-error';
+    panel.setAttribute('aria-labelledby', 'zx-runtime-load-title');
+    panel.style.cssText = 'width:min(380px,calc(100vw - 40px));box-sizing:border-box;padding:24px;border:1px solid #C9A85C;border-radius:16px;background:#0E1220;color:#E8E4D8;font:16px/1.7 system-ui,sans-serif;box-shadow:0 12px 60px #0008';
+    const title = document.createElement('h2');
+    title.id = 'zx-runtime-load-title';
+    title.textContent = '页面未能完整加载';
+    title.style.cssText = 'margin:0 0 8px;font-size:20px';
+    message = document.createElement('p');
+    message.textContent = '请重新加载后继续。';
+    message.style.cssText = 'margin:0 0 20px';
+    button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = '重新加载';
+    button.style.cssText = 'min-height:44px;width:100%;padding:10px 20px;border:0;border-radius:24px;background:#C9A85C;color:#0E1220;font:inherit;cursor:pointer';
+    button.addEventListener('click', async () => {
+      if (busy) return;
+      busy = true; button.disabled = true; button.textContent = '正在重试…';
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 8000);
+      try {
+        // WebKit can retain a failed preload across a normal reload. Re-fetching
+        // the exact failed URL first clears that cache without changing the URL,
+        // chart selection, consent, account state or any stored business action.
+        await Promise.all([...failed].map(async url => {
+          const response = await fetch(url, {method:'GET', cache:'reload', credentials:'omit', redirect:'error', mode:'same-origin', signal:controller.signal});
+          if (!response.ok) throw new Error('STATIC_SCRIPT_UNAVAILABLE');
+          await response.arrayBuffer();
+        }));
+        location.reload();
+      } catch (_) {
+        controller.abort();
+        message.textContent = '仍未加载成功，请稍后重试。';
+        busy = false; button.disabled = false; button.textContent = '重新加载';
+      } finally { clearTimeout(timer); }
+    });
+    panel.addEventListener('cancel', event => event.preventDefault());
+    panel.append(title, message, button);
+    document.body.append(panel);
+    panel.showModal();
+  }
+  window.addEventListener('error', event => {
+    const target = event.target;
+    if (!target || target.tagName !== 'SCRIPT' || !allowed.has(target.src)) return;
+    failed.add(target.src);
+    show();
+  }, true);
+  document.addEventListener('DOMContentLoaded', show, {once:true});
+})(["./public-config.js?v=7751013955c9","./minimum-age.js?v=96cd776ebf44","./privacy-consent.js?v=e9d931611689","./member.js?v=d9b22aa237d2","./display-profile.js?v=642992651d04","./paid-reports.js?v=d7056ff086e1","./paid-h5.js?v=2983f9adf0f9","./chart-vault.js?v=000920572654","./bazi-engine.js?v=2f507cc27577","./birth-location-picker.js?v=3d149d3ae64c","./synastry-policy.js?v=a56f5400e4ec","./synastry-engine.js?v=cface8bdbb48","./profile-gift.js?v=0949b4f7c89e","./synastry-opening.js?v=7a0b7689ab85","./profile-social.js?v=1ab630b5ac3b","./synastry-poster.js?v=889f1cea1d1e","./synastry.js?v=0f8a448bfe08"]);</script>
+<link rel="preload" as="script" href="./public-config.js?v=7751013955c9" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./minimum-age.js?v=96cd776ebf44" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./privacy-consent.js?v=e9d931611689" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./member.js?v=d9b22aa237d2" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./display-profile.js?v=642992651d04" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./paid-reports.js?v=d7056ff086e1" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./paid-h5.js?v=2983f9adf0f9" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./chart-vault.js?v=000920572654" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./bazi-engine.js?v=2f507cc27577" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./birth-location-picker.js?v=3d149d3ae64c" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./synastry-policy.js?v=a56f5400e4ec" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./synastry-engine.js?v=cface8bdbb48" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./profile-gift.js?v=0949b4f7c89e" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./synastry-opening.js?v=7a0b7689ab85" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./profile-social.js?v=1ab630b5ac3b" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./synastry-poster.js?v=889f1cea1d1e" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./synastry.js?v=0f8a448bfe08" data-zx-runtime-preload>
+<meta name="referrer" content="no-referrer">
+<style id="zx-frame-guard">html{visibility:hidden!important}</style>
+<script>(function(){var guard=document.getElementById('zx-frame-guard');if(window.self===window.top){guard.remove();return;}document.documentElement.setAttribute('aria-hidden','true');window.addEventListener('DOMContentLoaded',function(){document.body.replaceChildren();});})();</script>
+  <meta name="theme-color" content="#0E1220">
+  <meta name="description" content="看看五种合拍类型，邀请一个人，一起读懂彼此。">
+  <title>知星 · 谁与你更合拍</title>
+  <link rel="stylesheet" href="./synastry.css?v=31712517b681">
+  <link rel="stylesheet" href="./synastry-opening.css?v=3753255138a4">
+  <link rel="stylesheet" href="./profile-gift.css?v=3af8d5af1cf3">
+  <link rel="stylesheet" href="./birth-location-picker.css?v=544f244a033d">
+</head>
+<body>
+  <a class="skip" href="#app">跳到主要内容</a>
+  <div class="site-wrap">
+    <div class="home-return-bar"><a id="synastry-home-link" href="./app.html?private-report=1#result"><span aria-hidden="true">←</span> 返回日主页</a><a id="synastry-profile-link" href="./profile.html?private-report=1">我的资料 <span aria-hidden="true">↗</span></a></div>
+    <header class="site-header"><a class="brand" href="#home" aria-label="知星，合盘个人入口">知<span>星</span><small>以易理观己，以星盘为证</small></a><div class="header-links"><a class="my-pair-link" href="#connections">我的合盘 <span aria-hidden="true">›</span></a></div></header>
+    <nav class="prototype-nav" aria-label="主要页面"><a href="#home" data-nav="home">个人入口</a><a href="#rank" data-nav="rank">合拍类型</a><a href="#invite" data-nav="invite">邀请 TA</a><a href="#connections" data-nav="connections">合盘解读</a></nav>
+    <main id="app" tabindex="-1" aria-busy="true"><p class="synastry-state" role="status">正在读取当前图谱…</p></main>
+    <footer class="site-footer"><span>知星 · 读懂自己，也读懂彼此</span><p>内容用于个人发展与文化研究。类型探索不代表真实用户匹配或关系成功率；请结合实际相处判断。</p><p class="filing-note">贵州天云稀泉科技有限公司 · <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">黔ICP备2026013593号-1</a></p></footer>
+  </div>
+  <dialog id="social-detail" class="social-dialog" aria-labelledby="social-title"><div class="dialog-top"><h2 id="social-title">合盘记录</h2><button class="icon-button" type="button" id="social-close" aria-label="关闭">×</button></div><div id="social-body"></div></dialog>
+  <dialog id="rank-dialog" aria-labelledby="rank-dialog-title"><div class="dialog-top"><h2 id="rank-dialog-title">怎么看这五种推荐</h2><button class="icon-button" type="button" data-close-dialog aria-label="关闭">×</button></div><div class="type-about"><p>这是为你推荐的五种盘面类型，同一代号内并列。想到某个人时，仍值得看看属于你们的实际合盘。</p><p>八字关系是主轴，太阳星座是辅证。具体的相处方式，需要你们在真实交流中核对。</p><p>想到一个人时，可以发出邀请。双方分别同意并选定有效报告后，再看属于你们的共同解读。</p></div></dialog>
+  <noscript><p class="noscript">请启用 JavaScript 读取你的图谱与合盘入口。</p></noscript>
+  <script src="./public-config.js?v=7751013955c9"></script>
+  <script src="./minimum-age.js?v=96cd776ebf44"></script>
+  <script src="./privacy-consent.js?v=e9d931611689"></script>
+  <script src="./member.js?v=d9b22aa237d2"></script>
+  <script src="./display-profile.js?v=642992651d04"></script>
+  <script src="./paid-reports.js?v=d7056ff086e1"></script>
+  <script src="./paid-h5.js?v=2983f9adf0f9"></script>
+  <script src="./chart-vault.js?v=000920572654"></script>
+  <script src="./bazi-engine.js?v=2f507cc27577"></script>
+  <script src="./birth-location-picker.js?v=3d149d3ae64c"></script>
+  <script src="./synastry-policy.js?v=a56f5400e4ec"></script>
+  <script src="./synastry-engine.js?v=cface8bdbb48"></script>
+  <script src="./profile-gift.js?v=0949b4f7c89e"></script>
+  <script src="./synastry-opening.js?v=7a0b7689ab85"></script>
+  <script src="./profile-social.js?v=1ab630b5ac3b"></script>
+  <script src="./synastry-poster.js?v=889f1cea1d1e"></script>
+  <script src="./synastry.js?v=0f8a448bfe08"></script>
+</body>
+</html>

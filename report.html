@@ -1,0 +1,2874 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-BvR2bOARYQaI/gX9L65kpoBA5Q0EM5ugwgNojrwZE1o=' 'sha256-8Ojc3B63hSvTR0UI2v/REdAaH4i7zmTbPVqPU5avwlQ=' 'sha256-4tV3PEdWa4XgUr/IDBHSDCVO9Mhev3qHEmtikafwan4=' 'sha256-Qtm7PgAN8+EjNcVuwPpCWMEykLJBpqFP28oxJBj9kX0='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; worker-src 'none';">
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="./test-simulation-ui.css?v=b6b50a83e516">
+<script src="./test-simulation-bootstrap.js?v=2810cda6917b"></script>
+<script src="./test-simulation-fixtures.js?v=f8683e1cccc9"></script>
+<script src="./test-simulation-api.js?v=fb4b721e444c"></script>
+<script src="./test-simulation-ui.js?v=cb0320981fdc"></script>
+<script>window.ZX_PRIVATE_REPORT_BUILD=true;</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+<script data-zx-runtime-load-guard>(function runtimeLoadGuard(required) {
+  'use strict';
+  const allowed = new Set(required.map(src => new URL(src, location.href).href));
+  const failed = new Set();
+  let panel, message, button, busy = false;
+  function show() {
+    if (panel || !document.body || !failed.size) return;
+    panel = document.createElement('dialog');
+    panel.id = 'zx-runtime-load-error';
+    panel.setAttribute('aria-labelledby', 'zx-runtime-load-title');
+    panel.style.cssText = 'width:min(380px,calc(100vw - 40px));box-sizing:border-box;padding:24px;border:1px solid #C9A85C;border-radius:16px;background:#0E1220;color:#E8E4D8;font:16px/1.7 system-ui,sans-serif;box-shadow:0 12px 60px #0008';
+    const title = document.createElement('h2');
+    title.id = 'zx-runtime-load-title';
+    title.textContent = '页面未能完整加载';
+    title.style.cssText = 'margin:0 0 8px;font-size:20px';
+    message = document.createElement('p');
+    message.textContent = '请重新加载后继续。';
+    message.style.cssText = 'margin:0 0 20px';
+    button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = '重新加载';
+    button.style.cssText = 'min-height:44px;width:100%;padding:10px 20px;border:0;border-radius:24px;background:#C9A85C;color:#0E1220;font:inherit;cursor:pointer';
+    button.addEventListener('click', async () => {
+      if (busy) return;
+      busy = true; button.disabled = true; button.textContent = '正在重试…';
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 8000);
+      try {
+        // WebKit can retain a failed preload across a normal reload. Re-fetching
+        // the exact failed URL first clears that cache without changing the URL,
+        // chart selection, consent, account state or any stored business action.
+        await Promise.all([...failed].map(async url => {
+          const response = await fetch(url, {method:'GET', cache:'reload', credentials:'omit', redirect:'error', mode:'same-origin', signal:controller.signal});
+          if (!response.ok) throw new Error('STATIC_SCRIPT_UNAVAILABLE');
+          await response.arrayBuffer();
+        }));
+        location.reload();
+      } catch (_) {
+        controller.abort();
+        message.textContent = '仍未加载成功，请稍后重试。';
+        busy = false; button.disabled = false; button.textContent = '重新加载';
+      } finally { clearTimeout(timer); }
+    });
+    panel.addEventListener('cancel', event => event.preventDefault());
+    panel.append(title, message, button);
+    document.body.append(panel);
+    panel.showModal();
+  }
+  window.addEventListener('error', event => {
+    const target = event.target;
+    if (!target || target.tagName !== 'SCRIPT' || !allowed.has(target.src)) return;
+    failed.add(target.src);
+    show();
+  }, true);
+  document.addEventListener('DOMContentLoaded', show, {once:true});
+})(["./minimum-age.js?v=96cd776ebf44","./public-config.js?v=7751013955c9","./privacy-consent.js?v=e9d931611689","./member.js?v=d9b22aa237d2","./paid-h5.js?v=2983f9adf0f9","./paid-reports.js?v=d7056ff086e1","./report-download.js?v=5e9d071a3ee9","./bazi-engine.js?v=2f507cc27577","./birth-location-picker.js?v=3d149d3ae64c","./content-home-v1.js?v=ee4855e88ba1"]);</script>
+<meta name="referrer" content="no-referrer">
+<style id="zx-frame-guard">html{visibility:hidden!important}</style>
+<script>(function(){var guard=document.getElementById('zx-frame-guard');if(window.self===window.top){guard.remove();return;}document.documentElement.setAttribute('aria-hidden','true');window.addEventListener('DOMContentLoaded',function(){document.body.replaceChildren();});})();</script>
+<meta name="theme-color" content="#0E1220">
+<title>知星｜深度发展报告</title>
+<style>
+  :root{--ink:#0E1220;--panel:#1A2233;--gold:#C9A85C;--gold-dim:#b8a36c;--moon:#E8E4D8;--cinnabar:#B5472F;--mist:#98A2B3;
+    --serif:"Noto Serif SC","Songti SC","STSong",serif;--sans:"Noto Sans SC","PingFang SC",sans-serif}
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html{background:#080c18}
+  body{position:relative;isolation:isolate;min-height:100vh;
+    background:linear-gradient(180deg,#0b1020 0%,var(--ink) 38%,#090e1a 100%);
+    color:var(--moon);font-family:var(--sans);font-size:15px;line-height:1.9;overflow-x:hidden}
+  /* 与日主页同源的玄夜星野：纯 CSS 静态层，不注册动画或滚动监听。 */
+  body::before,body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none}
+  body::before{opacity:.3;background-image:
+    radial-gradient(circle,rgba(232,228,216,.72) 0 .7px,transparent 1.15px),
+    radial-gradient(circle,rgba(201,168,92,.58) 0 .65px,transparent 1.1px),
+    radial-gradient(circle,rgba(166,185,220,.45) 0 .55px,transparent 1px);
+    background-size:137px 151px,223px 197px,89px 113px;
+    background-position:19px 23px,71px 91px,37px 61px}
+  body::after{background:
+    radial-gradient(ellipse at 50% 5%,rgba(54,69,111,.28) 0%,rgba(37,49,80,.12) 32%,transparent 68%),
+    radial-gradient(ellipse at 7% 56%,rgba(73,61,102,.09) 0%,transparent 44%),
+    radial-gradient(ellipse at 96% 82%,rgba(35,73,92,.08) 0%,transparent 42%)}
+  .wrap{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:0 18px 70px}
+  .wrap > .card,.wrap > .meta{max-width:640px;margin-left:auto;margin-right:auto}
+  #out > .card{max-width:640px;margin-left:auto;margin-right:auto}
+  .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+
+  .report-topbar{position:absolute;top:max(14px,env(safe-area-inset-top));left:50%;z-index:6;display:flex;align-items:center;justify-content:space-between;width:min(calc(100% - 28px),960px);transform:translateX(-50%);pointer-events:none}
+  .report-topbar a,.report-topbar button{pointer-events:auto;display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 14px;border:1px solid rgba(201,168,92,.34);border-radius:999px;background:rgba(14,18,32,.94);color:#efe5c9;font-family:var(--serif);font-size:12.5px;font-weight:700;line-height:1;text-decoration:none}
+  .skip-link{position:fixed;left:16px;top:12px;z-index:120;padding:10px 14px;border-radius:6px;background:#f0d695;color:#0e1220;font-weight:700;text-decoration:none;transform:translateY(-160%)}
+  .skip-link:focus{transform:none;outline:3px solid #0e1220;outline-offset:2px}
+  .report-topbar button{width:auto;margin:0;letter-spacing:.02em;text-indent:0;cursor:pointer}
+  .report-topbar .report-my-link{color:var(--gold);border-color:rgba(201,168,92,.5)}
+
+  /* 报告首屏:直接给出身份、判断与五章入口，不再增设封面。 */
+  .report-hero{max-width:760px;margin:0 auto;padding:84px 18px 22px;text-align:center}
+  .badge{display:inline-block;font-size:10px;letter-spacing:.3em;text-indent:.3em;color:var(--gold);border:1px solid rgba(201,168,92,.5);border-radius:99px;padding:2px 12px;margin-bottom:12px}
+  h1{font-family:var(--serif);font-weight:700;font-size:clamp(26px,7vw,32px);letter-spacing:.22em;text-indent:.22em;
+    background:linear-gradient(180deg,#fff6dd,#e9d09a 45%,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .report-identity{margin-top:13px;color:#f4e8c8;font-family:var(--serif);font-size:clamp(19px,5vw,25px);font-weight:700;line-height:1.45}
+  .report-judgement{max-width:620px;margin:8px auto 0;color:#d3d9e2;font-size:15px;line-height:1.8}
+  .report-precision{max-width:660px;margin:14px auto 0;padding:11px 13px;border:1px solid rgba(201,168,92,.35);border-left:3px solid var(--gold);border-radius:8px;background:rgba(201,168,92,.075);color:#d7dde7;font-size:12.5px;line-height:1.75;text-align:left}
+  .report-precision.is-blocking{border-color:rgba(181,71,47,.5);border-left-color:var(--cinnabar);background:rgba(181,71,47,.12);color:#efc0b6}
+  .report-hero-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin-top:18px}
+  .report-hero-nav[hidden],.report-precision[hidden],.endviz[hidden]{display:none}
+  .report-hero-link{display:flex;align-items:center;justify-content:center;min-height:44px;padding:7px 4px;border:1px solid rgba(201,168,92,.24);border-radius:8px;background:rgba(201,168,92,.045);color:#d8deE7;font-family:var(--serif);font-size:12.5px;line-height:1.3;cursor:pointer}
+  .report-hero-link.active{border-color:var(--gold);background:rgba(201,168,92,.14);color:#f6e8bc}
+  .report-hero-link:focus-visible{outline:2px solid #f0d695;outline-offset:3px}
+
+  .card{background:rgba(26,34,51,.95);border:1px solid rgba(201,168,92,.22);border-radius:12px;margin-top:20px;overflow:hidden}
+  .card .pad{padding:20px 18px}
+  .card h2{font-family:var(--serif);font-size:17px;color:var(--gold);letter-spacing:.16em;margin-bottom:12px;
+    display:flex;align-items:center;justify-content:center;gap:12px;white-space:nowrap;text-indent:.16em}
+  .card h2::before,.card h2::after{content:"";flex:0 1 32px;min-width:8px;height:1px}
+  .card h2::before{background:linear-gradient(90deg,transparent,rgba(201,168,92,.5))}
+  .card h2::after{background:linear-gradient(90deg,rgba(201,168,92,.5),transparent)}
+  .chapviz{position:relative;height:220px;overflow:hidden}
+  /* 竖版配图:不放大,改缓慢上下平移(Ken Burns 竖扫),一个周期内从上扫到下,看全图与细节 */
+  .chapviz img{width:100%;height:100%;object-fit:cover;object-position:50% 50%}
+  .chapviz::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(26,34,51,0) 40%,var(--panel))}
+  .src{display:inline-block;font-size:12px;color:var(--mist);line-height:1.7;margin-bottom:10px}
+  /* 正文末尾「来源:…」弱化:更小更浅,不抢解读本身 */
+  .src-inline{font-size:12px;color:#aeb6c3;letter-spacing:.02em}
+
+  /* 命盘书册内置目录、进度与两个独立工具。 */
+  .nav-status{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:10px;padding:9px 7px 11px;border-top:1px solid rgba(201,168,92,.12);border-bottom:1px solid rgba(201,168,92,.12)}
+  .nav-current{min-width:0}
+  .nav-current span{display:block;color:var(--mist);font-size:10.5px;line-height:1.4;letter-spacing:.08em}
+  .nav-current strong{display:block;margin-top:3px;color:#f6efdb;font-family:var(--serif);font-size:13px;line-height:1.5;font-weight:600;overflow-wrap:anywhere}
+  .nav-position{display:flex;align-items:center;gap:8px;color:#a99a73;font-size:11px;white-space:nowrap}
+  .reader-menu-toggle{display:none;min-width:44px;min-height:44px;padding:0 10px;border:1px solid rgba(201,168,92,.3);border-radius:8px;background:#10182a;color:var(--gold);font-family:var(--serif);font-size:12px;cursor:pointer}
+  .secnav{display:block;margin-top:4px;border-top:1px solid rgba(201,168,92,.12)}
+  .nav-group{display:grid;grid-template-columns:46px minmax(0,1fr);gap:12px;align-items:start;padding:11px 0;border-bottom:1px solid rgba(201,168,92,.12)}
+  .nav-group-name{padding-top:8px;color:var(--gold-dim);font-family:var(--serif);font-size:12.5px;font-weight:600;line-height:1.5;letter-spacing:0}
+  .nav-group-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:4px 6px}
+  .nav-section-link{display:flex;align-items:center;min-width:0;min-height:38px;padding:4px 7px 4px 9px;border-left:2px solid transparent;
+    color:#c8cfda;font-family:var(--serif);font-size:13.5px;font-weight:600;line-height:1.45;letter-spacing:0;text-decoration:none;overflow-wrap:anywhere;
+    transition:background .18s,color .18s,border-color .18s,transform .18s}
+  .nav-label{min-width:0}
+  .nav-glyph{flex:0 0 20px;width:20px;height:20px;margin-right:9px;color:var(--gold-dim);fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+  .nav-state-icon{display:inline-grid;place-items:center;flex:0 0 18px;width:18px;height:18px;margin-left:auto;color:var(--gold-dim);font-family:var(--sans);font-size:16px;font-weight:500;line-height:1}
+  .nav-state-icon::before{content:"›"}
+  .nav-section-link:hover{color:#f3e6bd;background:rgba(201,168,92,.055);transform:translateX(2px)}
+  .nav-section-link.active{color:var(--gold);background:rgba(201,168,92,.09);border-left-color:var(--gold)}
+  .nav-section-link.active .nav-state-icon{color:var(--gold)}
+  .reader-tool-link{min-height:44px;border:1px solid transparent;border-left-width:1px;border-radius:8px;padding:8px 10px;font-size:13px;letter-spacing:.08em;transform:none}
+  .reader-tool-link .nav-state-icon::before{content:"进入";font-size:9px;letter-spacing:0}
+  .reader-tool-deep{color:#f2d990;border-color:rgba(201,168,92,.48);background:linear-gradient(135deg,rgba(201,168,92,.2),rgba(201,168,92,.07))}
+  .reader-tool-qian{color:#e6b8aa;border-color:rgba(181,71,47,.5);background:linear-gradient(135deg,rgba(181,71,47,.2),rgba(181,71,47,.06))}
+  .reader-tool-deep.active{color:#251d0c;background:var(--gold);border-color:var(--gold)}
+  .reader-tool-qian.active{color:#fff1ea;background:#8e3828;border-color:#b5472f}
+  .reader-tool-link:hover{transform:none}
+  .nav-section-link:focus-visible,.navedit .text-button:focus-visible,.report-topbar a:focus-visible,.report-topbar button:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid #f0d695;outline-offset:3px}
+  .navedit{display:block;text-align:center;margin-top:12px;color:var(--mist);font-size:12px}
+  .navedit .text-button{display:inline;width:auto;min-height:36px;margin:0;padding:0 4px;border:0;background:none;box-shadow:none;color:#d6b967;font-family:inherit;font-size:inherit;font-weight:600;letter-spacing:0;text-decoration:underline;text-underline-offset:2px;text-indent:0;cursor:pointer}
+  .card[id]{scroll-margin-top:24px}
+
+  /* 命盘书册:报告正文不再纵向堆叠,桌面目录 + 单章正文,手机一次只呈现一章。 */
+  .report-reader{display:grid;grid-template-columns:200px minmax(0,1fr);gap:18px;align-items:start;margin-top:0}
+  .reader-rail{position:sticky;top:18px;z-index:8}
+  .reader-rail-inner{padding:15px 12px;border:1px solid rgba(201,168,92,.22);border-radius:12px;background:rgba(20,28,48,.96)}
+  .reader-rail-label{display:block;padding:0 7px 10px;color:var(--gold);font-family:var(--serif);font-size:13px;font-weight:700;letter-spacing:.12em}
+  .reader-rail .secnav{margin:0;border-top:1px solid rgba(201,168,92,.12)}
+  .reader-rail .nav-group{display:block;padding:9px 0}
+  .reader-rail .nav-group-name{padding:0 7px 5px;color:var(--gold-dim);font-size:10.5px;letter-spacing:.08em}
+  .reader-rail .nav-group-links{display:block}
+  .reader-rail .nav-section-link{min-height:40px;padding:6px 8px 6px 10px;font-size:13px}
+  .reader-mobile-nav{display:none}
+  .reader-main{min-width:0}
+  .reader-stage{min-height:420px}
+  .reader-page.card{max-width:720px;margin:0 auto}
+  .reader-page[hidden]{display:none}
+  .reader-page.is-active{animation:reader-in .24s ease-out}
+  @keyframes reader-in{from{opacity:.35;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .reader-controls{position:static;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:10px;width:min(100%,720px);margin:18px auto 0;padding:9px 0}
+  .reader-control{display:flex;align-items:center;justify-content:center;min-width:0;min-height:48px;height:auto;padding:8px 11px;border:1px solid rgba(201,168,92,.3);border-radius:8px;background:#10182a;color:var(--gold);font-family:var(--serif);font-size:12.5px;font-weight:700;line-height:1.45;letter-spacing:.02em;text-indent:0}
+  .reader-control-next{background:var(--gold);border-color:var(--gold);color:#241c0c}
+  .reader-control:disabled{opacity:.32;cursor:not-allowed}
+  .reader-control[hidden],.reader-position[hidden]{display:none}
+  .reader-position{min-width:46px;color:#948968;font-size:11px;line-height:1;text-align:center;white-space:nowrap}
+  .reader-return{grid-column:1/-1;width:100%;min-height:48px;border:1px solid rgba(201,168,92,.34);border-radius:8px;background:#10182a;color:var(--gold);font-family:var(--serif);font-size:13px;font-weight:700;letter-spacing:.04em;text-indent:0}
+  .reader-return[hidden]{display:none}
+  .reader-tools{width:min(100%,720px);margin:14px auto 0;padding:16px 0 0;border-top:1px solid rgba(201,168,92,.16)}
+  .reader-tools-label{display:block;margin-bottom:8px;color:var(--mist);font-size:11px;letter-spacing:.08em}
+  .reader-tools-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+  .reader-tools .reader-tool-link{justify-content:center;border-left-width:1px}
+  .reader-edit-dock{width:min(100%,720px);margin:12px auto 0;padding:0 4px}
+  .reader-edit-dock .navedit{margin-top:0}
+  .reader-edit-dock .row{margin-top:10px;padding:12px;border:1px solid rgba(201,168,92,.16);border-radius:10px;background:rgba(20,28,48,.72)}
+  .report-chapter>.pad>h2{justify-content:flex-start;white-space:normal;text-indent:0;font-size:22px;letter-spacing:.06em}
+  .report-chapter>.pad>h2:focus-visible{outline:2px solid rgba(240,214,149,.72);outline-offset:5px;border-radius:3px}
+  .report-chapter>.pad>h2::before{display:none}
+  .report-chapter>.pad>h2::after{flex:1;max-width:80px}
+  .report-chapter>.pad{padding:26px 24px}
+  h1,h2,h3,h4{text-wrap:balance}
+  .chapter-block{margin-top:28px}
+  .chapter-block:first-child{margin-top:4px}
+  .chapter-block h3{margin:0 0 10px;color:#e4cf95;font-family:var(--serif);font-size:17px;line-height:1.55}
+  .chapter-block h4{margin:18px 0 8px;color:#d9c486;font-family:var(--serif);font-size:15px;line-height:1.6}
+  .heading-line{display:block}
+  .chapter-block p{margin:0 0 13px;color:var(--moon);font-size:16px;line-height:1.85;text-align:left}
+  .chapter-block ul,.chapter-block ol{margin:8px 0 14px;padding-left:1.35em}
+  .chapter-block li{margin:7px 0;color:#d7dde5;font-size:15px;line-height:1.75}
+  .chapter-block blockquote{margin:14px 0 18px;padding:12px 0;border-top:1px solid rgba(201,168,92,.2);border-bottom:1px solid rgba(201,168,92,.2);color:#f4ead1;font-family:var(--serif);font-size:17px;line-height:1.8}
+  .chapter-source,.chapter-block p.chapter-source{margin:22px 0 0;padding-top:12px;border-top:1px solid rgba(201,168,92,.16);color:#aeb6c3;font-size:12px;line-height:1.7}
+  p.method-reference,.chapter-block p.method-reference{margin:10px 0 0;color:#a4adbc;font-size:12px;line-height:1.7;overflow-wrap:anywhere}
+  .heading-eyebrow{display:block;margin-bottom:4px;color:var(--gold-dim);font-family:var(--sans);font-size:11px;font-weight:500;letter-spacing:.06em}
+  .structured-list-scenes{list-style:none;padding-left:0!important}
+  .structured-list-scenes li{padding:12px 0;border-top:1px dashed rgba(201,168,92,.16)}
+  .structured-list-scenes li:first-child{border-top:0}
+  .structured-list-scenes strong,.structured-list-scenes span{display:block}
+  .structured-list-scenes strong{margin-bottom:4px;color:#f0dfb3;font-family:var(--serif)}
+  .report-guide{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:8px 0 18px!important;padding:0!important;list-style:none}
+  .report-guide li{margin:0;padding:12px 0;border-top:1px solid rgba(201,168,92,.2)}
+  .report-guide strong,.report-guide span{display:block}
+  .report-guide strong{margin-bottom:4px;color:#f0dfb3;font-family:var(--serif);font-size:15px}
+  .report-guide span{color:#d7dde5;font-size:14px;line-height:1.7}
+  .identity-summary{padding:0 0 18px;border-bottom:1px solid rgba(201,168,92,.2)}
+  .identity-summary strong{display:block;color:#f4e7c4;font-family:var(--serif);font-size:20px;line-height:1.5}
+  .identity-summary p{margin:7px 0 0}
+  .identity-keywords{display:flex;flex-wrap:wrap;gap:8px;margin-top:11px}
+  .identity-keywords span{padding:4px 10px;border:1px solid rgba(201,168,92,.25);border-radius:999px;color:var(--gold-dim);font-size:12px}
+  .relation-levels{margin-top:18px}
+  .relation-level-buttons{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+  .relation-level-button{min-height:48px;padding:7px;border:1px solid rgba(201,168,92,.24);border-radius:8px;background:#10182a;color:#d4dbe5;font-size:13px;cursor:pointer}
+  .relation-level-button[aria-expanded="true"]{border-color:var(--gold);background:rgba(201,168,92,.15);color:#f4e5bb}
+  .relation-level-panel{margin-top:16px;padding:0}
+  .relation-level-panel[hidden]{display:none}
+  .action-opening,.action-pair,.action-tradeoff,.action-rhythm{margin-top:24px;padding:20px 0 0;border-top:1px solid rgba(201,168,92,.16)}
+  .action-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .action-pair>section+section{border-left:1px solid rgba(201,168,92,.16);padding-left:14px}
+  .action-tradeoff{border-color:rgba(224,191,112,.42)}
+  .action-rule{color:#fff0c5!important;font-family:var(--serif);font-size:18px!important;font-weight:700}
+  .rhythm-steps{list-style:none!important;counter-reset:rhythm;margin-left:0!important;padding-left:0!important}
+  .rhythm-steps li{counter-increment:rhythm;position:relative;padding-left:42px;min-height:34px}
+  .rhythm-steps li::before{content:counter(rhythm);position:absolute;left:0;top:0;display:grid;place-items:center;width:28px;height:28px;border:1px solid rgba(201,168,92,.45);border-radius:50%;color:var(--gold);font-family:var(--serif);font-size:12px}
+  .deep-composer{margin-top:10px}
+  .deep-composer input{width:100%}
+  .deep-composer button{width:100%;margin-top:8px}
+  .deep-composer.is-followup{margin-top:18px;padding-top:16px;border-top:1px dashed rgba(201,168,92,.24)}
+  .deep-closed{margin-top:22px;padding-top:18px;border-top:1px solid rgba(201,168,92,.2)}
+  .deep-closed h3{display:flex;align-items:center;gap:6px;color:#e4cf95;font-family:var(--serif);font-size:17px}
+  .deep-closed p{margin-top:8px;color:#b9c2d0;font-size:14px;line-height:1.8}
+  .deep-closed .member-actions{gap:10px;margin-top:16px}
+  .deep-closed button,.deep-closed a{height:auto;min-height:44px;padding:8px 14px;border:1px solid rgba(201,168,92,.35);border-radius:999px;background:none;color:var(--gold);font-family:var(--sans);font-size:13px;font-weight:500;letter-spacing:0;text-indent:0;text-decoration:none}
+
+  /* 星盘轮 */
+  .wheel{display:block;width:min(100%,320px);margin:8px auto 4px}
+  .wheelkey{margin:4px 0 12px;text-align:center}
+  .wheelkey li{display:block}
+
+  /* 星盘参照:三点深读 + 融合 */
+  .astro-item{padding:14px 0;border-top:1px dashed rgba(201,168,92,.16)}
+  .astro-item:first-child{border-top:none}
+  .astro-h{font-family:var(--serif);font-size:15px;color:var(--moon);margin-bottom:8px;display:flex;align-items:baseline;flex-wrap:wrap;gap:6px}
+  .astro-sym{color:var(--gold);font-size:15px}
+  .astro-role{font-size:10.5px;color:var(--gold-dim);font-family:var(--sans);letter-spacing:.02em}
+  .astro-approx{font-size:10px;color:var(--mist)}
+  .astro-cross{background:rgba(201,168,92,.07);border-left:2px solid rgba(201,168,92,.5);border-radius:0 6px 6px 0;padding:8px 12px;margin:8px 0!important}
+  .astro-tag{color:var(--gold);font-weight:700;margin-right:6px}
+  .astro-adv{color:#b9c2d0;font-size:13.5px}
+  .astro-close{color:var(--mist);font-size:13px;margin-top:6px!important;border-top:1px dashed rgba(201,168,92,.16);padding-top:12px}
+  .astro-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;list-style:none;margin:12px 0 0!important;padding:0!important}
+  .astro-facts li{display:grid;gap:2px;padding:10px;border:1px solid rgba(201,168,92,.18);border-radius:8px;background:rgba(16,24,42,.58);text-align:center}
+  .astro-facts span{color:var(--gold-dim);font-size:11px}
+  .astro-facts strong{color:#f1e4c4;font-family:var(--serif);font-size:15px}
+  .ten-god-summary{margin-top:14px;padding:13px;border:1px solid rgba(201,168,92,.16);border-radius:9px;background:rgba(16,24,42,.52)}
+  .ten-god-summary h4{margin:0 0 7px;color:#d9c486;font-family:var(--serif);font-size:14px}
+  .ten-god-summary p{margin:3px 0;color:#d7dde5;font-size:13.5px;line-height:1.7}
+  .chart-repeat-note{margin:12px 0 0;padding:10px 12px;border-left:2px solid rgba(201,168,92,.55);background:rgba(201,168,92,.06);color:#cbd2dc;font-size:12.5px;line-height:1.75}
+  .chart-basis{margin-top:13px;padding-top:11px;border-top:1px dashed rgba(201,168,92,.18)}
+  .chart-basis h4{margin:0 0 6px;color:#d9c486;font-family:var(--serif);font-size:13.5px}
+  .transition-lead{margin-bottom:5px!important;color:#ead9ae!important;font-weight:700}
+
+  /* 知星时间轴 */
+  .dy-wrap{margin:8px 0 4px}
+  .dy-title{margin:0 0 8px;color:var(--gold);font-family:var(--serif);font-size:18px;font-weight:600}
+  .dy-table{width:100%;border-collapse:collapse;text-align:center;font-family:var(--serif);font-size:13px}
+  .dy-table caption,.chart-table caption{padding:0 0 9px;color:#b7a46f;font-size:12px;line-height:1.6;text-align:left}
+  .dy-table th{color:var(--gold-dim);font-weight:400;font-size:11px;padding:6px 2px;letter-spacing:.1em;border-bottom:1px solid rgba(201,168,92,.2)}
+  .dy-table td{padding:7px 2px;border-top:1px dashed rgba(201,168,92,.13);color:var(--moon)}
+  .dy-table .dy-gz{color:var(--gold);font-weight:700}
+  .dy-table tr.dy-now td{background:rgba(201,168,92,.13)}
+  .dy-table tr.dy-now .dy-gz{background:linear-gradient(180deg,#fff6dd,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .dy-meta{text-align:center;color:var(--gold-dim);font-size:11px;margin-top:6px;letter-spacing:.08em}
+  .dy-cur{margin-top:14px;background:rgba(201,168,92,.07);border:1px solid rgba(201,168,92,.22);border-radius:10px;padding:14px 14px}
+  .dy-cur-h{font-family:var(--serif);color:var(--gold);font-size:14px;margin-bottom:8px}
+  .dy-cur-h b{background:linear-gradient(180deg,#fff6dd,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .dy-cur p{color:var(--moon);text-align:justify}
+  .dy-hint{color:var(--mist);font-size:13px;background:rgba(201,168,92,.06);border:1px dashed rgba(201,168,92,.3);border-radius:8px;padding:12px}
+  .time-stage{padding:0 0 14px;border-bottom:1px solid rgba(201,168,92,.2)}
+  .time-stage strong{display:block;color:#f4e7c4;font-family:var(--serif);font-size:19px}
+  .time-window{list-style:none;margin:12px 0 0!important;padding:0!important}
+  .time-window li{position:relative;margin:0;padding:0 0 18px 24px;border-left:1px solid rgba(201,168,92,.32)}
+  .time-window li::before{content:"";position:absolute;left:-5px;top:8px;width:9px;height:9px;border-radius:50%;background:#7d704e;border:2px solid var(--panel)}
+  .time-window li.is-current::before{background:var(--gold);box-shadow:0 0 0 4px rgba(201,168,92,.12)}
+  .time-window li:last-child{border-left-color:transparent;padding-bottom:0}
+  .time-period{display:block;color:var(--gold-dim);font-size:12px}
+  .time-ganzhi{color:#f1e5c3;font-family:var(--serif);font-size:16px;font-weight:700}
+  .timeline-details{margin-top:16px;border:1px solid rgba(201,168,92,.18);border-radius:9px;padding:0 13px;background:rgba(16,24,42,.56)}
+  .timeline-details summary{display:flex;align-items:center;min-height:48px;color:var(--gold);font-family:var(--serif);cursor:pointer}
+  .timeline-details[open] summary{border-bottom:1px solid rgba(201,168,92,.16)}
+  /* 用户确认的时间重点稿：近两年展开，十年阶段压缩，依据点击查看。 */
+  .time-focus h3.time-focus-title{font-size:22px;line-height:1.65;color:#f0dcaf;text-wrap:balance}
+  .time-focus .time-focus-lead{margin:14px 0 26px;color:#ccd0d7}
+  .time-focus-decade{padding:22px 0;border-block:1px solid rgba(201,168,92,.24)}
+  .time-focus .time-period-label{margin:0 0 6px;color:#e2c581;font-size:14px;font-weight:600}
+  .time-focus-decade h4{margin:0 0 10px;font-size:20px;line-height:1.7;color:#e8d3a2}
+  .time-focus-decade > p:not(.time-period-label){margin:0 0 13px;color:#ccd0d7}
+  .time-focus-decade > p:last-child{margin-bottom:0}
+  .time-turning-years{margin:0 0 28px;padding-top:4px}
+  .time-turning-years>h4{margin:0 0 14px;color:#f0dcaf;font-size:20px}
+  .time-turning-years>ol{margin:0;padding:0;list-style:none}
+  .time-turning-years li{display:grid;grid-template-columns:68px minmax(0,1fr);gap:18px;margin:0;padding:20px 0;border-top:1px solid rgba(201,168,92,.3)}
+  .time-turning-year{color:#f5d999;font:700 26px/1.35 var(--serif);text-shadow:0 0 12px rgba(223,184,98,.2)}
+  .time-turning-years .time-turning-kind{margin:0 0 3px;color:#c2ae7e;font-size:12px;letter-spacing:.06em}
+  .time-turning-years h5{margin:0 0 10px;color:#f0dcaf;font:650 18px/1.6 var(--serif)}
+  .time-turning-years .time-turning-basis{margin:0 0 9px;color:#adb6c4;font-size:13px;line-height:1.8}
+  .time-turning-years .time-turning-body{margin:0;color:#d5d9e1;font-size:15px}
+  .time-focus-astro{margin-top:24px;padding:18px 0 0;border-top:1px dashed rgba(201,168,92,.24)}
+  .time-focus-astro h5{margin:0 0 9px;color:#e2c581;font:600 16px/1.7 var(--serif)}
+  .time-focus-astro p:last-child{margin-bottom:0}
+  .time-focus-year{padding:36px 0 26px}
+  .time-focus-year + .time-focus-year{border-top:1px solid rgba(201,168,92,.24)}
+  .time-year-heading{display:flex;gap:22px;align-items:flex-start;margin-bottom:24px}
+  .time-year-number{flex:0 0 auto;font:700 32px/1.25 var(--serif);color:#f5d999;text-shadow:0 0 12px rgba(223,184,98,.24)}
+  .time-year-number small{display:block;margin-top:5px;color:#b4b7be;font:500 13px/1.5 var(--sans);text-shadow:none}
+  .time-year-heading h4{margin:0;color:#f0dcaf;font-size:24px;line-height:1.65;text-wrap:balance}
+  .time-focus .time-reading-label{margin:23px 0 8px;color:#e2c581;font:600 14px/1.7 var(--sans)}
+  .time-focus .time-year-why{margin:0 0 13px}
+  .time-key-phrase{font-weight:650;color:#f7e2ae;text-decoration:underline;text-decoration-color:rgba(226,197,129,.5);text-decoration-thickness:1px;text-underline-offset:.24em}
+  .time-focus .time-year-actions{margin:12px 0 0;padding-left:24px}
+  .time-year-actions li{margin:0 0 22px;padding-left:8px}
+  .time-year-actions li::marker{color:#e2c581;font-weight:600}
+  .time-year-actions h6{margin:0 0 5px;color:#ecddb9;font:600 16px/1.75 var(--sans)}
+  .time-year-actions p{margin:0}
+  .time-key-change{margin-top:20px;padding-top:17px;border-top:1px solid rgba(201,168,92,.24)}
+  .time-key-change h5{margin:0 0 8px;color:#f5d999;font:650 18px/1.65 var(--serif);text-shadow:0 0 10px rgba(223,184,98,.15)}
+  .time-key-change p{margin:0;color:#cdd0d5;font-size:15px}
+  .time-focus .time-focus-basis{margin-top:28px}
+  .time-focus-basis h4{font-size:16px}
+  .time-focus-basis h4:first-child{margin-top:0}
+  .time-focus-basis p,.time-focus-basis li{color:#bfc5cf;font-size:14px}
+  .time-focus-basis a{color:#e2c581;text-underline-offset:.25em;overflow-wrap:anywhere}
+  .time-focus-basis a:focus-visible{outline:2px solid #f3d99c;outline-offset:4px}
+  @media(max-width:600px){.time-turning-years li{grid-template-columns:58px minmax(0,1fr);gap:12px}.time-turning-year{font-size:24px}.time-year-heading{gap:16px}.time-year-number{font-size:28px}.time-year-heading h4{font-size:22px}.time-focus-year{padding-top:30px}.time-focus .time-year-actions{padding-left:20px}.time-year-actions li{padding-left:4px}}
+  @media(max-width:350px){.time-year-heading{display:block}.time-year-number{display:block;margin-bottom:12px}.time-year-number small{display:inline;margin-left:12px}}
+  .chart-details{margin-top:22px;border:1px solid rgba(201,168,92,.18);border-radius:9px;background:rgba(16,24,42,.56)}
+  .chart-details summary{display:flex;align-items:center;min-height:48px;padding:0 13px;color:var(--gold);font-family:var(--serif);cursor:pointer}
+  .chart-details[open] summary{border-bottom:1px solid rgba(201,168,92,.16)}
+  .chart-details-body{padding:14px 13px}
+  .skeleton-details .chapter-block{margin-top:0;padding-top:0;border-top:0}
+  .skeleton-details .legacy-block > h3:first-child{display:none}
+  .chart-details > summary,.timeline-details > summary{gap:12px;min-height:64px;padding-block:12px;list-style:none;border-radius:8px}
+  .chart-details > summary::-webkit-details-marker,.timeline-details > summary::-webkit-details-marker{display:none}
+  .details-title{flex:1;min-width:0;line-height:1.65;text-wrap:balance}
+  .details-cue{display:inline-flex;align-items:center;justify-content:center;gap:7px;flex-shrink:0;min-height:34px;padding:6px 10px;border:1px solid rgba(225,191,115,.6);border-radius:999px;background:rgba(201,168,92,.14);color:#f3d99c;font:500 12px/1.5 var(--sans);letter-spacing:0;white-space:nowrap}
+  .details-cue::before{content:"";width:6px;height:6px;border-radius:50%;background:#f7d78c;box-shadow:0 0 6px rgba(245,212,135,.8);animation:details-cue-glow 2.4s ease-in-out infinite}
+  .details-cue::after{content:"";width:6px;height:6px;margin-left:1px;margin-top:-3px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg);transition:transform .2s cubic-bezier(.25,1,.5,1)}
+  .details-cue-open{display:none}
+  details[open] > summary .details-cue{background:rgba(201,168,92,.07);border-color:rgba(225,191,115,.35)}
+  details[open] > summary .details-cue::before{animation:none;box-shadow:none;opacity:.65}
+  details[open] > summary .details-cue::after{transform:rotate(225deg);margin-top:3px}
+  details[open] > summary .details-cue-closed{display:none}
+  details[open] > summary .details-cue-open{display:inline}
+  .chart-details > summary:hover .details-cue,.timeline-details > summary:hover .details-cue{background:rgba(201,168,92,.24)}
+  .chart-details > summary:focus-visible,.timeline-details > summary:focus-visible{outline:2px solid #f3d99c;outline-offset:4px}
+  @keyframes details-cue-glow{0%,100%{opacity:.45}50%{opacity:1}}
+  @media(prefers-reduced-motion:reduce){.details-cue::before{animation:none}.details-cue::after{transition:none}}
+  .chart-table-scroll{overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+  .chart-table-scroll:focus-visible{outline:2px solid #f0d695;outline-offset:3px}
+  .chart-table{min-width:520px;table-layout:fixed}
+  .chart-table th,.chart-table td{padding:7px 6px;line-height:1.55;vertical-align:top}
+  .chart-table thead th:first-child,.chart-table tbody th{position:sticky;left:0;z-index:1;width:88px;background:#141c30}
+  .chart-hidden-item{display:block;white-space:nowrap}
+  .chart-hidden-item+.chart-hidden-item{margin-top:2px}
+  .chart-table-hint{display:none}
+
+  /* 今日知星卡 */
+  .qian-intro{color:var(--mist);font-size:13.5px;text-align:center;margin-top:4px}
+  .qian-draw{margin-top:12px;text-align:center;animation:qfade .7s ease}
+  @keyframes qfade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .qian-hex{font-family:var(--serif);font-size:30px;letter-spacing:.4em;text-indent:.4em;font-weight:700;
+    background:linear-gradient(180deg,#fff6dd,#e9d09a 45%,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent;
+    filter:drop-shadow(0 0 18px rgba(201,168,92,.3))}
+  .qian-omen{font-family:var(--serif);color:var(--moon);font-size:14px;letter-spacing:.06em;margin-top:8px}
+  .qian-draw .body{text-align:justify}
+  /* 今日卡片生成动效 */
+  .qian-cast{margin:20px 0 6px;text-align:center}
+  .qian-cast .tube{display:inline-grid;place-items:center;width:66px;height:66px;margin:0 auto;border-radius:50%;
+    border:1px solid rgba(201,168,92,.5);font-family:var(--serif);font-size:26px;color:var(--gold);
+    filter:drop-shadow(0 0 16px rgba(201,168,92,.35));animation:qshake .55s ease-in-out infinite}
+  .qian-cast .txt{margin-top:12px;color:var(--gold-dim);font-family:var(--serif);letter-spacing:.3em;text-indent:.3em;font-size:13px}
+  @keyframes qshake{0%,100%{transform:translateY(0) rotate(-5deg)}25%{transform:translateY(-6px) rotate(4deg)}50%{transform:translateY(0) rotate(5deg)}75%{transform:translateY(-4px) rotate(-4deg)}}
+  /* 今日知星卡分享层 */
+  #qianPosterLayer{display:block;position:fixed;inset:0;z-index:60;background:rgba(8,11,20,.92);overflow:auto;padding:24px 0}
+  #qianPosterLayer[hidden]{display:none}
+  .qp-inner{width:min(92vw,600px);margin:0 auto;padding:0 20px;text-align:center}
+  #qianCanvas{display:block;width:100%;height:auto;aspect-ratio:3/4;border-radius:12px;box-shadow:0 12px 50px rgba(0,0,0,.6)}
+  .qp-tip{color:var(--mist);font-size:12.5px;margin:12px 0}
+  .qp-actions{display:grid;gap:10px}
+  #qianShareBtn,#qianPosterClose{width:100%;margin:0 auto}
+  #qianShareStatus{min-height:1.5em;color:var(--gold-dim);font-size:12px;line-height:1.5;margin:0 0 10px}
+  @media(max-width:600px){.qp-inner{width:auto;max-width:420px;padding:0 18px}}
+  .deep-intro{color:var(--mist);font-size:13px;text-align:justify}
+  .member-box{margin-top:10px;padding:10px 12px;border:1px solid rgba(201,168,92,.18);border-radius:8px;background:rgba(201,168,92,.055)}
+  .member-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .member-title{font-family:var(--serif);color:#f6efdb;font-size:13px}
+  .member-pill{flex:none;border:1px solid rgba(201,168,92,.35);border-radius:999px;padding:3px 8px;color:var(--gold);font-size:11px}
+  .member-copy{margin-top:7px;color:#b9c2d0;font-size:12px;line-height:1.75;text-align:justify}
+  .member-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+  .member-actions:empty{display:none}
+  .member-actions a,.member-actions span{display:inline-flex;align-items:center;height:30px;border-radius:999px;border:1px solid rgba(232,228,216,.14);padding:0 10px;font-size:12px;color:var(--gold);text-decoration:none}
+  .member-actions .disabled{color:var(--mist);opacity:.65;cursor:not-allowed}
+  .deep-echo{margin-top:10px;background:rgba(201,168,92,.07);border-radius:8px;padding:10px 12px;color:#b9c2d0;font-size:13px;line-height:1.8}
+  .deep-notice{margin-top:10px;padding:10px 12px;border-left:2px solid rgba(201,168,92,.42);background:rgba(201,168,92,.045)}
+  .deep-notice p{margin:0;color:#aeb8c7;font-size:12px;line-height:1.75}
+  .deep-notice p+p{margin-top:6px}
+  .deep-policy{margin-top:7px;color:#8992a3;font-size:12px}
+  .deep-policy a{color:var(--gold);text-underline-offset:3px}
+  .ai-interaction{margin-top:10px;color:var(--gold-dim);font-size:12px}
+  .ai-label{display:inline-flex;align-items:center;margin-bottom:8px;border:1px solid rgba(201,168,92,.3);border-radius:999px;padding:2px 9px;color:var(--gold);font-size:10px;letter-spacing:.08em}
+  /* 问星 · 答复卡 */
+  .deep-ans{margin-top:12px;animation:qfade .5s ease}
+  .da-q{font-size:12.5px;color:var(--gold-dim);margin-bottom:10px;padding-left:10px;border-left:2px solid rgba(201,168,92,.4)}
+  .da-reply{font-family:var(--serif);font-size:15.5px;color:#f6efdb;line-height:1.85;margin-bottom:12px}
+  .da-part{margin:10px 0;padding:12px 14px;background:rgba(201,168,92,.05);border-radius:8px}
+  .da-label{display:inline-block;font-family:var(--serif);font-size:12px;color:var(--gold);letter-spacing:.12em;margin-bottom:6px}
+  .da-part p{text-align:justify;color:var(--moon)}
+  .da-part .src-inline{display:block;margin-top:6px}
+  .da-adv{margin:14px 0 6px}
+  .da-adv-h{font-family:var(--serif);color:var(--gold);font-size:13px;margin-bottom:6px}
+  .da-adv ul{list-style:none}
+  .da-adv li{color:var(--moon);font-size:14px;margin:7px 0;padding-left:18px;position:relative}
+  .da-adv li::before{content:"◇";position:absolute;left:0;color:var(--gold-dim)}
+  .da-caveat{color:var(--mist);font-size:12px;margin-top:10px}
+  .da-more{margin-top:16px;padding-top:12px;border-top:1px dashed rgba(201,168,92,.2);color:#b9c2d0;font-size:13px}
+  .da-more b{color:var(--gold)}
+  /* 内测:key 直接放进问星块(仅 ?lab=1 可见),避免与旧面板成两个通道 */
+  .deep-key{margin-top:10px;padding:10px 12px;background:rgba(201,168,92,.06);border:1px dashed rgba(201,168,92,.3);border-radius:8px}
+  .deep-key small{display:block;color:var(--mist);font-size:11px;margin-top:6px;line-height:1.6}
+  .body p{margin-bottom:13px;text-align:justify;white-space:pre-wrap}
+  .body p:last-child{margin-bottom:0}
+  /* 重点句字效(渲染层,不改文案库):key=亮象牙粗体,hot=鎏金粗体(每段最锋利那句) */
+  .key{font-weight:600;color:#f6efdb}
+  .key-hot{font-weight:700;color:var(--gold);text-shadow:0 0 14px rgba(201,168,92,.22)}
+  .astro-adv .key,.astro-adv .key-hot,.dy-cur .key,.dy-cur .key-hot{text-shadow:none}
+
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  input,button,textarea{height:46px;border-radius:8px;border:1px solid rgba(232,228,216,.16);background:#10182a;color:var(--moon);
+    padding:0 12px;font-size:15px;font-family:var(--sans);color-scheme:dark;-webkit-appearance:none}
+  button{background:linear-gradient(180deg,#d8b96a,var(--gold));color:#241c0c;border:none;font-family:var(--serif);font-weight:700;
+    letter-spacing:.2em;text-indent:.2em;padding:0 24px;cursor:pointer;border-radius:999px}
+  button.ghost{background:transparent;border:1px solid var(--gold);color:var(--gold)}
+
+  table{width:100%;border-collapse:collapse;text-align:center;font-family:var(--serif)}
+  th{color:var(--gold-dim);font-weight:400;font-size:11.5px;padding:5px 0;letter-spacing:.2em}
+  td{padding:4px 0;border-top:1px dashed rgba(201,168,92,.15)}
+  td.gz{font-size:25px;font-weight:700;background:linear-gradient(180deg,#fff6dd,#e9d09a 40%,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+  td.tg{font-size:11.5px;color:var(--mist)}
+  .warn{background:rgba(181,71,47,.12);border:1px solid rgba(181,71,47,.4);border-radius:8px;padding:9px 12px;font-size:12.5px;color:#e0a294;margin-top:10px}
+
+  .bar{display:flex;align-items:center;gap:10px;margin:6px 0}
+  .bar b{width:2em;font-family:var(--serif);font-weight:400}
+  .bar .track{flex:1;height:9px;background:#10182a;border-radius:99px;overflow:hidden}
+  .bar .fill{height:100%;border-radius:99px;transition:width 1.2s cubic-bezier(.2,.7,.3,1)}
+  .basis li{color:var(--mist);font-size:12.5px;list-style:none}
+  .basis li::before{content:"· ";color:var(--gold-dim)}
+
+  /* 卦象 */
+  .hex{display:flex;flex-direction:column-reverse;gap:7px;width:120px;margin:14px auto}
+  .yao{display:flex;gap:10px;height:10px}
+  .yao i{flex:1;background:var(--gold);border-radius:2px;opacity:.85}
+  .yao.mov i{background:var(--cinnabar);box-shadow:0 0 10px rgba(181,71,47,.6)}
+  .hexname{text-align:center;font-family:var(--serif);font-size:20px;letter-spacing:.2em;
+    background:linear-gradient(180deg,#fff6dd,var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  /* AI 生成中:浑天仪 */
+  @keyframes breathe2{0%,100%{opacity:.45}50%{opacity:1}}
+
+  .rip{position:fixed;border:1.5px solid rgba(201,168,92,.7);border-radius:50%;transform:translate(-50%,-50%);pointer-events:none;
+    animation:rp .85s ease-out forwards;z-index:70}
+  @keyframes rp{from{width:10px;height:10px;opacity:.9}to{width:42vmin;height:42vmin;opacity:0}}
+
+  .meta{color:#98a2b3;font-size:11.5px;line-height:1.9;margin-top:24px;text-align:center}
+  .filing-footer{position:relative;z-index:1;max-width:640px;margin:0 auto;padding:0 18px max(36px,env(safe-area-inset-bottom));color:#98a2b3;font-size:11.5px;line-height:1.9;text-align:center}
+  .filing-link{display:inline-flex;align-items:center;min-height:32px;color:inherit;text-decoration:underline;text-underline-offset:3px}
+  .filing-link:focus-visible{outline:2px solid #f0d695;outline-offset:3px}
+  .endviz{position:relative;height:230px;overflow:hidden;border-radius:12px;margin-top:22px}
+  .endviz img{width:100%;height:100%;object-fit:cover;object-position:50% 42%}
+  .endviz::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(14,18,32,.15),rgba(14,18,32,.75))}
+  .endviz .cap{position:absolute;left:0;right:0;bottom:12px;text-align:center;font-family:var(--serif);color:var(--moon);font-size:13px;letter-spacing:.24em;text-indent:.24em}
+  small.note{display:block;color:var(--mist);font-size:11.5px;margin-top:8px;line-height:1.7}
+  @media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+  @media(max-width:420px){
+    .nav-group{grid-template-columns:42px minmax(0,1fr);gap:8px}
+    .report-hero-nav{gap:5px}
+    .report-hero-link{font-size:11.5px}
+    .chart-details-body{padding-inline:8px}
+    .chart-table-hint{display:block;margin:0 0 7px;color:var(--mist);font-size:12px;line-height:1.6}
+  }
+  @media(max-width:760px){
+    body::before{opacity:.25}
+    .wrap{max-width:640px}
+    .report-hero{padding:74px 16px 17px}
+    .report-topbar{top:max(10px,env(safe-area-inset-top));width:calc(100% - 22px)}
+    .report-topbar a,.report-topbar button{min-height:44px;padding:0 12px;font-size:12px}
+    .report-reader{display:block}
+    .reader-rail{position:sticky;top:0;z-index:9;margin:0 -18px 12px;padding:8px 18px;background:linear-gradient(180deg,var(--ink) 84%,rgba(14,18,32,0))}
+    .reader-rail-inner{padding:9px 11px;border-radius:0 0 11px 11px;background:rgba(20,28,48,.97)}
+    .reader-rail-label,.reader-rail .secnav{display:none}
+    .reader-rail .nav-status{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:10px;padding:3px 0 9px;border-top:0}
+    .reader-menu-toggle{display:inline-flex;align-items:center;justify-content:center}
+    .reader-mobile-nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:8px}
+    .reader-mobile-nav[hidden]{display:none}
+    .reader-mobile-nav-item{flex-direction:column;justify-content:center;min-height:62px;padding:6px 3px;border:1px solid rgba(201,168,92,.2);border-radius:8px;background:#10182a;color:#bfc6d2;font-family:var(--sans);font-size:10.5px;font-weight:500;line-height:1.2;text-align:center;transform:none}
+    .reader-mobile-nav-item .nav-glyph{width:20px;height:20px;margin:0 0 5px;color:#8d805e}
+    .reader-mobile-nav-item .nav-label{display:block;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .reader-mobile-nav-item .nav-state-icon{display:none}
+    .reader-mobile-nav-item:hover{transform:none}
+    .reader-mobile-nav-item.active{border-color:rgba(224,191,112,.78);border-left-color:rgba(224,191,112,.78);background:rgba(201,168,92,.15);color:#f5ead0}
+    .reader-mobile-nav-item.active .nav-glyph{color:#e1bd69}
+    .reader-stage{min-height:360px}
+    .reader-controls{margin-top:12px;padding:7px 0}
+    .report-chapter>.pad{padding:22px 18px}
+    .reader-control{min-height:46px;padding:7px 8px;font-size:12px}
+    .reader-edit-dock{margin-top:10px;padding:0}
+    .report-guide{grid-template-columns:1fr}
+    .action-pair{grid-template-columns:1fr}
+    .action-pair>section+section{border-left:0;border-top:1px solid rgba(201,168,92,.16);padding:14px 0 0}
+    .astro-facts{grid-template-columns:1fr}
+    .dy-table,.dy-table tbody,.dy-table tr,.dy-table td{display:block;width:100%}
+    .dy-table thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+    .dy-table tr{margin:10px 0;padding:10px 12px;border:1px solid rgba(201,168,92,.15);border-radius:8px;background:rgba(16,24,42,.58);text-align:left}
+    .dy-table td{display:grid;grid-template-columns:76px minmax(0,1fr);gap:8px;padding:3px 0;border:0}
+    .dy-table td::before{content:attr(data-label);color:var(--gold-dim);font-size:11px;letter-spacing:.04em}
+  }
+  @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}body::before,body::after{animation:none;transform:none}.chapviz img,.txt,.qian-cast .tube,.qian-draw,.deep-ans,.reader-page.is-active,.rip{animation:none;transition:none}.bar .fill,.reader-tool-link,.nav-section-link,.report-hero-link{transition:none;transform:none}}
+  #ageGateBlock,#reportAccessGateBlock,#reportPrivacyGateBlock,#aiProcessingGateBlock{position:fixed;inset:0;z-index:100;display:grid;place-items:center;padding:24px;background:rgba(14,18,32,.96)}
+  #ageGateBlock[hidden],#reportAccessGateBlock[hidden],#reportPrivacyGateBlock[hidden],#aiProcessingGateBlock[hidden]{display:none}
+  .age-gate-card{width:min(100%,420px);max-height:calc(100vh - 48px);max-height:calc(100dvh - 48px);overflow-y:auto;overscroll-behavior:contain;padding:28px 24px;border:1px solid rgba(201,168,92,.3);background:var(--panel);border-radius:12px;text-align:center}
+  .age-gate-card .badge{margin-bottom:14px}
+  .age-gate-card h2{font-size:25px;letter-spacing:.08em;text-indent:0}
+  .age-gate-card p{margin-top:14px;color:#b8c0cd}
+  .age-gate-card a{display:inline-flex;align-items:center;justify-content:center;min-height:44px;margin-top:18px;padding:8px 18px;border:1px solid var(--gold);border-radius:999px;color:var(--gold);text-decoration:none;font-size:13px}
+  .age-gate-card .gate-detail{font-size:12.5px;line-height:1.8;text-align:left}
+  .gate-check{display:flex;align-items:flex-start;gap:9px;margin-top:16px;color:#d0d6df;font-size:12.5px;line-height:1.7;text-align:left;cursor:pointer}
+  .gate-check input{width:18px;height:18px;margin-top:2px;accent-color:var(--gold);flex:0 0 auto}
+  .gate-actions{display:grid;grid-template-columns:1fr;gap:9px;margin-top:18px}
+  .gate-actions button{width:100%;margin:0}
+  .gate-actions button:disabled{opacity:.45;cursor:not-allowed}
+  .age-gate-card p.gate-error{color:#f2b9a8;font-size:13px;line-height:1.7;text-align:left}
+  .gate-error[hidden]{display:none}
+  .gate-policy{font-size:12px!important;text-align:center!important}.gate-policy a{margin-top:0;padding:0;border:0;border-radius:0;text-decoration:underline}
+  .private-state{padding:28px;text-align:left;border:1px solid rgba(201,168,92,.3);border-radius:16px;background:var(--card);margin:20px 0}
+  .private-state h2{font-family:var(--serif);color:var(--gold);font-size:24px;margin:0 0 14px}
+  .private-state p{line-height:1.9;color:var(--text)}
+  .private-state .member-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
+  .private-state a,.private-state button{font-size:14px;letter-spacing:0;text-indent:0;min-height:44px}
+  .private-answer-actions{display:flex;justify-content:flex-end;margin-top:12px}
+  .private-answer-actions button{font-size:12px;letter-spacing:0;text-indent:0;padding:8px 14px}
+  #privateReportState[hidden]{display:none}
+  #reportStatus{min-height:1.6em;margin-top:8px;color:#f0cf9b;font-size:12px;text-align:center}
+  .report-download{margin:22px 0;padding:18px 20px;border:1px solid rgba(201,168,92,.3);border-radius:14px;background:rgba(26,34,51,.7)}
+  .report-download[hidden]{display:none}
+  .report-download .member-actions{display:flex;flex-wrap:wrap;gap:10px;margin:0}
+  .report-download button{font-size:14px;letter-spacing:0;text-indent:0;min-height:44px}
+  .report-download p{margin:10px 0 0;font-size:12px;line-height:1.7;color:var(--mist)}
+  #reportDownloadStatus:empty{display:none}
+  .report-management{margin:22px 0;padding:18px 20px;border:1px solid rgba(201,168,92,.3);border-radius:14px;background:rgba(26,34,51,.7)}
+  .report-management[hidden],.report-management [hidden]{display:none}
+  .report-management summary{cursor:pointer;color:var(--gold);font-size:15px}
+  .report-management p,.report-management label{font-size:13px;line-height:1.8}
+  .report-management .member-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+  .report-management button{font-size:13px;letter-spacing:0;text-indent:0;min-height:44px}
+  .report-management .correction-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+  .report-management .correction-fields label{display:grid;gap:6px;min-width:0}
+  .report-management input:not([type=checkbox]):not([type=radio]),.report-management select{width:100%;min-width:0;min-height:44px}
+  .report-management .confirm-check{display:flex;gap:8px;align-items:flex-start;margin:12px 0}
+  .report-management input[type=checkbox],.report-management input[type=radio]{flex:none;width:18px;height:18px;margin-top:3px}
+  #reportLifecycleStatus:empty{display:none}
+</style>
+<link rel="stylesheet" href="./birth-location-picker.css?v=544f244a033d">
+<link rel="stylesheet" href="./synastry-entry.css?v=0989e4f9c19f">
+</head>
+<body class="synastry-approved-layout">
+<a class="skip-link" href="#reportMain">跳到报告正文</a>
+<nav class="report-topbar" aria-label="报告快捷导航">
+  <button id="reportBack" type="button">‹ 返回日主页</button>
+  <a class="report-my-link" href="./profile.html">我的资料</a>
+</nav>
+<main class="wrap" id="reportMain">
+  <header class="report-hero" aria-labelledby="reportTitle">
+    <span class="badge">个 人 发 展 参 考</span>
+    <h1 id="reportTitle">深度发展报告</h1>
+    <p class="report-identity" id="reportIdentity">正在生成组合身份</p>
+    <p class="report-judgement" id="reportJudgement">正在整理这张盘最值得先看的核心判断。</p>
+    <div class="report-precision" id="reportPrecision" role="alert" hidden></div>
+    <nav class="report-hero-nav synastry-nav" aria-label="报告章节与合盘入口">
+      <button class="report-hero-link" type="button" data-nav-target="sec-overview">总览</button>
+      <button class="report-hero-link" type="button" data-nav-target="sec-chart">盘面</button>
+      <button class="report-hero-link" type="button" data-nav-target="sec-relation">关系</button>
+      <button class="report-hero-link" type="button" data-nav-target="sec-action">行动</button>
+      <button class="report-hero-link" type="button" data-nav-target="sec-phase">时间</button>
+      <a class="report-hero-link synastry-nav-link" id="reportSynastryLink" href="./synastry.html#invite">合盘</a>
+    </nav>
+  </header>
+
+  <section id="privateReportState" class="private-state" role="status" aria-live="polite" hidden></section>
+  <section id="reportDownload" class="report-download" aria-label="保存完整报告" hidden>
+    <div class="member-actions"><button id="reportDownloadHtml" type="button">下载完整报告 · HTML</button><button id="reportPrint" class="ghost" type="button">打印／另存为 PDF</button></div>
+    <p>HTML 文件可离线阅读，包含完整五章；不包含问星记录。PDF 请在浏览器打印窗口中选择“另存为 PDF”。已下载文件无法远程撤回，请妥善保管。</p>
+    <p id="reportDownloadStatus" role="status" aria-live="polite"></p>
+  </section>
+  <section id="reportManagement" class="report-management" aria-label="报告保存与资料管理" hidden>
+    <p id="reportStorageExpiry"></p>
+    <details id="reportManageDetails"><summary>报告资料管理 · 点击展开</summary>
+      <p id="reportCorrectionAvailability"></p>
+      <div class="member-actions"><button id="reportCorrectionOpen" type="button" class="ghost">免费更正出生资料</button><button id="reportDeleteOpen" type="button" class="ghost">删除这份报告</button></div>
+      <form id="reportCorrectionForm" hidden>
+        <p>每份已购报告可免费更正一次。更正后，原报告及其问星记录会永久删除，无法恢复；新报告沿用原保存到期日，问星次数不重赠。已下载到设备的文件不受影响。</p>
+        <div class="correction-fields">
+          <label>出生日期<input id="correctionDate" type="date" required></label><label>出生时间<input id="correctionTime" type="time" required></label>
+          <label class="birth-location-field">出生地点<input id="correctionCity" type="text" data-birth-location placeholder="输入省、市、区县" maxlength="60" required autocomplete="off"></label><label>出生性别<select id="correctionGender" required><option value="">请选择</option><option value="男">男</option><option value="女">女</option></select></label>
+        </div>
+        <label class="confirm-check"><input type="radio" name="correctionSubject" value="self">更正的是我本人的资料</label>
+        <label class="confirm-check"><input type="radio" name="correctionSubject" value="other">更正的是他人的资料</label>
+        <label id="correctionPermissionRow" class="confirm-check" hidden><input id="correctionPermission" type="checkbox">我已获得对方同意，允许我提交、保存和更正其出生资料。</label>
+        <label class="confirm-check"><input id="correctionStorageConsent" type="checkbox">我同意将本次填写的出生资料发送给知星并保存到当前微信账号，用于更正这份报告。</label>
+        <label class="confirm-check"><input id="correctionDiscardConsent" type="checkbox">我确认永久删除原报告及其问星记录，并使用这一次免费更正机会。</label>
+        <div class="member-actions"><button id="reportCorrectionSubmit" type="submit" disabled>确认更正并替换原报告</button><button id="reportCorrectionCancel" type="button" class="ghost">取消</button></div>
+      </form>
+      <div id="reportDeleteConfirm" hidden>
+        <p>这份报告及其问星记录将从账号中永久删除，无法恢复。删除内容不等于申请退款；交易记录仍按规定期限保存。已下载到设备的文件需自行删除。</p>
+        <label class="confirm-check"><input id="reportDeleteConsent" type="checkbox">我确认永久删除这份报告及其问星记录，并了解删除后无法恢复。</label>
+        <div class="member-actions"><button id="reportDeleteSubmit" type="button" disabled>确认永久删除</button><button id="reportDeleteCancel" type="button" class="ghost">取消</button></div>
+      </div>
+    </details>
+    <p id="reportLifecycleStatus" role="status" aria-live="polite"></p>
+  </section>
+  <div id="out"></div>
+
+  <div class="reader-edit-dock" id="reportEditDock" hidden>
+    <small class="navedit">已按你的出生信息生成 · <button id="editLink" type="button" class="text-button" aria-expanded="false" aria-controls="editRow">出生资料有误？修改</button></small>
+    <div class="row" id="editRow" style="display:none">
+      <label class="sr-only" for="d">出生日期</label><input type="date" id="d" style="flex:1.2;min-width:150px">
+      <label class="sr-only" for="t">出生时间</label><input type="time" id="t" style="flex:1;min-width:110px">
+      <label class="sr-only" for="c">出生地点</label><input type="text" id="c" data-birth-location placeholder="输入省、市、区县" maxlength="60" autocomplete="off">
+      <button id="go" type="button">重新生成</button>
+    </div>
+    <div id="reportStatus" role="status" aria-live="polite"></div>
+  </div>
+
+  <div class="endviz"><img src="./img/token.jpg" alt="" loading="lazy"><div class="cap">本 命 信 物</div></div>
+
+  <div class="meta">
+    本报告基于传统文化框架，对出生时间信息进行结构化解读，仅供自我探索与个人发展参考。<br>
+    不构成医疗、心理、法律或投资建议，也不替代相关专业服务。<br>
+    八字与五行作为主轴，星盘用于参照或呈现差异；页面中的来源标注可用于回看解读依据。
+  </div>
+</main>
+
+<footer class="filing-footer">
+  贵州天云稀泉科技有限公司 · <a class="filing-link" href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer">黔ICP备2026013593号-1</a>
+</footer>
+
+<!-- 今日知星卡分享层与报告正文并列，打开时可安全将背景整体 inert。 -->
+<div id="qianPosterLayer" role="dialog" aria-modal="true" aria-labelledby="qianPosterTitle" tabindex="-1" hidden><div class="qp-inner">
+  <h2 id="qianPosterTitle" class="sr-only">今日知星卡分享预览</h2>
+  <canvas id="qianCanvas" width="750" height="1000" role="img" aria-label="根据当前个人文化图谱生成的今日知星卡" aria-describedby="qianCanvasDescription">今日知星卡图片预览</canvas>
+  <p class="sr-only" id="qianCanvasDescription">卡片包含今日日期、文化意象、适合与暂缓事项、知星品牌及官网二维码；页面正文会同时显示可复制的文字结果。</p>
+  <div class="qp-tip">长按图片保存 / 截图保存</div>
+  <div id="qianShareStatus" role="status" aria-live="polite"></div>
+  <div class="qp-actions">
+    <button id="qianShareBtn" type="button" hidden>分享今日知星卡</button>
+    <button id="qianPosterClose" class="ghost" type="button">关闭</button>
+  </div>
+</div></div>
+
+<section id="ageGateBlock" role="alertdialog" aria-modal="true" aria-labelledby="ageGateTitle" tabindex="-1" hidden>
+  <div class="age-gate-card"><span class="badge">服 务 年 龄 门 槛</span><h2 id="ageGateTitle">暂无法使用知星</h2><p id="ageGateBody">本服务暂不向不满 14 周岁的用户提供。</p><a id="ageGateBack" href="./app.html">返回首页</a></div>
+</section>
+<section id="reportAccessGateBlock" role="alertdialog" aria-modal="true" aria-labelledby="reportAccessGateTitle" tabindex="-1" hidden>
+  <div class="age-gate-card">
+    <span class="badge">个 人 文 化 图 谱</span>
+    <h2 id="reportAccessGateTitle">请先生成个人文化图谱</h2>
+    <p id="reportAccessGateBody">当前浏览器没有可用于生成报告的出生资料。分享不是查看报告的前置条件。</p>
+    <a id="reportAccessBack" href="./app.html">返回首页</a>
+  </div>
+</section>
+<section id="reportPrivacyGateBlock" role="alertdialog" aria-modal="true" aria-labelledby="reportPrivacyGateTitle" tabindex="-1" hidden>
+  <div class="age-gate-card">
+    <span class="badge">资 料 处 理 确 认</span>
+    <h2 id="reportPrivacyGateTitle">确认后再生成报告</h2>
+    <p class="gate-detail">出生日期、时间、城市、排盘性别和称呼用于生成个人文化图谱。本机最多保存 2 张基础图谱，保留到你主动删除；可在“我的资料”删除，或在隐私中心撤回本机处理同意。清理浏览器数据也会移除本机图谱。已购深度报告按账号另行保存，不占这 2 个名额。本次确认不自动开启账号、云端同步或第三方大模型处理。</p>
+    <p class="gate-policy"><a id="reportPrivacyPolicyLink" href="./privacy.html">查看隐私政策</a></p>
+    <label class="gate-check"><input type="checkbox" id="reportPrivacyCheck">我已阅读并同意本机处理与保存，基础图谱保留到我主动删除；之后可在隐私中心撤回。</label>
+    <p class="gate-error" id="reportPrivacyError" role="alert" aria-live="assertive" hidden></p>
+    <div class="gate-actions">
+      <button id="reportPrivacyOk" type="button" disabled>同意并生成</button>
+      <button id="reportPrivacyBack" type="button" class="ghost">返回首页</button>
+    </div>
+  </div>
+</section>
+<section id="aiProcessingGateBlock" role="alertdialog" aria-modal="true" aria-labelledby="aiProcessingGateTitle" tabindex="-1" hidden>
+  <div class="age-gate-card">
+    <span class="badge">AI 处 理 确 认</span>
+    <h2 id="aiProcessingGateTitle">首次使用问星</h2>
+    <p class="gate-detail" id="aiProcessingGateDetail">本次会把个人文化图谱摘要、你的问题、必要的最近问答摘要和今日知星卡，经知星后端发送给 DeepSeek 大模型生成答复。完整答案先写入账号存档，成功交付后才消耗 1 次问星；模型失败、超时或答案未成功持久化时不扣次数。模型服务方会按其服务规则处理输入与输出。请不要填写身份证号、银行卡号、住址、联系方式或医疗诊断。</p>
+    <p class="gate-policy"><a id="aiPrivacyPolicyLink" href="./privacy.html">查看隐私政策</a></p>
+    <label class="gate-check"><input type="checkbox" id="aiProcessingCheck">我了解并同意把上述最小范围发送给 DeepSeek 生成答复；本次成功交付将消耗 1 次问星。该选择记录在本机，可通过“隐私选择”撤回。</label>
+    <p class="gate-error" id="aiProcessingError" role="alert" aria-live="assertive" hidden></p>
+    <div class="gate-actions">
+      <button id="aiProcessingOk" type="button" disabled>同意并继续</button>
+      <button id="aiProcessingCancel" type="button" class="ghost">暂不使用</button>
+    </div>
+  </div>
+</section>
+
+<script src="./vendor/qrcode-generator.js?v=79ec86f82856"></script>
+<script src="./share-qr.js?v=037fb5917da3"></script>
+<script src="./minimum-age.js?v=96cd776ebf44"></script>
+<script src="./public-config.js?v=7751013955c9"></script>
+<script src="./privacy-consent.js?v=e9d931611689"></script>
+<script src="./analytics.js?v=2986447e1859"></script>
+<script src="./member.js?v=d9b22aa237d2"></script>
+<script src="./paid-h5.js?v=2983f9adf0f9"></script>
+<script src="./paid-reports.js?v=d7056ff086e1"></script>
+<script src="./report-download.js?v=5e9d071a3ee9"></script>
+<script src="./bazi-engine.js?v=2f507cc27577"></script>
+<script src="./birth-location-picker.js?v=3d149d3ae64c"></script>
+<script src="./content-home-v1.js?v=ee4855e88ba1"></script>
+
+
+
+
+
+
+<script>
+'use strict';
+const $ = id => document.getElementById(id);
+const trackEvent=(name,details)=>{try{return !!(window.ZxAnalytics&&ZxAnalytics.track(name,details))}catch(_){return false}};
+const ELEM_COLOR = { 木:'#7FA864', 火:'#C96A4A', 土:'#C9A85C', 金:'#D8D5CB', 水:'#5C82AE' };
+const CHAP_VIZ = { energy:'./img/energy.jpg', skeleton:'./img/card.jpg', relation:'./img/relation.jpg', action:'./img/action.jpg', phase:'./img/phase.jpg' };
+
+let CHART = null;
+let CURRENT_QIAN = null;
+const PRIVATE_REPORT_MODE = !!(window.ZX_PRIVATE_REPORT_BUILD === true || (window.ZxPaidReports && ZxPaidReports.isPrivate()) || ((location.protocol==='file:' || ['localhost','127.0.0.1','[::1]'].includes(location.hostname)) && new URLSearchParams(location.search).get('private-report')==='1'));
+let PRIVATE_REPORT_ID = '';
+let PRIVATE_SNAPSHOT = null;
+let PRIVATE_DOWNLOAD_READY = false;
+let PRIVATE_DELIVERY_ID = '';
+let PRIVATE_REPORT_LIFECYCLE = null;
+let PRIVATE_CORRECTION_ATTEMPT = null;
+let PRIVATE_LIFECYCLE_BUSY = false;
+let PRIVATE_OWNER = '';
+let PRIVATE_READ_REVISION = 0;
+let PRIVATE_ASK_IDS = [];
+let PRIVATE_OWNER_TIMER = null;
+let GENDER = '';   // 大运顺逆需性别,由 URL(g) 或简版握手(zx_input.g)带入
+const LOCAL_DEBUG_PAGE = location.protocol === 'file:' || ['localhost','127.0.0.1','[::1]'].includes(location.hostname);
+const PUBLIC_CONFIG = window.ZX_PUBLIC_CONFIG && typeof window.ZX_PUBLIC_CONFIG === 'object'
+  ? window.ZX_PUBLIC_CONFIG
+  : {};
+const PAID_ASK_LAUNCH = PUBLIC_CONFIG.launchMode === 'paid-ask' && PUBLIC_CONFIG.paidAskEnabled === true;
+const CONFIGURED_DEEP_ENDPOINT = configuredDeepEndpoint(PUBLIC_CONFIG.deepApiUrl);
+const AI_SERVICE_PUBLIC_READY = PUBLIC_CONFIG.deepServiceAvailable === true && !!CONFIGURED_DEEP_ENDPOINT;
+const PUBLIC_AI_AVAILABLE = AI_SERVICE_PUBLIC_READY && PAID_ASK_LAUNCH;
+const LOCAL_REAL_DEEP_ENDPOINT = 'http://127.0.0.1:9001/';
+const LOCAL_DEEP_MODE = localDebugDeepMode();
+let LOCAL_DEEP_BOOTSTRAP = captureLocalRealBootstrap();
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+
+/* ===== 重点句加粗(仅处理展示格式) =====
+ * EMPH.hot / EMPH.key 均为「原文逐字子串」清单,由选词工作流产出并经程序化核验。
+ * 每级已在构建期去重+去互相包含+长→短排序,故此处 split/join 逐字面替换即安全,不会嵌套。 */
+let EMPH = {hot:[],key:[]};
+
+function wrapPhrase(html, phrase, cls){
+  if (!phrase) return html;
+  return html.split(phrase).join('<strong class="'+cls+'">'+phrase+'</strong>');
+}
+/* 在「已转义的纯文本」上作用(此刻还没有标签,不会碰到属性);hot 先于 key */
+function keyEmph(escaped){
+  for (const p of EMPH.hot) escaped = wrapPhrase(escaped, p, 'key-hot');
+  for (const p of EMPH.key) escaped = wrapPhrase(escaped, p, 'key');
+  return escaped;
+}
+/* 段落格式化:转义 → 重点加粗 → 把末尾「来源:…」包成弱化 span(缩小变浅) */
+function fmtBody(text){ return keyEmph(esc(text)).replace(/(来源[:：][^\n]*)$/m, '<span class="src-inline">$1</span>'); }
+
+function methodReference(text){
+  if (!text) return '';
+  return `<p class="method-reference">方法参考：${esc(text)}</p>`;
+}
+
+function chartCard(c){
+  const cols=['year','month','day','hour'], names={year:'年柱',month:'月柱',day:'日柱',hour:'时柱'};
+  const p=c.pillars;
+  const groups={};
+  cols.forEach(k=>{
+    if(!p[k])return;
+    const gz=p[k].stem+p[k].branch;
+    if(!groups[gz])groups[gz]=[];
+    groups[gz].push(names[k]);
+  });
+  const repeated=Object.entries(groups).filter(([,labels])=>labels.length>1);
+  const joinedLabels=labels=>labels.length<2?labels[0]:`${labels.slice(0,-1).join('、')}与${labels[labels.length-1]}`;
+  const repeatNote=repeated.length
+    ? `<p class="chart-repeat-note" id="chartRepeatNote">盘面说明：${repeated.map(([gz,labels])=>`${joinedLabels(labels)}当前计算均为${gz}`).join('；')}。四柱仍按年、月、日、时分别展示。</p>`
+    : '';
+  const hidden=k=>p[k]?(BaziEngine.HIDDEN[p[k].branch]||[]).map(stem=>`<span class="chart-hidden-item">${esc(stem+'（'+(BaziEngine.tenGod(c.dayMaster.stem,stem)||'—')+'）')}</span>`).join(''):'—';
+  return `<details class="chart-details">${disclosureSummary('查看完整盘面依据')}<div class="chart-details-body">
+    <p id="chartTableHint" class="chart-table-hint">小屏可左右滑动或使用方向键查看完整四柱。</p>
+    <div class="chart-table-scroll" role="region" tabindex="0" aria-label="四柱干支、十神与藏干表" aria-describedby="chartTableHint"><table class="chart-table"${repeated.length?' aria-describedby="chartRepeatNote"':''}>
+    <caption>四柱干支、十神与藏干依据</caption>
+    <thead><tr><th scope="col">层</th>${cols.map(k=>`<th scope="col">${names[k]}</th>`).join('')}</tr></thead>
+    <tbody><tr><th scope="row">干支</th>${cols.map(k=>`<td class="gz">${p[k]?p[k].stem+p[k].branch:'—'}</td>`).join('')}</tr>
+    <tr><th scope="row">天干十神</th>${cols.map(k=>`<td class="tg">${p[k]?esc(c.tenGods?.[k]?.stem||'—'):'—'}</td>`).join('')}</tr>
+    <tr><th scope="row">地支主气十神</th>${cols.map(k=>`<td class="tg">${p[k]?esc(c.tenGods?.[k]?.branchMain||'—'):'—'}</td>`).join('')}</tr>
+    <tr><th scope="row">藏干</th>${cols.map(k=>`<td class="tg chart-hidden">${hidden(k)}</td>`).join('')}</tr></tbody></table></div>
+    ${repeatNote}
+    <section class="chart-basis"><h4>强弱计算依据</h4><ul class="basis">${c.fiveElements.dayMasterStrength.basis.map(b=>`<li>${esc(b)}</li>`).join('')}</ul></section>
+    <div style="margin-top:10px;font-size:12.5px;color:var(--mist)">
+      <span class="src">日主 · ${c.dayMaster.stem}${c.dayMaster.element}(${c.dayMaster.yinyang})</span>
+      ${c.solar.trueSolarTime?` 真太阳时 ${c.solar.trueSolarTime.slice(11,16)}${c.solar.city?` · 已按${esc(c.solar.city)}经度与均时差校正`:' · 按标准经度推算'}`:esc(c.solar.note||'')}
+    </div>
+    ${c.meta.warnings.map(w=>`<div class="warn">⚠ ${esc(w)}</div>`).join('')}
+  </div></details>${methodReference('《子平真诠·论用神》，沈孝瞻。')}`;
+}
+
+function tenGodSummary(c){
+  const unique = values => [...new Set(values.filter(Boolean))];
+  const visible = unique(['year','month','hour'].map(key => c.tenGods?.[key]?.stem));
+  const branches = unique(['year','month','day','hour'].map(key => c.tenGods?.[key]?.branchMain));
+  return `<section class="ten-god-summary" aria-labelledby="tenGodSummaryTitle"><h4 id="tenGodSummaryTitle">十神概览（同类已合并）</h4>
+    <p><strong>天干可见：</strong>${esc(visible.join('、') || '—')}</p>
+    <p><strong>地支主气：</strong>${esc(branches.join('、') || '—')}</p></section>`;
+}
+
+function energyExtra(c){
+  const fe=c.fiveElements, maxV=Math.max(...Object.values(fe.counts));
+  return Object.entries(fe.counts).map(([k,v])=>
+    `<div class="bar"><b>${k}</b><div class="track"><div class="fill" style="width:${(v/maxV*100).toFixed(0)}%;background:${ELEM_COLOR[k]}"></div></div><small style="width:2.6em;text-align:right;color:var(--mist)">${v}</small></div>`).join('')
+    + tenGodSummary(c);
+}
+
+function selectedCurrentDaYunStep(c){
+  const dy = c && c.daYun;
+  if (!dy || !Array.isArray(dy.steps)) return null;
+  const now = (new Date()).getFullYear();
+  return dy.steps.find(s => now>=s.yearFrom && now<=s.yearTo) || null;
+}
+
+function sectionCard(s, c, options = {}){
+  const extraBefore = s.id==='energy' ? energyExtra(c) : '';
+  const extraAfter  = s.id==='phase' && !PRIVATE_REPORT_MODE ? phaseExtra(c) : '';
+  const paras = s.body.split(/\n\n+/).map(t=>`<p>${fmtBody(t)}</p>`).join('');
+  const issue = s.issues && s.issues.length ? `<div class="warn">本章内容未通过自动校对,已展示稳定版本</div>` : '';
+  const title = options.title || s.title;
+  const bodyAndData = s.id === 'energy'
+    ? `<div class="body">${paras}</div>${extraBefore}`
+    : `${extraBefore}<div class="body">${paras}</div>${extraAfter}`;
+  return `<section class="chapter-block legacy-block"><h3>${esc(title)}</h3>
+    ${bodyAndData}${issue}
+    <p class="chapter-source">来源 · ${esc(s.source)}</p>
+    ${methodReference(s.methodReference)}</section>`;
+}
+
+function chapterCard(id, title, content){
+  return `<article class="card report-chapter" id="${id}"><div class="pad"><h2 tabindex="-1">${esc(title)}</h2>${content}</div></article>`;
+}
+
+function structuredProfileSection(section){
+  return !!(section && typeof section.profile === 'string' && Array.isArray(section.blocks));
+}
+
+function structuredList(block){
+  const items = Array.isArray(block.items) ? block.items : [];
+  if (block.style === 'keywords') {
+    return `<div class="identity-keywords" aria-label="组合关键词">${items.map(item=>`<span>${esc(item)}</span>`).join('')}</div>`;
+  }
+  const className = block.style ? ` structured-list structured-list-${esc(block.style)}` : 'structured-list';
+  return `<ul class="${className}">${items.map(item => {
+    if (item && typeof item === 'object') return `<li><strong>${esc(item.title || '')}</strong><span>${esc(item.body || '')}</span></li>`;
+    return `<li>${esc(item)}</li>`;
+  }).join('')}</ul>`;
+}
+
+function reportGuide(items){
+  const guide = Array.isArray(items) ? items : [];
+  return `<ul class="report-guide" aria-label="深度报告章节导读">${guide.map(item=>`<li><strong>${esc(item.title || '')}</strong><span>${esc(item.body || '')}</span></li>`).join('')}</ul>`;
+}
+
+function relationStrengths(data){
+  const strengths = data && Array.isArray(data.strengths) ? data.strengths : [];
+  if (!strengths.length) return '';
+  const buttons = strengths.map((item,index) => `<button class="relation-level-button" type="button" data-relation-target="relation-panel-${esc(item.id)}" aria-controls="relation-panel-${esc(item.id)}" aria-expanded="${index === 0}">${esc(item.label)}</button>`).join('');
+  const panels = strengths.map((item,index) => `<section class="relation-level-panel" id="relation-panel-${esc(item.id)}" ${index === 0 ? '' : 'hidden'}>
+    <h4>${esc(item.title)}</h4><p><strong>适用场景：</strong>${esc(item.scene)}</p>
+    <blockquote>${esc(item.quote)}</blockquote>
+    ${item.returnQuote ? `<p><strong>${esc(item.returnLead || '返回时可以说：')}</strong></p><blockquote>${esc(item.returnQuote)}</blockquote>` : ''}
+    <p>${esc(item.why)}</p></section>`).join('');
+  return `<section class="chapter-block relation-levels" aria-labelledby="relationLevelsTitle"><h3 id="relationLevelsTitle">按冲突强度选择表达</h3><div class="relation-level-buttons">${buttons}</div>${panels}</section>`;
+}
+
+function actionLayout(data){
+  if (!data) return '';
+  const total = Array.isArray(data.total) ? data.total.map(text=>`<p>${esc(text)}</p>`).join('') : '';
+  const strategy = data.strategy || {}, experiment = data.experiment || {}, tradeoff = data.tradeoff || {};
+  const list = items => `<ul>${(items || []).map(item=>`<li>${esc(item)}</li>`).join('')}</ul>`;
+  return `<div class="action-opening"><h3>行动总则</h3>${total}<h4>行动依据</h4><p>${esc(data.basis || '')}</p></div>
+    <div class="action-pair">
+      <section><h3>${esc(strategy.title || '行动策略')}</h3><p>${esc(strategy.body || '')}</p>${strategy.itemsLead ? `<p class="transition-lead">${esc(strategy.itemsLead)}</p>` : ''}${list(strategy.items)}</section>
+      <section><h3>${esc(experiment.title || '行动试验')}</h3><p>${esc(experiment.body || '')}</p>${experiment.itemsLead ? `<p class="transition-lead">${esc(experiment.itemsLead)}</p>` : ''}${list(experiment.items)}${experiment.close ? `<p>${esc(experiment.close)}</p>` : ''}</section>
+    </div>
+    <section class="action-tradeoff"><h3>${esc(tradeoff.title || '行动取舍')}</h3>${tradeoff.ruleLead ? `<p class="transition-lead">${esc(tradeoff.ruleLead)}</p>` : ''}<p class="action-rule">${esc(tradeoff.rule || '')}</p>${tradeoff.questionsLead ? `<p class="transition-lead">${esc(tradeoff.questionsLead)}</p>` : ''}${list(tradeoff.questions)}${tradeoff.close ? `<p>${esc(tradeoff.close)}</p>` : ''}</section>
+    <section class="action-rhythm"><h3>行动节奏</h3><ol class="rhythm-steps">${(data.rhythm || []).map(item=>`<li>${esc(item)}</li>`).join('')}</ol><p>${esc(data.close || '')}</p></section>`;
+}
+
+function timelineRows(rows, currentRange){
+  return `<ol class="time-window">${rows.map(row => `<li class="${row[0] === currentRange ? 'is-current' : ''}"><span class="time-period">${esc(row[0])}</span><strong class="time-ganzhi">${esc(row[1])} · ${esc(row[2])}</strong><p>${esc(row[3])}</p></li>`).join('')}</ol>`;
+}
+
+function timelineBlock(data){
+  if (!data) return '';
+  const rows = Array.isArray(data.rows) ? data.rows : [];
+  const currentRange = String(data.stage || '').split(/\s+/)[0];
+  const currentIndex = Math.max(0, rows.findIndex(row => row[0] === currentRange));
+  const nearby = rows.slice(Math.max(0,currentIndex - 1), Math.min(rows.length,currentIndex + 2));
+  const nearbyRanges = new Set(nearby.map(row=>row[0]));
+  const remaining = rows.filter(row=>!nearbyRanges.has(row[0]));
+  const remainingTimeline = remaining.length
+    ? `<details class="timeline-details">${disclosureSummary('查看其余阶段')}${timelineRows(remaining,currentRange)}</details>`
+    : '';
+  return `<section class="chapter-block">
+    <div class="time-stage"><h3>${esc(data.stageLead || '当前阶段｜')}${esc(data.stage || '')}</h3>${(data.explanation || []).map(text=>`<p>${esc(text)}</p>`).join('')}</div>
+    <h3>${esc(data.amplifyTitle || '适合放大的事')}</h3>${structuredList({items:data.amplify || []})}
+    <h3>最容易踩的坑</h3><p>${esc(data.pitfall || '')}</p>
+    <h3>${esc(data.actionTitle || '当前阶段动作')}</h3><p>${esc(data.action || '')}</p>
+    <h3>${esc(data.yearTitle || '2026 年落点')}</h3><p>${esc(data.year || '')}</p>
+    <h3>${esc(data.timelineTitle || '完整时间轴')}</h3><p class="dy-meta">${esc(data.startLead || '起运：')}${esc(data.start || '')} · 传统文化时间结构</p>${timelineRows(nearby,currentRange)}
+    ${remainingTimeline}
+    <h3>${esc(data.nextLead || '下一阶段预告｜')}${esc(data.nextTitle || '')}</h3><p>${esc(data.next || '')}</p>
+  </section>`;
+}
+
+function timeFocusHighlight(text, phrase){
+  const value = String(text || ''), emphasis = String(phrase || '');
+  const index = emphasis ? value.indexOf(emphasis) : -1;
+  if (index < 0) return esc(value);
+  return esc(value.slice(0,index)) + `<strong class="time-key-phrase">${esc(emphasis)}</strong>` + esc(value.slice(index+emphasis.length));
+}
+
+function timeFocusParagraphs(paragraphs, fallbackBody, fallbackBold, className=''){
+  const items=Array.isArray(paragraphs)
+    ? paragraphs.filter(item => typeof item==='string' ? item.trim() : item && typeof item.body==='string' && item.body.trim())
+    : [];
+  const values=items.length ? items : (fallbackBody ? [{body:fallbackBody,bold:fallbackBold}] : []);
+  return values.map(item=>{
+    const value=typeof item==='string' ? {body:item} : item;
+    return `<p${className ? ` class="${esc(className)}"` : ''}>${timeFocusHighlight(value.body,value.bold)}</p>`;
+  }).join('');
+}
+
+function timeFocusDecade(period, showKeyChange=true){
+  if (!period) return '';
+  const id = `time-focus-${period.id}`;
+  const change = showKeyChange && period.keyChange;
+  return `<section class="time-focus-decade" id="${esc(id)}" aria-labelledby="${esc(id)}-title">
+    <p class="time-period-label">${esc(period.years)} · ${esc(period.pillar)}大运</p>
+    <h4 id="${esc(id)}-title">${esc(period.tagline)}</h4>${timeFocusParagraphs(period.paragraphs,period.body,period.bold)}
+    ${change ? `<div class="time-key-change"><h5>${esc(change.label)}</h5><p>${timeFocusHighlight(change.body,change.bold)}</p></div>` : ''}
+  </section>`;
+}
+
+function timeFocusBlock(data){
+  if (!data) return '';
+  const years = Array.isArray(data.focusYears) ? data.focusYears : [];
+  const turningYears = Array.isArray(data.turningYears) ? data.turningYears.filter(item=>item && item.year && item.title) : [];
+  const basis = data.basis || {};
+  const turning = turningYears.length ? `<section class="time-turning-years" aria-labelledby="time-turning-title"><h4 id="time-turning-title">转折与重点年份</h4><ol>${turningYears.map(item=>`<li><span class="time-turning-year">${esc(item.year)}</span><div>${item.kind ? `<p class="time-turning-kind">${esc(item.kind)}</p>` : ''}<h5>${esc(item.title)}</h5>${item.basis ? `<p class="time-turning-basis">${esc(item.basis)}</p>` : ''}<p class="time-turning-body">${timeFocusHighlight(item.body,item.bold)}</p></div></li>`).join('')}</ol></section>` : '';
+  const focus = years.map(item => `<section class="time-focus-year" data-year="${esc(item.year)}" aria-labelledby="time-year-${esc(item.year)}-title">
+    <header class="time-year-heading"><span class="time-year-number">${esc(item.year)}<small>${esc(item.pillar)}</small></span><h4 id="time-year-${esc(item.year)}-title">${esc(item.tagline)}</h4></header>
+    <h5 class="time-reading-label">为什么这样看</h5>${timeFocusParagraphs(item.paragraphs,item.why,item.bold,'time-year-why')}
+    ${(item.actions || []).length ? `<h5 class="time-reading-label">可以怎样做</h5><ol class="time-year-actions">${item.actions.map(action => `<li><h6>${esc(action.title)}</h6><p>${timeFocusHighlight(action.body,action.bold)}</p></li>`).join('')}</ol>` : ''}
+    ${item.astro && item.astro.body ? `<aside class="time-focus-astro"><h5>${esc(item.astro.title || '星盘辅证')}</h5><p>${timeFocusHighlight(item.astro.body,item.astro.bold)}</p></aside>` : ''}
+  </section>`).join('');
+  const sources = (basis.sources || []).filter(source => /^https:\/\//.test(source.url || ''));
+  return `<div class="time-focus"><h3 class="time-focus-title">${esc(data.title)}</h3><p class="time-focus-lead">${esc(data.lead)}</p>
+    ${turning}${timeFocusDecade(data.currentPeriod)}${focus}${timeFocusDecade(data.nextPeriod,!turningYears.length)}
+    <details class="chart-details time-focus-basis">${disclosureSummary(basis.title || '查看时间依据')}<div class="chart-details-body">
+      ${(basis.items || []).map(item => `<section><h4>${esc(item.title)}</h4><p>${esc(item.body)}</p></section>`).join('')}
+      ${sources.length ? `<h4>原典参考</h4><ul>${sources.map(source => `<li><a href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">${esc(source.title)}</a></li>`).join('')}</ul>` : ''}
+    </div></details></div>`;
+}
+
+function disclosureSummary(title){
+  return `<summary><span class="details-title">${esc(title)}</span><span class="details-cue"><span class="details-cue-closed">点击展开</span><span class="details-cue-open">收起</span></span></summary>`;
+}
+
+function renderStructuredBlocks(blocks){
+  return blocks.map(block => {
+    if (!block || !block.type) return '';
+    if (block.type === 'heading') {
+      const tag = Number(block.level) >= 3 ? 'h4' : 'h3';
+      const text = String(block.text || '');
+      const title = text.includes('  ') ? text.split('  ').map(line=>`<span class="heading-line">${esc(line)}</span>`).join('  ') : esc(text);
+      return `<${tag}>${block.eyebrow ? `<small class="heading-eyebrow">${esc(block.eyebrow)}</small>` : ''}${title}</${tag}>`;
+    }
+    if (block.type === 'quote') return `<blockquote>${esc(block.text || '')}</blockquote>`;
+    if (block.type === 'paragraph') return `<p>${esc(block.text || '')}</p>`;
+    if (block.type === 'details') return `<details class="chart-details">${disclosureSummary(block.title || '')}<div class="chart-details-body">${renderStructuredBlocks(block.blocks || [])}</div></details>`;
+    if (block.type === 'list') return structuredList(block);
+    if (block.type === 'report-guide') return reportGuide(block.items);
+    if (block.type === 'relation-strengths') return relationStrengths(block.data);
+    if (block.type === 'action-layout') return actionLayout(block.data);
+    if (block.type === 'timeline') return timelineBlock(block.data);
+    if (block.type === 'time-focus') return timeFocusBlock(block.data);
+    if (block.type === 'source') return `<p class="chapter-source">来源 · ${esc(block.text || '')}</p>`;
+    if (block.type === 'method-reference') return methodReference(block.text);
+    return '';
+  }).join('');
+}
+
+function structuredSection(section){
+  return `<section class="chapter-block structured-block">${renderStructuredBlocks(section.blocks)}</section>`;
+}
+
+function initStructuredInteractions(){
+  document.querySelectorAll('[data-relation-target]').forEach(button => {
+    button.addEventListener('click', () => {
+      const container = button.closest('.relation-levels');
+      if (!container) return;
+      container.querySelectorAll('[data-relation-target]').forEach(peer => peer.setAttribute('aria-expanded', String(peer === button)));
+      container.querySelectorAll('.relation-level-panel').forEach(panel => { panel.hidden = panel.id !== button.dataset.relationTarget; });
+    });
+  });
+}
+
+/* ---------- 知星时间轴(进与收章尾) ---------- */
+
+/* ---------- 星盘参照:黄道轮(外圈西盘)× 五行星形(内圈八字)同图叠加 ---------- */
+function wheelSVG(c){
+  const a = c.astro, fe = c.fiveElements.counts, dm = c.dayMaster;
+  const CX=170, CY=170, R1=158, R2=126, RM=(R1+R2)/2;
+  /* U+FE0E 变体选择符:强制文本样式,防安卓/Chrome 渲染成 emoji(项目铁坑) */
+  const GLY = '♈♉♊♋♌♍♎♏♐♑♒♓'.split('').map(g => g + '︎');
+  const WCOL = { 火:'#C96A4A', 土:'#C9A85C', 风:'#9FB4C7', 水:'#5C82AE' };
+  const SIGNS = BaziEngine.SIGNS;
+  const pt = (lon,r)=>{ const t=(180-lon)*Math.PI/180; return [CX + r*Math.cos(t), CY - r*Math.sin(t)]; };
+  let g = '';
+  /* 外圈:十二宫分段(按西盘四象着色)+ 宫界刻度 + 星座符号(必须带 U+FE0E) */
+  for (let i=0;i<12;i++){
+    const col = WCOL[['火','土','风','水'][i % 4]];
+    const [x1,y1]=pt(i*30,RM), [x2,y2]=pt((i+1)*30,RM);
+    g += `<path d="M ${x1.toFixed(1)} ${y1.toFixed(1)} A ${RM} ${RM} 0 0 1 ${x2.toFixed(1)} ${y2.toFixed(1)}" stroke="${col}" stroke-opacity=".14" stroke-width="${R1-R2}" fill="none"/>`;
+    const [tx,ty]=pt(i*30,R2), [tx2,ty2]=pt(i*30,R1);
+    g += `<line x1="${tx.toFixed(1)}" y1="${ty.toFixed(1)}" x2="${tx2.toFixed(1)}" y2="${ty2.toFixed(1)}" stroke="rgba(201,168,92,.3)" stroke-width="1"/>`;
+    const [gx,gy]=pt(i*30+15,RM);
+    g += `<text x="${gx.toFixed(1)}" y="${gy.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-size="14" fill="${col}" fill-opacity=".9">${GLY[i]}</text>`;
+  }
+  g += `<circle cx="${CX}" cy="${CY}" r="${R1}" fill="none" stroke="rgba(201,168,92,.4)" stroke-width="1"/>`;
+  g += `<circle cx="${CX}" cy="${CY}" r="${R2}" fill="none" stroke="rgba(201,168,92,.3)" stroke-width="1"/>`;
+  /* 内圈:五行能量星形(八字盘) */
+  const ELEMS = ['木','火','土','金','水'];
+  const maxV = Math.max(...ELEMS.map(k=>fe[k]||0)) || 1;
+  const spike = ELEMS.map((k,i)=>{ const ang=90-i*72, r=28+(fe[k]||0)/maxV*68;
+    const t=ang*Math.PI/180; return [CX + r*Math.cos(t), CY - r*Math.sin(t), k, r, ang]; });
+  g += `<polygon points="${spike.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')}" fill="rgba(201,168,92,.13)" stroke="rgba(201,168,92,.5)" stroke-width="1"/>`;
+  for (const [x,y,k] of spike.map(p=>[p[0],p[1],p[2]])){
+    g += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="2.5" fill="${ELEM_COLOR[k]}"/>`;
+    const lx = CX + (x-CX)*1.16, ly = CY + (y-CY)*1.16;
+    g += `<text x="${lx.toFixed(1)}" y="${ly.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-size="10" fill="${ELEM_COLOR[k]}">${k}</text>`;
+  }
+  /* 中宫:日主 */
+  g += `<text x="${CX}" y="${CY-5}" text-anchor="middle" dominant-baseline="central" font-size="26" font-family="Noto Serif SC,Songti SC,serif" font-weight="700" fill="${ELEM_COLOR[dm.element]}">${dm.stem}</text>`;
+  g += `<text x="${CX}" y="${CY+16}" text-anchor="middle" font-size="9" fill="#8f7a45" letter-spacing="1">日主·${dm.stem}${dm.element}</text>`;
+  /* 三要素标记:日/月/升(与中宫虚线相连 = 参照) */
+  const marks = [['☉︎', a.sun, '#E9D09A'], ['☽︎', a.moon, '#E8E4D8'], ['升', a.asc, '#B5472F']];
+  const placed = [];   // 同度/近度重叠避让:后画的标记向内退
+  for (const [ch, o, col] of marks){
+    if (!o || o.lon === undefined || o.sign === undefined) continue;
+    let inset = 0;
+    for (const pl of placed){
+      const d = Math.abs(((o.lon - pl.lon) % 360 + 540) % 360 - 180);
+      if (d < 8) inset = Math.max(inset, pl.inset + 22);
+    }
+    placed.push({ lon: o.lon, inset });
+    const [mx,my] = pt(o.lon, R2-13-inset);
+    const [lx,ly] = pt(o.lon, R2-24-inset);
+    g += `<line x1="${lx.toFixed(1)}" y1="${ly.toFixed(1)}" x2="${CX}" y2="${CY}" stroke="rgba(201,168,92,.18)" stroke-width="1" stroke-dasharray="3 4"/>`;
+    g += `<circle cx="${mx.toFixed(1)}" cy="${my.toFixed(1)}" r="9" fill="#0E1220" stroke="${col}" stroke-width="1"/>`;
+    g += `<text x="${mx.toFixed(1)}" y="${my.toFixed(1)}" text-anchor="middle" dominant-baseline="central" font-size="${ch==='升'?9:11}" fill="${col}">${ch}</text>`;
+  }
+  return `<svg class="wheel" viewBox="0 0 340 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="星盘与五行叠加图">${g}</svg>`;
+}
+
+function astroCard(c){
+  const a = c.astro || {};
+  const facts = [
+    ['太阳',a.sun],
+    ['月亮',a.moon],
+    ['上升',a.asc]
+  ].filter(([,item]) => item && item.sign);
+  if (!facts.length) return '';
+  const factList = facts.map(([label,item]) => `<li><span>${label}</span><strong>${esc(item.sign)}</strong>${item.approx?'<small class="astro-approx">按正午近似</small>':''}</li>`).join('');
+  const notes = (a.notes||[]).map(n=>`<small class="note">${esc(n)}</small>`).join('');
+  return `<section class="chapter-block astro-block">
+    <h3>太阳、月亮与上升参照</h3>
+    ${wheelSVG(c)}
+    <ul class="astro-facts" aria-label="星盘三要素">${factList}</ul>${notes}
+    <p class="chapter-source">来源 · 同一出生时刻的星盘计算</p>
+    ${methodReference('《当代占星研究·诠释星盘》，苏·汤普金斯。')}</section>`;
+}
+
+
+function deepMemberBox(){
+  return `<div id="deepMemberBox" class="member-box" aria-live="polite"></div>`;
+}
+
+const REPORT_SOURCE_TREE = /\/v1\/report\.html$/.test(location.pathname);
+const ACCOUNT_PAGE_AVAILABLE = true;
+const ACCOUNT_PAGE_HREF = REPORT_SOURCE_TREE ? './profile.html' : './profile.html';
+const HOME_PAGE_HREF = PRIVATE_REPORT_MODE&&window.ZxPaidReports
+  ? ZxPaidReports.homeUrl()
+  : withLocalDeepEndpoint(REPORT_SOURCE_TREE ? './app.html' : './app.html');
+function currentHomeHref(){
+  const state=window.zxMember?.snapshot?.();
+  return PRIVATE_REPORT_MODE&&PRIVATE_SNAPSHOT&&PRIVATE_REPORT_ID&&PRIVATE_OWNER&&
+    state?.authenticated&&state.identityKind==='wechat'&&state.accountRef===PRIVATE_OWNER
+    ? ZxPaidReports.homeUrl(PRIVATE_REPORT_ID) : HOME_PAGE_HREF;
+}
+function synastryPageHref(){
+  const url=new URL(currentHomeHref(),location.href);
+  url.pathname=new URL(REPORT_SOURCE_TREE?'./synastry.html':'./synastry.html',location.href).pathname;
+  url.hash='invite';return url.href;
+}
+$('reportSynastryLink').href=synastryPageHref();
+const profilePageLink=new URL(REPORT_SOURCE_TREE ? './profile.html' : './profile.html',location.href);
+if(PRIVATE_REPORT_MODE&&window.ZxPaidReports){const accountRoute=new URL(ZxPaidReports.loginUrl(ZxPaidReports.reportId()||undefined));profilePageLink.search=accountRoute.search;}
+document.querySelector('.report-my-link').href=profilePageLink.href;
+const PRIVACY_PAGE_HREF = REPORT_SOURCE_TREE ? './privacy.html' : './privacy.html';
+const AI_DISCLOSURE_PAGE_HREF = REPORT_SOURCE_TREE ? './ai-disclosure.html' : './ai-disclosure.html';
+const MODEL_PROCESSING_NOTICE = PRIVATE_REPORT_MODE
+  ? '本次仅使用这份已购报告的盘面摘要、你的问题，以及你选择继续追问的已保存答案，经知星后端发送给 DeepSeek。完整答案先保存到账户，再确认交付；失败回补状态以服务端确认为准。'
+  : LOCAL_DEEP_MODE === 'real'
+  ? '本机真实回答测试会把个人文化图谱摘要、本次问题、最近几轮对话摘要和今日知星卡，经只绑定回环地址的临时测试转发发送给已部署的 DeepSeek 函数；本机临时凭证不会发送给云端。'
+  : '提问会发送个人文化图谱摘要、本次问题、必要的最近对话摘要和今日知星卡，用于生成本次答复。完整答案先写入账号存档，成功交付后才消耗 1 次问星；模型失败、超时或答案未成功持久化时不扣次数。';
+const MODEL_INPUT_CAUTION = '请不要填写身份证号、银行卡号、住址、联系方式、医疗诊断等不必要的敏感信息。';
+const CREDITS_REQUIRED = {
+  title: '当前没有可用问星次数',
+  body: '免费报告仍可查看。登录后可主动选择单次 ¥2.90 或三次 ¥6；分享不会增加次数。'
+};
+let PAID_ASK_STATE = {loaded:false,remaining:null,allowed:false};
+
+let ACTIVE_REPORT_MODAL = null;
+let ACTIVE_REPORT_MODAL_TRIGGER = null;
+let ACTIVE_REPORT_MODAL_ESCAPE = null;
+const REPORT_MODAL_BACKGROUND = [
+  document.querySelector('.skip-link'),
+  document.querySelector('.report-topbar'),
+  $('reportMain'),
+  document.querySelector('.filing-footer')
+].filter(Boolean);
+function setReportModalBackgroundInert(inert){
+  REPORT_MODAL_BACKGROUND.forEach(node => {
+    node.inert = inert;
+    if (inert){
+      node.setAttribute('inert','');
+      node.setAttribute('aria-hidden','true');
+    } else {
+      node.removeAttribute('inert');
+      node.removeAttribute('aria-hidden');
+    }
+  });
+  if(window.ZxPrivacyConsent&&typeof ZxPrivacyConsent.setDockSuppressed==='function'){
+    ZxPrivacyConsent.setDockSuppressed(inert);
+  }
+}
+function reportModalFocusables(root){
+  return [...root.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])')]
+    .filter(node => !node.hidden && node.getClientRects().length);
+}
+function openReportModal(id,onEscape){
+  const root=$(id);
+  if(!root)return;
+  ACTIVE_REPORT_MODAL=root;
+  ACTIVE_REPORT_MODAL_TRIGGER=document.activeElement instanceof HTMLElement?document.activeElement:null;
+  ACTIVE_REPORT_MODAL_ESCAPE=typeof onEscape==='function'?onEscape:null;
+  root.hidden=false;
+  document.body.style.overflow='hidden';
+  setReportModalBackgroundInert(true);
+  requestAnimationFrame(()=>{
+    const first=reportModalFocusables(root)[0];
+    (first||root).focus({preventScroll:true});
+  });
+}
+function closeReportModal(id,{restoreFocus=true}={}){
+  const root=$(id);
+  if(root)root.hidden=true;
+  document.body.style.overflow='';
+  setReportModalBackgroundInert(false);
+  const trigger=ACTIVE_REPORT_MODAL_TRIGGER;
+  ACTIVE_REPORT_MODAL=null;
+  ACTIVE_REPORT_MODAL_TRIGGER=null;
+  ACTIVE_REPORT_MODAL_ESCAPE=null;
+  if(restoreFocus&&trigger&&trigger.isConnected)trigger.focus({preventScroll:true});
+}
+document.addEventListener('keydown',event=>{
+  const root=ACTIVE_REPORT_MODAL;
+  if(!root||root.hidden)return;
+  if(event.key==='Escape'&&ACTIVE_REPORT_MODAL_ESCAPE){
+    event.preventDefault();
+    ACTIVE_REPORT_MODAL_ESCAPE();
+    return;
+  }
+  if(event.key!=='Tab')return;
+  const items=reportModalFocusables(root);
+  if(!items.length){event.preventDefault();root.focus();return}
+  const first=items[0],last=items[items.length-1];
+  if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus()}
+  else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus()}
+});
+
+$('ageGateBack').href = HOME_PAGE_HREF;
+$('reportPrivacyPolicyLink').href = PRIVACY_PAGE_HREF;
+$('aiPrivacyPolicyLink').href = PRIVACY_PAGE_HREF;
+$('reportBack').onclick = () => {
+  location.href = currentHomeHref();
+};
+
+function memberSnapshot(){
+  if (!window.zxMember || !zxMember.snapshot) return { configured:false, ready:false, cloudSyncEnabled:false, authenticated:false, identityKind:'', accountRef:'' };
+  const s = zxMember.snapshot();
+  return {
+    configured: !!(zxMember.configured && zxMember.configured()),
+    ready: !!s.ready,
+    cloudSyncEnabled: !!s.cloudSyncEnabled,
+    authenticated: s.authenticated === true,
+    identityKind: String(s.identityKind||''),
+    accountRef: /^[a-f0-9]{64}$/.test(String(s.accountRef||'')) ? String(s.accountRef) : ''
+  };
+}
+
+async function refreshPaidAskState(){
+  if(PRIVATE_REPORT_MODE)return refreshPrivateAskState();
+  if(LOCAL_DEBUG_PAGE)return PAID_ASK_STATE;
+  if(!window.ZxPaidAsk||typeof ZxPaidAsk.peek!=='function'){
+    PAID_ASK_STATE={loaded:true,remaining:null,allowed:false};
+    renderMemberStatus();
+    return PAID_ASK_STATE;
+  }
+  try{
+    const state=await ZxPaidAsk.peek();
+    PAID_ASK_STATE={loaded:true,remaining:Number(state.remaining),allowed:state.allowed===true&&state.kind==='paid_ask_credits'};
+  }catch(_){PAID_ASK_STATE={loaded:true,remaining:null,allowed:false}}
+  renderMemberStatus();
+  return PAID_ASK_STATE;
+}
+
+function renderMemberStatus(){
+  if(PRIVATE_REPORT_MODE){renderPrivateAskStatus();return;}
+  const box = $('deepMemberBox'); if (!box) return;
+  if (!deepComposerAvailable()) {
+    box.innerHTML = '<p class="member-copy" role="status">问星尚未开放。报告与今日知星卡仍可查看。</p>';
+    const composer = $('deepComposer');
+    if (composer) composer.hidden = true;
+    if ($('deepAsk')) $('deepAsk').disabled = true;
+    return;
+  }
+  const s = memberSnapshot();
+  const pending = readPendingDeepRequest();
+  const recovery = pending && (LOCAL_DEBUG_PAGE || (s.accountRef && pending.accountRef===s.accountRef))
+    ? pending
+    : null;
+  let title = '付费问星尚未开放';
+  let pill = '暂不可用';
+  let copy = '免费报告与今日知星卡仍可查看；正式配置未齐时不会创建订单或发送问题。';
+  const inWechat = !!(window.ZxPaidAsk&&typeof ZxPaidAsk.isWeChatBrowser==='function'&&ZxPaidAsk.isWeChatBrowser());
+  if (!LOCAL_DEBUG_PAGE&&!inWechat) {
+    title = '付费问星仅在微信内开放';
+    pill = '请在微信打开';
+    copy = '免费排盘与报告可继续查看；购买次数、问星和资产恢复请使用微信内置浏览器。';
+  } else if (s.configured && !s.ready) {
+    title = '正在读取账号和问星次数';
+    pill = '加载中';
+    copy = '读取完成前不会发起问星；免费报告仍可查看。';
+  } else if (s.configured && s.authenticated && s.accountRef && recovery) {
+    title = '上一问等待安全恢复';
+    pill = '待恢复';
+    copy = '请使用原问题继续恢复；系统会复用同一幂等键，不会因网络重试重复扣次。';
+  } else if (s.configured && s.authenticated && s.accountRef && PAID_ASK_STATE.loaded && Number.isInteger(PAID_ASK_STATE.remaining)) {
+    title = `当前可用 ${PAID_ASK_STATE.remaining} 次问星`;
+    pill = `剩 ${PAID_ASK_STATE.remaining} 次`;
+    copy = PAID_ASK_STATE.remaining > 0
+      ? '首问和每次追问各消耗 1 次；完整答案先保存到账户，模型失败不扣次数。'
+      : '当前没有可用次数。可主动选择单次 ¥2.90 或三次 ¥6；分享不会增加次数。';
+  } else if (s.configured && s.authenticated && s.accountRef) {
+    title = '暂时无法确认问星次数';
+    pill = '读取失败';
+    copy = '当前不会假定仍有次数，也不会发起问星；请稍后重试。';
+  } else if (inWechat) {
+    title = '请完成微信授权';
+    pill = '待授权';
+    copy = '首次问星会直接进入服务号 OAuth；次数、订单和完整答复只归属后端确认的微信账号。';
+  }
+  const account = `<a href="${ACCOUNT_PAGE_HREF}#ask-section">${s.authenticated&&s.accountRef?'查看次数与购买':'微信授权并查看商品'}</a>`;
+  box.innerHTML = `<div class="member-row"><div class="member-title">${esc(title)}</div><div class="member-pill">${esc(pill)}</div></div>
+    <div class="member-copy">${esc(copy)}</div>
+    <div class="member-actions">${account}</div>`;
+}
+
+function watchMemberStatus(){
+  if(PRIVATE_REPORT_MODE){refreshPrivateAskState();return;}
+  renderMemberStatus();
+  if(PUBLIC_AI_AVAILABLE&&!LOCAL_DEBUG_PAGE&&window.zxMember&&typeof zxMember.whenReady==='function'){
+    zxMember.whenReady().then(()=>refreshPaidAskState()).catch(()=>renderMemberStatus());
+  }
+  let n = 0;
+  const timer = setInterval(() => {
+    renderMemberStatus();
+    n += 1;
+    const s = memberSnapshot();
+    if (!s.configured || s.ready || n > 20) clearInterval(timer);
+  }, 500);
+}
+
+function deepCard(){
+  if(PRIVATE_REPORT_MODE)return privateDeepCard();
+  let content = '';
+  const deepMethodReference = methodReference('《内在的天空》，斯蒂芬·福里斯特。');
+  if (!deepComposerAvailable()) {
+    content = `
+      <h2>问星</h2>
+      <p class="deep-intro">系统会结合已经生成的个人文化图谱，整理现实条件、可选路径和下一步验证；输出不预测结果，也不替你决定。</p>
+      ${deepMethodReference}
+      <section class="deep-closed" aria-labelledby="deepClosedTitle">
+        <h3 id="deepClosedTitle">${reportNavIcon('sec-deep')}问星尚未开放</h3>
+        <p role="status">当前无法提交问题或购买次数。报告与今日知星卡可继续查看。</p>
+        <p>购买报告后赠 1 次问星；用完后单次 ¥2.90，三次包 ¥6。购买与赠送功能尚未开放。</p>
+        <div class="member-actions"><button type="button" id="deepRetry">刷新状态</button></div>
+      </section>
+    `;
+  } else {
+    content = `
+      <h2>问星</h2>
+      <p class="deep-intro">写下一个具体情境。系统会结合已经生成的个人文化图谱，整理现实条件、可选路径和下一步验证；输出由人工智能生成，不预测结果，也不替你决定。首问和每次追问各消耗 1 次。</p>
+      ${deepMethodReference}
+      ${deepMemberBox()}
+      <div class="ai-interaction">${LOCAL_DEEP_MODE === 'real' ? '真实 DeepSeek 测试 · 本机临时凭证' : '你正在与人工智能服务互动'}</div>
+      <div class="deep-notice"><p>${esc(MODEL_PROCESSING_NOTICE)}</p><p>${esc(MODEL_INPUT_CAUTION)}</p><div class="deep-policy">首次使用前会再次征求同意；详情见<a href="${PRIVACY_PAGE_HREF}" target="_blank" rel="noopener">《隐私政策》</a>和<a href="${AI_DISCLOSURE_PAGE_HREF}" target="_blank" rel="noopener">《AI 服务说明》</a>。</div></div>
+      <div class="deep-composer" id="deepComposer" aria-label="问星输入区">
+        <label class="sr-only" for="deepQ">需要梳理的具体情境</label>
+        <input type="text" id="deepQ" maxlength="200" placeholder="比如：这份工作让我犹豫，我需要先核对哪些现实条件？">
+        <button id="deepAsk" type="button" class="ghost">提交本次问星 · 消耗 1 次</button>
+      </div>
+      <div id="deepEcho" role="status" aria-live="polite" aria-atomic="false" tabindex="-1"></div>
+    `;
+  }
+  return `<div class="card" id="sec-deep"><div class="pad">${content}</div></div>`;
+}
+
+
+/* 今日卡片生成动效:约 1.2s 后出图 */
+
+
+/* 卡片固定绘制官网入口码；付费首发只分享图片，不附加权益链接。 */
+const QIAN_ASSET_ROOT = './img/share/qian/';
+const QIAN_POSTER_IMAGES = new Map();
+function qianAssetUrl(assetId){
+  return QIAN_ASSET_ROOT + encodeURIComponent(assetId) + '.webp';
+}
+function loadQianPosterImage(assetId){
+  if (!assetId) return Promise.reject(new Error('missing qian asset id'));
+  if (QIAN_POSTER_IMAGES.has(assetId)) return QIAN_POSTER_IMAGES.get(assetId);
+  const pending = new Promise((resolve,reject) => {
+    const img = new Image();
+    img.decoding = 'async';
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error('qian poster unavailable'));
+    img.src = qianAssetUrl(assetId);
+  });
+  QIAN_POSTER_IMAGES.set(assetId,pending);
+  pending.catch(() => QIAN_POSTER_IMAGES.delete(assetId));
+  return pending;
+}
+async function drawQianPoster(q){
+  const c = $('qianCanvas');
+  const posterDate = qianPosterDateText();
+  c.dataset.assetId = q.assetId || '';
+  c.dataset.posterDate = posterDate;
+  c.dataset.qrMode = 'official';
+  c.dataset.shareLinkMode = 'none';
+  const img = await loadQianPosterImage(q.assetId);
+  drawQianPosterAsset(q,img,posterDate);
+  c.dataset.renderMode = 'asset';
+  return 'asset';
+}
+
+function qianPosterDateText(date = new Date()){
+  return date.getFullYear()+'.'+(date.getMonth()+1)+'.'+date.getDate();
+}
+
+function drawQianPosterAsset(q,img,posterDate){
+  const c = $('qianCanvas'), x = c.getContext('2d');
+  const W = 750, H = 1000, SERIF = '"Noto Serif SC","Songti SC","STSong",serif';
+  c.width = W; c.height = H;
+  x.clearRect(0,0,W,H);
+
+  // 保留定稿卡片的主体视觉，并在导出时覆盖日期与公开称谓。
+  x.drawImage(img,0,0,img.naturalWidth,img.naturalHeight,0,0,W,H);
+
+  // 固定图保留版式，但原图日期是制作日；覆盖为当天确定日期，避免双日期。
+  const dateCover = x.createLinearGradient(0,44,0,112);
+  dateCover.addColorStop(0,'rgba(4,10,17,.15)');
+  dateCover.addColorStop(.22,'rgba(4,10,17,1)');
+  dateCover.addColorStop(.78,'rgba(4,10,17,1)');
+  dateCover.addColorStop(1,'rgba(4,10,17,.15)');
+  x.fillStyle = dateCover; x.fillRect(150,44,450,68);
+  x.textAlign = 'center';
+  x.fillStyle = '#d7b766'; x.font = '20px '+SERIF;
+  x.fillText('◇  今 日 知 星 卡  ·  '+posterDate+'  ◇',W/2,88);
+
+  // 底部直接沿用 60 张定稿卡片的原生画面与信息排布，不再叠加整块蒙版或第二套文字。
+  // 仅在源图原有二维码的小范围内替换为可扫描的固定官网码。
+  drawQianOfficialQr(x);
+}
+
+function findQianOfficialQrSlot(x){
+  const scanX=560,scanY=800,scanW=160,scanH=170,stride=scanW+1;
+  let pixels;
+  try{pixels=x.getImageData(scanX,scanY,scanW,scanH).data}catch(_){return{x:610,y:850,size:74,score:0}}
+  const integral=new Uint32Array((scanW+1)*(scanH+1));
+  for(let py=0;py<scanH;py+=1){
+    let row=0;
+    for(let px=0;px<scanW;px+=1){
+      const offset=(py*scanW+px)*4;
+      const r=pixels[offset],g=pixels[offset+1],b=pixels[offset+2];
+      row+=(r>135&&g>125&&b>105&&Math.max(r,g,b)-Math.min(r,g,b)<95)?1:0;
+      integral[(py+1)*stride+px+1]=integral[py*stride+px+1]+row;
+    }
+  }
+  let best={x:610,y:850,size:74,score:0};
+  for(const size of [66,70,74,78]){
+    for(let py=0;py<=scanH-size;py+=1){
+      for(let px=0;px<=scanW-size;px+=1){
+        const left=px,top=py,right=px+size,bottom=py+size;
+        const light=integral[bottom*stride+right]-integral[top*stride+right]-integral[bottom*stride+left]+integral[top*stride+left];
+        const score=light/(size*size);
+        if(score>best.score)best={x:scanX+px,y:scanY+py,size,score};
+      }
+    }
+  }
+  return best.score>=.35?best:{x:610,y:850,size:74,score:best.score};
+}
+
+function drawQianOfficialQr(x){
+  if(!window.ZxShareQr)throw new Error('share qr unavailable');
+  const slot=findQianOfficialQrSlot(x);
+  const fieldSize=Math.max(78,Math.min(90,slot.size+8));
+  const fieldX=Math.max(566,Math.min(712-fieldSize,Math.round(slot.x-(fieldSize-slot.size)/2)));
+  const fieldY=Math.max(810,Math.min(970-fieldSize,Math.round(slot.y-(fieldSize-slot.size)/2)));
+  x.fillStyle='#f3ead2';
+  x.fillRect(fieldX,fieldY,fieldSize,fieldSize);
+  const qrX=fieldX+Math.round((fieldSize-66)/2),qrY=fieldY+Math.round((fieldSize-66)/2);
+  const qr=window.ZxShareQr.drawOfficial(x,{x:qrX,y:qrY,size:66,quietZone:4});
+  x.strokeStyle='#C9A85C';x.lineWidth=1;
+  x.strokeRect(fieldX-1,fieldY-1,fieldSize+2,fieldSize+2);
+  return{slot,field:{x:fieldX,y:fieldY,size:fieldSize},qr};
+}
+
+function qianPosterBlob(){
+  return new Promise(resolve=>{
+    const canvas=$('qianCanvas');
+    if(typeof canvas.toBlob!=='function'){resolve(null);return}
+    canvas.toBlob(resolve,'image/jpeg',.92);
+  });
+}
+
+function downloadQianPoster(){
+  const link=document.createElement('a');
+  link.download='知星-今日知星卡.jpg';
+  link.href=$('qianCanvas').toDataURL('image/jpeg',.92);
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
+
+function refreshQianShareButton(){
+  const button=$('qianShareBtn'),status=$('qianShareStatus');
+  button.hidden=!CURRENT_QIAN;
+  status.textContent=CURRENT_QIAN?'海报已带官网二维码，可使用系统分享或仅保存图片。':'';
+}
+
+async function shareQianPoster(){
+  if(!CHART||!CURRENT_QIAN)return;
+  const button=$('qianShareBtn'),status=$('qianShareStatus');
+  button.disabled=true;status.textContent='正在准备今日知星卡……';
+  trackEvent('share_started',{outcome:'started'});
+  try{
+    await drawQianPoster(CURRENT_QIAN);
+    const blob=await qianPosterBlob();
+    const file=blob&&typeof File==='function'?new File([blob],'知星-今日知星卡.jpg',{type:'image/jpeg'}):null;
+    const canShareFile=!!(navigator.share&&file&&navigator.canShare&&navigator.canShare({files:[file]}));
+    if(canShareFile){
+      await navigator.share({title:'知星·今日知星卡',text:'这是我的今日知星卡。',files:[file]});
+      trackEvent('native_share_completed',{method:'native_share',outcome:'completed'});
+      status.textContent='系统已把内容交给分享目标。';
+    }else{
+      downloadQianPoster();
+      trackEvent('poster_saved',{method:'download',outcome:'completed'});
+      status.textContent='今日知星卡已保存；本次只记录为保存，不计为系统分享。';
+    }
+  }catch(error){
+    if(error&&error.name==='AbortError'){trackEvent('share_failed',{outcome:'cancelled',reason:'unknown'});status.textContent='已取消分享。';return}
+    trackEvent('share_failed',{outcome:'failed',reason:'unknown'});
+    status.textContent='今日知星卡暂时没有准备好，请刷新后重试。';
+  }finally{
+    button.disabled=false;
+  }
+}
+
+// Rendering only: export uses the same fixed snapshot, never the current live DOM.
+function reportChapterMarkup(chart, sections){
+  const byId = Object.fromEntries(sections.map(section => [section.id,section]));
+  const useSection = (section, fallbackTitle) => section
+    ? (structuredProfileSection(section) ? structuredSection(section) : sectionCard(section,chart,{title:fallbackTitle}))
+    : '';
+  const skeletonInChart = byId.skeleton && byId.skeleton.placement === 'chart-details';
+  const skeletonInOverview = byId.skeleton && byId.skeleton.placement === 'overview-details';
+  const overviewSkeleton = skeletonInOverview
+    ? `<details class="chart-details skeleton-details">${disclosureSummary('性格骨架')}<div class="chart-details-body">${useSection(byId.skeleton,'性格骨架')}</div></details>`
+    : (skeletonInChart ? '' : useSection(byId.skeleton,'性格骨架'));
+  const overview = useSection(byId.overview,'核心气质与主要矛盾') + overviewSkeleton;
+  const chartContent = useSection(byId.energy,'五行、强弱与主要十神')
+    + (structuredProfileSection(byId.energy) ? energyExtra(chart) : '')
+    + astroCard(chart) + (skeletonInChart ? useSection(byId.skeleton,'性格骨架') : '') + chartCard(chart);
+  const relationContent = useSection(byId.relation,'关系与协作');
+  const actionContent = useSection(byId.action,'行动与决策');
+  return chapterCard('sec-overview','总览',overview)
+    + chapterCard('sec-chart','盘面',chartContent)
+    + chapterCard('sec-relation','关系',relationContent)
+    + chapterCard('sec-action','行动',actionContent)
+    + chapterCard('sec-phase','时间',useSection(byId.phase,'当前的进与收'));
+}
+
+function render(chart, sections){
+  CHART = chart;
+  document.querySelector('.endviz').hidden=false;
+  const editDock = $('reportEditDock');
+  if (editDock && $('out').contains(editDock)) $('out').after(editDock);
+  const byId = Object.fromEntries(sections.map(section => [section.id,section]));
+  let h = reportChapterMarkup(chart,sections);
+  h += deepCard();
+  h += PRIVATE_REPORT_MODE ? privateQianCard() : qianCard();
+  $('out').innerHTML = h;
+  updateReportHero(chart,byId.overview);
+  initStructuredInteractions();
+  buildReportReader();
+  buildNav();
+  openInitialReportTarget();
+  watchMemberStatus();
+  if ($('drawBtn')) $('drawBtn').onclick = () => drawQianRitual(chart);
+  $('qianShareBtn').onclick = shareQianPoster;
+  $('qianPosterClose').onclick = () => closeReportModal('qianPosterLayer');
+  if ($('deepAsk')) $('deepAsk').onclick = () => askDeep(chart);
+  if ($('deepRetry')) $('deepRetry').onclick = () => location.reload();
+  if (!render.reportOpened){trackEvent('report_opened',{outcome:'completed'});render.reportOpened=true}
+}
+
+function updateReportHero(chart, overview){
+  $('reportSynastryLink').href=synastryPageHref();
+  const homeContent = window.ZhixingHomeContentV1;
+  const home = !PRIVATE_REPORT_MODE && homeContent && typeof homeContent.buildHome === 'function'
+    ? homeContent.buildHome(chart)
+    : null;
+  const identity = home?.identity || `${chart.dayMaster.stem}${chart.dayMaster.element} × 太阳${String(chart.astro?.sun?.sign || '星座').replace(/座$/,'')}`;
+  const fallback = String(overview?.body || '先从总览开始，结合真实经历核对这张盘呈现的倾向。')
+    .split(/\n\n+/)[0].replace(/\s*来源[:：].*$/s,'').trim();
+  const missingBirthTime=chart.meta&&chart.meta.inputPrecision&&chart.meta.inputPrecision.birthTime==='missing';
+  $('reportIdentity').textContent = identity + (missingBirthTime?'（缺时暂排）':'');
+  $('reportJudgement').textContent = String(overview?.hero || fallback).trim();
+  document.querySelector('.report-hero-nav').hidden=false;
+  const precision=$('reportPrecision');
+  const warnings=Array.isArray(chart.meta&&chart.meta.warnings)?chart.meta.warnings.filter(Boolean):[];
+  precision.classList.remove('is-blocking');
+  precision.textContent=warnings.length
+    ? ((missingBirthTime?'暂排提示：':'边界提示：')+warnings.join(' '))
+    : '';
+  precision.hidden=!warnings.length;
+}
+
+const REPORT_NAV_GROUPS = [
+  { label:'五章', items:[['sec-overview','总览'],['sec-chart','盘面'],['sec-relation','关系'],['sec-action','行动'],['sec-phase','时间']] }
+];
+const REPORT_READING_IDS = REPORT_NAV_GROUPS.flatMap(group => group.items.map(item => item[0]));
+const REPORT_TOOL_IDS = ['sec-deep','sec-qian'];
+// Lucide 0.468.0 (ISC), vendored paths only; ./vendor/lucide-LICENSE.txt.
+// A single 24-unit grid / 1.5 stroke family; labels remain the information source.
+const REPORT_NAV_ICONS = {
+  'sec-chart':'<path d="M12 3v18"/><path d="M3 12h18"/><rect x="3" y="3" width="18" height="18" rx="2"/>',
+  'sec-overview':'<rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/>',
+  'sec-relation':'<path d="M18 21a8 8 0 0 0-16 0"/><circle cx="10" cy="8" r="5"/><path d="M22 20c0-3.37-2-6.5-4-8a5 5 0 0 0-.45-8.3"/>',
+  'sec-action':'<circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/>',
+  'sec-phase':'<rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4M3 10h18M8 2v4M17 14h-6M13 18H7M7 14h.01M17 18h.01"/>',
+  'sec-deep':'<path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/>',
+  'sec-qian':'<path d="m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2Z"/><path d="m9 10 2 2 4-4"/>'
+};
+const REPORT_MOBILE_TITLES = {
+  'sec-overview':'总览','sec-chart':'盘面','sec-relation':'关系','sec-action':'行动','sec-phase':'时间',
+  'sec-deep':'问星','sec-qian':'知星卡'
+};
+const REPORT_NAV_TITLES = Object.fromEntries(REPORT_NAV_GROUPS.flatMap(group => group.items).concat([
+  ['sec-deep','问星'],['sec-qian','今日知星卡']
+]));
+let REPORT_NAV_OBSERVER = null;
+let REPORT_NAV_SCROLL_HANDLER = null;
+let REPORT_ACTIVE_ID = 'sec-overview';
+let REPORT_LAST_READING_ID = 'sec-overview';
+let REPORT_LAST_TRACKED_SECTION = '';
+const REPORT_CHAPTER_KEY_PREFIX = 'zx_report_last_chapter_v2:';
+// 与报告内容候选一起升级；旧的全局 v1 阅读进度不再迁入任意新盘。
+const REPORT_READING_CONTENT_VERSION = 'report-time-annual-approved-2026-09-11';
+let REPORT_CHAPTER_STORAGE_KEY = '';
+let REPORT_GENERATION_REVISION = 0;
+const REPORT_SECTION_ANALYTICS = {
+  'sec-chart':'chart','sec-overview':'overview',
+  'sec-relation':'relation','sec-action':'action','sec-phase':'phase','sec-deep':'context','sec-qian':'card'
+};
+
+function reportNavIcon(id){
+  return `<svg class="nav-glyph" viewBox="0 0 24 24" aria-hidden="true">${REPORT_NAV_ICONS[id] || ''}</svg>`;
+}
+
+function reportNavLink(id, title, className = ''){
+  return `<a class="nav-section-link${className ? ' ' + className : ''}" href="#${id}" data-nav-target="${id}">${reportNavIcon(id)}<span class="nav-label">${title}</span><span class="nav-state-icon" aria-hidden="true"></span></a>`;
+}
+
+function scrollToReportTarget(target, smooth){
+  if (!target) return;
+  setTimeout(() => {
+    const mobileRail = matchMedia('(max-width: 760px)').matches ? document.querySelector('.reader-rail') : null;
+    const offset = mobileRail ? mobileRail.getBoundingClientRect().height + 12 : 18;
+    const top = target.getBoundingClientRect().top + window.scrollY - offset;
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (smooth && !reduceMotion) window.scrollTo({ top, behavior:'smooth' });
+    else {
+      const root = document.documentElement;
+      const previous = root.style.scrollBehavior;
+      root.style.scrollBehavior = 'auto';
+      window.scrollTo(0, top);
+      root.style.scrollBehavior = previous;
+    }
+  }, 60);
+}
+
+function syncReaderControls(id){
+  const index = REPORT_READING_IDS.indexOf(id);
+  if (index < 0) return;
+  const position = $('readerPosition');
+  if (position) position.textContent = `${index + 1} / ${REPORT_READING_IDS.length}`;
+  const navPosition = $('navPosition');
+  if (navPosition) navPosition.textContent = `${index + 1} / ${REPORT_READING_IDS.length}`;
+  const prev = $('readerPrev'), next = $('readerNext');
+  const returnButton = $('readerReturn');
+  if (prev) prev.hidden = false;
+  if (next) next.hidden = false;
+  if (position) position.hidden = false;
+  if (returnButton) returnButton.hidden = true;
+  if (prev){
+    prev.disabled = index === 0;
+    prev.textContent = index === 0 ? '已经是第一章' : `上一章 · ${REPORT_NAV_TITLES[REPORT_READING_IDS[index - 1]]}`;
+  }
+  if (next){
+    next.disabled = index === REPORT_READING_IDS.length - 1;
+    next.textContent = index === REPORT_READING_IDS.length - 1 ? '本章已是终章' : `下一章 · ${REPORT_NAV_TITLES[REPORT_READING_IDS[index + 1]]}`;
+  }
+}
+
+async function reportChapterStorageKey(chart, contentVersion = REPORT_READING_CONTENT_VERSION){
+  const input = chart && chart.input;
+  if (!input || !window.crypto || !window.crypto.subtle || typeof TextEncoder !== 'function') return '';
+  const normalized = {
+    version:contentVersion,
+    y:Number(input.y),m:Number(input.m),d:Number(input.d),
+    hh:input.hh == null ? null : Number(input.hh),mm:input.mm == null ? null : Number(input.mm),
+    city:String(input.city || '').normalize('NFC').trim(),
+    gender:String(input.gender || '').normalize('NFC').trim()
+  };
+  try {
+    const digest = await window.crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify(normalized)));
+    return REPORT_CHAPTER_KEY_PREFIX + Array.from(new Uint8Array(digest),value=>value.toString(16).padStart(2,'0')).join('');
+  } catch (_) { return ''; }
+}
+
+function rememberReportChapter(id){
+  if (!REPORT_CHAPTER_STORAGE_KEY || !REPORT_READING_IDS.includes(id)) return;
+  try { localStorage.setItem(REPORT_CHAPTER_STORAGE_KEY,id); } catch (_) {}
+}
+
+function rememberedReportChapter(){
+  try {
+    if (!REPORT_CHAPTER_STORAGE_KEY) return '';
+    const id = localStorage.getItem(REPORT_CHAPTER_STORAGE_KEY);
+    return REPORT_READING_IDS.includes(id) ? id : '';
+  } catch (_) { return ''; }
+}
+
+function announceReportChapter(card,id){
+  const index = REPORT_READING_IDS.indexOf(id);
+  const heading = card && card.querySelector(':scope > .pad > h2');
+  if (heading) heading.focus({preventScroll:true});
+  const announcer = $('chapterAnnouncer');
+  if (announcer) announcer.textContent = `${REPORT_NAV_TITLES[id]}，第 ${index + 1} 章，共 ${REPORT_READING_IDS.length} 章`;
+}
+
+function activateReportChapter(id, shouldScroll, updateHash = true, moveFocus = shouldScroll, persist = true){
+  if (!REPORT_READING_IDS.includes(id)) return false;
+  const card = $(id); if (!card) return false;
+  REPORT_ACTIVE_ID = id;
+  REPORT_LAST_READING_ID = id;
+  if (persist) rememberReportChapter(id);
+  document.querySelectorAll('.reader-page,.reader-tool-page').forEach(page => {
+    const active = page.id === id;
+    page.hidden = !active;
+    page.classList.toggle('is-active', active);
+    page.setAttribute('aria-hidden', String(!active));
+  });
+  syncReaderControls(id);
+  setReportNavActive(id);
+  if (updateHash) history.replaceState({zxReportScope:REPORT_CHAPTER_STORAGE_KEY}, '', `#${id}`);
+  if (shouldScroll) scrollToReportTarget(card, true);
+  if (moveFocus) setTimeout(() => announceReportChapter(card,id), 140);
+  return true;
+}
+
+function activateReportTool(id, shouldScroll, updateHash = true){
+  if (!REPORT_TOOL_IDS.includes(id)) return false;
+  const card = $(id); if (!card) return false;
+  REPORT_ACTIVE_ID = id;
+  document.querySelectorAll('.reader-page,.reader-tool-page').forEach(page => {
+    const active = page.id === id;
+    page.hidden = !active;
+    page.classList.toggle('is-active', active);
+    page.setAttribute('aria-hidden', String(!active));
+  });
+  const prev = $('readerPrev'), next = $('readerNext'), position = $('readerPosition'), returnButton = $('readerReturn');
+  const navPosition = $('navPosition');
+  if (prev) prev.hidden = true;
+  if (next) next.hidden = true;
+  if (position) position.hidden = true;
+  if (returnButton){
+    returnButton.hidden = false;
+    returnButton.textContent = `返回报告 · ${REPORT_NAV_TITLES[REPORT_LAST_READING_ID]}`;
+  }
+  if (navPosition) navPosition.textContent = '工具';
+  setReportNavActive(id);
+  if (updateHash) history.replaceState({zxReportScope:REPORT_CHAPTER_STORAGE_KEY}, '', `#${id}`);
+  if (shouldScroll) scrollToReportTarget(card, true);
+  return true;
+}
+
+function buildReportReader(){
+  const out = $('out');
+  if (!out || $('reportReader')) return;
+  const reader = document.createElement('section');
+  reader.className = 'report-reader';
+  reader.id = 'reportReader';
+  reader.setAttribute('aria-label', '深度发展报告单章阅读器');
+  reader.innerHTML = `<aside class="reader-rail" aria-label="章节目录"><div class="reader-rail-inner">
+      <span class="reader-rail-label">知 星 报 告</span>
+      <div class="nav-status">
+        <div class="nav-current"><span>当前章节</span><strong id="navCurrent">总览</strong></div>
+        <div class="nav-position">
+          <span id="navPosition">1 / ${REPORT_READING_IDS.length}</span>
+          <button class="reader-menu-toggle" id="readerMenuToggle" type="button" aria-expanded="false" aria-controls="readerMobileNav">目录</button>
+        </div>
+      </div>
+      <nav class="reader-mobile-nav" id="readerMobileNav" aria-label="报告五章" hidden></nav>
+      <nav class="secnav" id="secNav" aria-label="报告章节"></nav>
+    </div></aside>
+    <div class="reader-main"><div class="reader-stage" id="readerStage"></div>
+      <div class="reader-controls" aria-label="章节切换">
+        <button class="reader-control" id="readerPrev" type="button">上一章</button>
+        <span class="reader-position" id="readerPosition">1 / ${REPORT_READING_IDS.length}</span>
+        <button class="reader-control reader-control-next" id="readerNext" type="button">下一章</button>
+        <button class="reader-return" id="readerReturn" type="button" hidden>返回报告</button>
+      </div>
+      <aside class="reader-tools" aria-label="报告后的互动工具">
+        <span class="reader-tools-label">报告后的互动工具 · 不计入五章进度</span>
+        <div class="reader-tools-links">
+          ${reportNavLink('sec-deep','问星','reader-tool-link reader-tool-deep')}
+          ${reportNavLink('sec-qian',PRIVATE_REPORT_MODE?'日主身份卡':'今日知星卡','reader-tool-link reader-tool-qian')}
+        </div>
+      </aside>
+      <span class="sr-only" id="chapterAnnouncer" role="status" aria-live="polite" aria-atomic="true"></span>
+    </div>`;
+  out.prepend(reader);
+  const stage = $('readerStage');
+  REPORT_READING_IDS.forEach(id => {
+    const card = $(id); if (!card) return;
+    const pad = card.querySelector(':scope > .pad');
+    const heading = pad && pad.querySelector(':scope > h2');
+    if (!pad || !heading) return;
+    heading.setAttribute('tabindex','-1');
+    card.classList.add('reader-page');
+    stage.appendChild(card);
+  });
+  REPORT_TOOL_IDS.forEach(id => {
+    const card = $(id); if (!card) return;
+    card.classList.add('reader-tool-page');
+    card.hidden = true;
+    card.setAttribute('aria-hidden', 'true');
+    stage.appendChild(card);
+  });
+  $('readerPrev').addEventListener('click', () => {
+    const index = REPORT_READING_IDS.indexOf(REPORT_ACTIVE_ID);
+    if (index > 0) activateReportChapter(REPORT_READING_IDS[index - 1], true);
+  });
+  $('readerNext').addEventListener('click', () => {
+    const index = REPORT_READING_IDS.indexOf(REPORT_ACTIVE_ID);
+    if (index >= 0 && index < REPORT_READING_IDS.length - 1) activateReportChapter(REPORT_READING_IDS[index + 1], true);
+  });
+  $('readerReturn').addEventListener('click', () => activateReportChapter(REPORT_LAST_READING_ID, true));
+  $('readerMenuToggle').addEventListener('click', () => {
+    const menu = $('readerMobileNav');
+    const open = menu.hidden;
+    menu.hidden = !open;
+    $('readerMenuToggle').setAttribute('aria-expanded',String(open));
+  });
+  const editDock = $('reportEditDock');
+  if (editDock){
+    editDock.hidden = PRIVATE_REPORT_MODE;
+    reader.querySelector('.reader-main').appendChild(editDock);
+  }
+  activateReportChapter('sec-overview', false, false, false, false);
+  mountSynastryShortcut();
+}
+
+function mountSynastryShortcut(){
+  const status=document.querySelector('#reportReader .nav-status');if(!status)return;
+  let shortcut=$('synastry-reader-shortcut');
+  if(!shortcut){
+    shortcut=document.createElement('div');shortcut.id='synastry-reader-shortcut';shortcut.className='syn-reader-shortcut';
+    shortcut.innerHTML='<span>从了解自己，到了解彼此</span><a aria-label="邀请 TA 合盘"><span class="syn-shortcut-full">邀请 TA 合盘</span><span class="syn-shortcut-short">合盘</span><span aria-hidden="true">↗</span></a>';
+  }
+  shortcut.querySelector('a').href=synastryPageHref();
+  const mobile=matchMedia('(max-width:760px)').matches;
+  if(mobile)status.querySelector('.nav-position').append(shortcut);else status.after(shortcut);
+}
+matchMedia('(max-width:760px)').addEventListener('change',mountSynastryShortcut);
+
+function openInitialReportTarget(){
+  let id = '';
+  try { id = decodeURIComponent(location.hash.replace(/^#/, '')); } catch (_) {}
+  const remembered = rememberedReportChapter();
+  const hashScope = history.state && history.state.zxReportScope;
+  const matchingHash = hashScope ? hashScope === REPORT_CHAPTER_STORAGE_KEY : !!remembered;
+  if (matchingHash && id && activateReportChapter(id, false, false, false)) { scrollToReportTarget($(id), false); return; }
+  // 保留外部明确进入问星/知星卡的入口，但不把另一张盘的工具位置带过来。
+  if ((!hashScope || matchingHash) && id && activateReportTool(id, false, false)) {
+    REPORT_LAST_READING_ID = remembered || 'sec-overview';
+    $('readerReturn').textContent = `返回报告 · ${REPORT_NAV_TITLES[REPORT_LAST_READING_ID]}`;
+    rememberReportChapter(REPORT_LAST_READING_ID);
+    scrollToReportTarget($(id), false);
+    return;
+  }
+  if (remembered && remembered !== 'sec-overview') {
+    activateReportChapter(remembered,false,true,false);
+    scrollToReportTarget($(remembered),false);
+  } else {
+    activateReportChapter('sec-overview',false,true,false);
+  }
+}
+
+function setReportNavActive(id){
+  if (!REPORT_NAV_TITLES[id]) return;
+  if (REPORT_LAST_TRACKED_SECTION !== id && REPORT_SECTION_ANALYTICS[id]) {
+    REPORT_LAST_TRACKED_SECTION=id;
+    trackEvent('report_section_viewed',{section:REPORT_SECTION_ANALYTICS[id],outcome:'shown'});
+  }
+  document.querySelectorAll('[data-nav-target]').forEach(link => {
+    const active = link.dataset.navTarget === id;
+    link.classList.toggle('active', active);
+    if (active) link.setAttribute('aria-current', 'location');
+    else link.removeAttribute('aria-current');
+  });
+  const current = $('navCurrent');
+  if (current) current.textContent = REPORT_NAV_TITLES[id];
+  const index = REPORT_READING_IDS.indexOf(id);
+  const navPosition = $('navPosition');
+  if (navPosition) navPosition.textContent = index >= 0 ? `${index + 1} / ${REPORT_READING_IDS.length}` : '工具';
+}
+
+/* 五章与报告后工具分层；工具不进入章节数量与上下章顺序。 */
+function buildNav(){
+  const nav = $('secNav'); if (!nav) return;
+  if (REPORT_NAV_OBSERVER) REPORT_NAV_OBSERVER.disconnect();
+  if (REPORT_NAV_SCROLL_HANDLER) window.removeEventListener('scroll', REPORT_NAV_SCROLL_HANDLER);
+  REPORT_NAV_OBSERVER = null;
+  REPORT_NAV_SCROLL_HANDLER = null;
+  const chapterGroups = REPORT_NAV_GROUPS.map(group => `<div class="nav-group">
+    <div class="nav-group-name">${group.label}</div>
+    <div class="nav-group-links">${group.items.map(([id,title]) => reportNavLink(id,title)).join('')}</div>
+  </div>`).join('');
+  nav.innerHTML = chapterGroups;
+  const mobileNav = $('readerMobileNav');
+  if (mobileNav){
+    mobileNav.innerHTML = REPORT_READING_IDS.map(id => {
+      return reportNavLink(id,REPORT_MOBILE_TITLES[id],'reader-mobile-nav-item');
+    }).join('');
+  }
+
+  const sections = [$('reportReader')].filter(Boolean);
+  document.querySelectorAll('[data-nav-target]').forEach(link => {
+    link.addEventListener('click', event => {
+      const id = link.dataset.navTarget;
+      event.preventDefault();
+      const menu = $('readerMobileNav');
+      if (menu && link.closest('#readerMobileNav')) {
+        menu.hidden = true;
+        $('readerMenuToggle')?.setAttribute('aria-expanded','false');
+      }
+      if (activateReportChapter(id, true)) return;
+      activateReportTool(id, true);
+    });
+  });
+  setReportNavActive(REPORT_ACTIVE_ID);
+
+  if ('IntersectionObserver' in window){
+    REPORT_NAV_OBSERVER = new IntersectionObserver(entries => {
+      const visible = entries.filter(entry => entry.isIntersecting);
+      if (!visible.length) return;
+      const marker = Math.max(24, innerHeight * .18);
+      visible.sort((a,b) => Math.abs(a.boundingClientRect.top-marker) - Math.abs(b.boundingClientRect.top-marker));
+      setReportNavActive(REPORT_ACTIVE_ID);
+    }, { rootMargin:'-16% 0px -72% 0px', threshold:0 });
+    sections.forEach(section => REPORT_NAV_OBSERVER.observe(section));
+  } else {
+    REPORT_NAV_SCROLL_HANDLER = () => {
+      const marker = innerHeight * .22;
+      const current = sections.reduce((best, section) => {
+        const distance = Math.abs(section.getBoundingClientRect().top - marker);
+        return !best || distance < best.distance ? { section, distance } : best;
+      }, null);
+      if (current){
+        setReportNavActive(REPORT_ACTIVE_ID);
+      }
+    };
+    window.addEventListener('scroll', REPORT_NAV_SCROLL_HANDLER, { passive:true });
+  }
+}
+
+
+/* ---------- 问星（只允许后端或本机回环测试转发） ----------
+ * 铁律:不让 AI 起卦/排盘,只把「已算好的个人文化图谱 + 今日知星卡」作为观察材料，梳理现实条件。 */
+// 用户的否定、引用和疑问不等于模型断言；输出断言由后端单独校验。
+const DEEP_REQUEST_SCOPE = /算命|测吉凶|改运|消灾|破财|血光|灾祸|克夫|克妻|寿命/;
+function deepQuestionIssue(question){
+  if(!question)return '先写下你想问的事。';
+  if(question.length>200||/[\u0000-\u001f\u007f]/.test(question))return '问题请控制在 200 字内，并删除特殊控制字符。';
+  const requested=question.replace(/(?:不需要|不想|不要|无需|不做|不是)(?:再|去|做|进行)?(?:算命|测吉凶|改运|消灾)/g,'');
+  return DEEP_REQUEST_SCOPE.test(requested)?'问星只提供个人发展参照，请描述现实处境或下一步选择。':'';
+}
+
+/* 后端直答开关：公开环境只接受配置的知星后端，本机调试只接受回环地址。 */
+const DEEP_ENDPOINT = PUBLIC_AI_AVAILABLE ? CONFIGURED_DEEP_ENDPOINT : '';
+const DEEP_HISTORY_LIMIT = 4;
+const DEEP_RESPONSE_TIMEOUT_MS = 70000;
+let deepTurns = [];
+let deepRequestInFlight = false;
+
+function isLocalDebugHost(hostname){
+  return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '[::1]';
+}
+function isLocalDebugPage(){
+  return location.protocol === 'file:' || isLocalDebugHost(location.hostname);
+}
+function localDebugUrlParam(name){
+  const raw = new URLSearchParams(location.search).get(name);
+  if (!raw || !isLocalDebugPage()) return '';
+  try {
+    const u = new URL(raw, location.href);
+    return /^https?:$/.test(u.protocol) && isLocalDebugHost(u.hostname) ? u.href : '';
+  } catch (_) {
+    return '';
+  }
+}
+function localDebugDeepMode(){
+  const endpoint=localDebugUrlParam('deep');
+  if(!endpoint)return '';
+  const mode=new URLSearchParams(location.search).get('deepMode');
+  if(mode==='real'){
+    return location.protocol==='http:'&&location.hostname==='127.0.0.1'&&endpoint===LOCAL_REAL_DEEP_ENDPOINT?'real':'';
+  }
+  return mode==='mock'?'mock':'';
+}
+function captureLocalRealBootstrap(){
+  if(LOCAL_DEEP_MODE!=='real')return '';
+  const parts=location.hash.slice(1).split('&').filter(Boolean);
+  const bootstrapPart=parts.find(part=>part.startsWith('deepBootstrap='))||'';
+  let raw='';
+  try{raw=decodeURIComponent(bootstrapPart.slice('deepBootstrap='.length))}catch(_){}
+  if(/^[a-f0-9]{64}$/.test(raw)){
+    const kept=parts.filter(part=>!part.startsWith('deepBootstrap='));
+    history.replaceState(null,'',location.pathname+location.search+(kept.length?'#'+kept.join('&'):''));
+    return raw;
+  }
+  return '';
+}
+function withLocalDeepEndpoint(href){
+  const endpoint=localDebugUrlParam('deep');
+  if(!endpoint)return href;
+  try{
+    const target=new URL(href,location.href);
+    target.searchParams.set('deep',endpoint);
+    const mode=localDebugDeepMode();
+    if(mode)target.searchParams.set('deepMode',mode);
+    return target.pathname+target.search+target.hash;
+  }catch(_){
+    return href;
+  }
+}
+function configuredDeepEndpoint(value){
+  if(window.ZX_TEST_SIMULATION===true && value===window.ZXTestBootstrap.apiBase+'/ai/deep')return value;
+  const raw=String(value||'').trim();
+  if(!raw)return '';
+  try{
+    const u=new URL(raw);
+    const hostname=u.hostname.toLowerCase().replace(/\.$/,'');
+    if(u.protocol!=='https:'||u.username||u.password||u.search||u.hash||
+      (hostname!=='zhixng.cn'&&!hostname.endsWith('.zhixng.cn')))return '';
+    return u.href.replace(/\/+$/,'');
+  }catch(_){
+    return '';
+  }
+}
+function deepEndpoint(){
+  const localEndpoint = localDebugUrlParam('deep');
+  return localEndpoint || (isLocalDebugPage() ? '' : DEEP_ENDPOINT);
+}
+function deepComposerAvailable(){
+  if(PRIVATE_REPORT_MODE)return !!CONFIGURED_DEEP_ENDPOINT && PUBLIC_CONFIG.deepServiceAvailable === true;
+  return LOCAL_DEBUG_PAGE
+    ? !!deepEndpoint() && (LOCAL_DEEP_MODE === 'mock' || LOCAL_DEEP_MODE === 'real')
+    : PUBLIC_AI_AVAILABLE && !!deepEndpoint();
+}
+async function allowsLocalLoopbackDeepWithoutToken(endpoint){
+  const localEndpoint = localDebugUrlParam('deep');
+  if(!LOCAL_DEBUG_PAGE||!localEndpoint||endpoint!==localEndpoint||LOCAL_DEEP_MODE!=='mock')return false;
+  try{
+    const response=await fetchWithTimeout(endpoint,{method:'GET'},3000);
+    const health=await response.json();
+    return response.ok&&health&&health.service==='zhixing-deep'&&health.provider==='mock'&&health.model==='mock';
+  }catch(_){
+    return false;
+  }
+}
+function localRealPairUrl(endpoint){
+  const target=new URL(endpoint);
+  target.pathname=target.pathname.replace(/\/+$/,'')+'/pair';
+  target.search='';
+  target.hash='';
+  return target.href;
+}
+function newLocalRealToken(){
+  const bytes=new Uint8Array(32);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes,value=>value.toString(16).padStart(2,'0')).join('');
+}
+async function localRealDeepToken(endpoint){
+  const localEndpoint=localDebugUrlParam('deep');
+  if(LOCAL_DEEP_MODE!=='real'||!localEndpoint||endpoint!==localEndpoint)return '';
+  const key='zx_local_real_deep_pair_v1';
+  let token='';
+  try{token=sessionStorage.getItem(key)||''}catch(_){}
+  if(!/^[a-f0-9]{64}$/.test(token)){
+    token=newLocalRealToken();
+    try{sessionStorage.setItem(key,token)}catch(_){}
+  }
+  const healthResponse=await fetchWithTimeout(endpoint,{method:'GET'},3000);
+  const health=await healthResponse.json();
+  if(!healthResponse.ok||!health||health.service!=='zhixing-deep-test-relay'||health.provider!=='deepseek'){
+    throw new Error('local real deep health mismatch');
+  }
+  const response=await fetchWithTimeout(localRealPairUrl(endpoint),{
+    method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({token,bootstrap:LOCAL_DEEP_BOOTSTRAP})
+  },5000);
+  if(!response.ok)throw new Error('local real deep pair failed');
+  LOCAL_DEEP_BOOTSTRAP='';
+  return token;
+}
+async function deepAccountToken(){
+  if(!window.zxMember)return '';
+  if(typeof zxMember.freshAccessToken==='function')return zxMember.freshAccessToken();
+  return typeof zxMember.token==='function'?zxMember.token():'';
+}
+
+async function fetchWithTimeout(input, init = {}, timeoutMs = 25000){
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try { return await fetch(input, { ...init, signal:controller.signal }); }
+  finally { clearTimeout(timer); }
+}
+
+function newDeepIdempotencyKey(){
+  if(!window.crypto||typeof crypto.getRandomValues!=='function')throw new Error('secure random unavailable');
+  const bytes=new Uint8Array(16);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes,value=>value.toString(16).padStart(2,'0')).join('');
+}
+function deepResponseCode(data){
+  const raw=data&&data.error;
+  return String(raw&&typeof raw==='object'?raw.code:raw||'').trim();
+}
+function deepInputRejection(error,recovering){
+  if(!error||error.status!==400||!['SENSITIVE_INPUT_REJECTED','ASK_QUESTION_INVALID'].includes(error.code))return null;
+  const data=error.data||{},restored=error.creditRestored===true||data.credit_restored===true;
+  // 本次校验在扣次前；重放旧请求被拒绝不能证明上一次没有扣次。
+  const clearPending=restored||(!recovering&&error.retrySameRequest!==true&&data.retry_same_request!==true&&data.credit_restored!==false);
+  const reason=error.code==='SENSITIVE_INPUT_REJECTED'
+    ?'提交内容含联系方式或证件、银行卡号。'
+    :'问题格式不符，限 1—200 字且不能含控制字符。';
+  return {clearPending,message:reason+(clearPending
+    ?(restored?'次数已回补，请修改后再试。':'本次未扣次，请修改后再试。')
+    :'上一问状态未确认，请先核对问答存档，保留原问题重试。')};
+}
+
+/* 公开真答：只走知星 Deep 后端。浏览器不调用扣次、回补或持久化内部接口。 */
+
+function deepPaywall(reason){
+  const loginRequired=reason==='login';
+  const wechatRequired=reason==='wechat';
+  const title=wechatRequired?'请在微信中打开':(loginRequired?'请完成微信授权':CREDITS_REQUIRED.title);
+  const body=wechatRequired
+    ?'付费问星仅在微信内开放；免费排盘与报告仍可继续查看。'
+    :(loginRequired?'问星次数、订单和已保存答复只归属后端已确认的微信账号。'
+    :CREDITS_REQUIRED.body);
+  const action=loginRequired?'微信授权并查看商品':'选择问星次数';
+  return `<div class="deep-echo"><b style="color:var(--gold)">${esc(title)}</b><br>${esc(body)}<div class="member-actions"><a href="${ACCOUNT_PAGE_HREF}#ask-section">${esc(action)}</a></div></div>`;
+}
+
+function renderDeep(ans, q){
+  const parts = (ans.parts || []).map(p =>
+    `<div class="da-part"><span class="da-label">${esc(p.label || '')}</span><p>${fmtBody(String(p.body || ''))}</p>` +
+    (p.source ? `<span class="src-inline">来源:${esc(p.source)}</span>` : '') + `</div>`).join('');
+  const adv = (ans.advice || []).length
+    ? `<div class="da-adv"><div class="da-adv-h">可以先做的</div><ul>${ans.advice.map(a => `<li>${esc(a)}</li>`).join('')}</ul></div>` : '';
+  return `<div class="deep-ans">
+    <div class="ai-label">AI 生成内容</div>
+    <div class="da-q">你问:${esc(q)}</div>
+    <div class="da-reply">${esc(ans.reply || '')}</div>
+    ${parts}${adv}
+    <div class="da-caveat">${esc(ans.caveat || '请核对其中引用的盘面信息，并结合现实情况判断。不要把回答作为医疗、心理、法律、投资或其他重要决定的唯一依据。')}</div>
+    ${deepUpsell()}
+  </div>`;
+}
+
+function rememberDeepTurn(question, ans){
+  deepTurns.push({
+    question: String(question || '').slice(0, 160),
+    reply: String(ans.reply || '').slice(0, 160),
+    parts: (ans.parts || []).map(p => ({
+      label: String(p.label || '').slice(0, 20),
+      source: String(p.source || '').slice(0, 40),
+      body: String(p.body || '').slice(0, 180)
+    })),
+    advice: (ans.advice || []).map(a => String(a || '').slice(0, 120)).slice(0, 3)
+  });
+  if (deepTurns.length > DEEP_HISTORY_LIMIT) deepTurns = deepTurns.slice(-DEEP_HISTORY_LIMIT);
+}
+
+function deepArchiveNotice(){
+  return `<div class="da-more">完整答案已保存到账号，可在「我的」中恢复查看；本次已消耗 1 次问星。</div>`;
+}
+
+/* 支持连续追问，下一问会带上最近几轮问答摘要。每次提交独立消耗 1 次。 */
+function deepUpsell(){
+  const remaining=Number.isInteger(PAID_ASK_STATE.remaining)?PAID_ASK_STATE.remaining:null;
+  const balance=remaining===null?'次数以服务端最新记录为准':`当前剩余 ${remaining} 次`;
+  return `<div class="da-more">可以继续追问，每次追问消耗 1 次；${balance}。建议补一条具体背景，比如时间、对象、代价或你最纠结的点。</div>`;
+}
+function moveDeepComposerAfterAnswer(){
+  const composer = $('deepComposer');
+  const echo = $('deepEcho');
+  if (!composer || !echo) return;
+  echo.insertAdjacentElement('afterend', composer);
+  composer.classList.add('is-followup');
+}
+/* 无 Key(未走内测通道 / 公开访问):优雅降级为预告,不暴露直连 */
+function deepTeaser(q){
+  return `<div class="deep-echo"><b style="color:var(--gold)">问星暂不可用</b><br>本次问题未能提交。你仍可查看深度发展报告与今日知星卡。</div>`;
+}
+
+function updateDeepEcho(html, focusResult){
+  const echo = $('deepEcho');
+  if (!echo) return;
+  echo.innerHTML = html;
+  if (focusResult) requestAnimationFrame(() => echo.focus({preventScroll:true}));
+}
+
+let AI_PROCESSING_RESOLVE = null;
+function requestAiProcessingConsent(){
+  if (window.ZxPrivacyConsent && ZxPrivacyConsent.has('ai_processing')) return Promise.resolve(true);
+  $('aiProcessingGateDetail').textContent = MODEL_PROCESSING_NOTICE + ' ' + MODEL_INPUT_CAUTION;
+  $('aiProcessingCheck').checked = false;
+  $('aiProcessingOk').disabled = true;
+  $('aiProcessingError').hidden = true;
+  $('aiProcessingError').textContent = '';
+  trackEvent('ai_consent_shown',{outcome:'shown'});
+  openReportModal('aiProcessingGateBlock',()=>{ $('aiProcessingCancel').click(); });
+  return new Promise(resolve => { AI_PROCESSING_RESOLVE = resolve; });
+}
+$('aiProcessingCheck').onchange = () => {
+  $('aiProcessingOk').disabled = !$('aiProcessingCheck').checked;
+};
+$('aiProcessingOk').onclick = () => {
+  if (!$('aiProcessingCheck').checked) return;
+  try {
+    if (!window.ZxPrivacyConsent) throw new Error('privacy choice unavailable');
+    ZxPrivacyConsent.grant('ai_processing');
+    if (!ZxPrivacyConsent.has('ai_processing')) throw new Error('privacy choice not saved');
+  } catch (_) {
+    $('aiProcessingError').hidden = false;
+    $('aiProcessingError').textContent = '未能保存你的同意，问题尚未发送。请允许此网站保存本机数据后，再点“同意并继续”；也可选择“暂不使用”。';
+    return;
+  }
+  trackEvent('ai_consent_granted',{outcome:'granted'});
+  closeReportModal('aiProcessingGateBlock');
+  const resolve = AI_PROCESSING_RESOLVE;
+  AI_PROCESSING_RESOLVE = null;
+  if (resolve) resolve(true);
+};
+$('aiProcessingCancel').onclick = () => {
+  trackEvent('ai_consent_declined',{outcome:'declined'});
+  closeReportModal('aiProcessingGateBlock');
+  const resolve = AI_PROCESSING_RESOLVE;
+  AI_PROCESSING_RESOLVE = null;
+  if (resolve) resolve(false);
+};
+
+async function askDeep(chart){
+  if(PRIVATE_REPORT_MODE)return askPrivateReport();
+  if(deepRequestInFlight)return;
+  deepRequestInFlight=true;
+  try{await askDeepOnce(chart)}finally{deepRequestInFlight=false}
+}
+
+const DEEP_PENDING_STORAGE_KEY='zx_paid_ask_pending_v1';
+function readPendingDeepRequest(){
+  try{
+    const raw=sessionStorage.getItem(DEEP_PENDING_STORAGE_KEY)||'';
+    if(raw.length>64000)return null;
+    const value=JSON.parse(raw||'null');
+    if(value&&/^[a-f0-9]{32}$/.test(value.idempotencyKey)&&typeof value.question==='string'&&
+       value.question.length>0&&value.question.length<=200&&Array.isArray(value.history)&&value.history.length<=4&&
+       Number.isSafeInteger(value.historyLength)&&value.historyLength===value.history.length&&
+       /^(?:local-debug|[a-f0-9]{64})$/.test(String(value.accountRef||''))&&
+       /^[a-f0-9]{64}$/.test(String(value.chartRef||''))&&
+       Number.isFinite(value.createdAt)&&Date.now()-value.createdAt<24*60*60*1000)return value;
+  }catch(_){}
+  return null;
+}
+async function paidAskRequestBinding(chart,accountState){
+  const accountRef=LOCAL_DEBUG_PAGE?'local-debug':String(accountState&&accountState.accountRef||'');
+  if(!/^(?:local-debug|[a-f0-9]{64})$/.test(accountRef)){
+    const error=new Error('account binding unavailable');
+    error.code='REQUEST_BINDING_UNAVAILABLE';
+    throw error;
+  }
+  const input=chart&&chart.input;
+  const normalized=input&&{
+    y:Number(input.y),m:Number(input.m),d:Number(input.d),
+    hh:input.hh==null?null:Number(input.hh),mm:input.mm==null?null:Number(input.mm),
+    city:String(input.city||'').normalize('NFC').trim(),
+    gender:String(input.gender||'').normalize('NFC')
+  };
+  if(!normalized||![normalized.y,normalized.m,normalized.d].every(Number.isSafeInteger)||
+     (normalized.hh!==null&&!Number.isSafeInteger(normalized.hh))||
+     (normalized.mm!==null&&!Number.isSafeInteger(normalized.mm))||!normalized.city||
+     !window.crypto||!window.crypto.subtle||typeof window.crypto.subtle.digest!=='function'||
+     typeof TextEncoder!=='function'){
+    const error=new Error('chart binding unavailable');
+    error.code='REQUEST_BINDING_UNAVAILABLE';
+    throw error;
+  }
+  const digest=await window.crypto.subtle.digest('SHA-256',new TextEncoder().encode(JSON.stringify(normalized)));
+  const chartRef=Array.from(new Uint8Array(digest),item=>item.toString(16).padStart(2,'0')).join('');
+  if(!/^[a-f0-9]{64}$/.test(chartRef)){
+    const error=new Error('chart binding unavailable');
+    error.code='REQUEST_BINDING_UNAVAILABLE';
+    throw error;
+  }
+  return {accountRef,chartRef};
+}
+function pendingDeepRequest(question,history,binding){
+  const current=readPendingDeepRequest();
+  if(current){
+    if(current.question===question&&current.accountRef===binding.accountRef&&current.chartRef===binding.chartRef)return current;
+    const error=new Error('pending request differs');
+    error.code='PENDING_REQUEST_DIFFERS';
+    throw error;
+  }
+  let value,encoded;
+  try{
+    const savedHistory=JSON.parse(JSON.stringify(Array.isArray(history)?history.slice(-4):[]));
+    value={idempotencyKey:newDeepIdempotencyKey(),question,history:savedHistory,historyLength:savedHistory.length,
+      accountRef:binding.accountRef,chartRef:binding.chartRef,createdAt:Date.now()};
+    encoded=JSON.stringify(value);
+    if(encoded.length>64000)throw new Error('pending request is too large');
+    sessionStorage.setItem(DEEP_PENDING_STORAGE_KEY,encoded);
+    if(sessionStorage.getItem(DEEP_PENDING_STORAGE_KEY)!==encoded)throw new Error('pending request was not persisted');
+  }catch(cause){
+    const error=new Error('idempotency storage unavailable');
+    error.code='IDEMPOTENCY_STORAGE_UNAVAILABLE';
+    error.cause=cause;
+    throw error;
+  }
+  return value;
+}
+function clearPendingDeepRequest(idempotencyKey){
+  const current=readPendingDeepRequest();
+  if(!current||current.idempotencyKey!==idempotencyKey)return;
+  try{sessionStorage.removeItem(DEEP_PENDING_STORAGE_KEY)}catch(_){}
+}
+
+async function askDeepOnce(chart){
+  if (!deepComposerAvailable() || !$('deepQ')) return;
+  const storedPending=readPendingDeepRequest();
+  const typedQuestion=($('deepQ').value || '').trim();
+  const echo = $('deepEcho');
+  if (!typedQuestion&&!storedPending){ updateDeepEcho(`<div class="deep-echo">先写下你想问的那件事。</div>`, true); return; }
+  const typedIssue=typedQuestion&&deepQuestionIssue(typedQuestion);
+  if(typedIssue){
+    updateDeepEcho(`<div class="deep-echo">${esc(typedIssue)}</div>`,true);
+    return;
+  }
+  const useBackend = !!deepEndpoint();
+  if (!useBackend){
+    updateDeepEcho(typedQuestion
+      ? deepTeaser(typedQuestion)
+      : `<div class="deep-echo">问星当前不可用；本机待恢复问题不会在未验证账号与命盘前显示或发送。</div>`,true);
+    return;
+  }
+  if(!LOCAL_DEBUG_PAGE&&window.zxMember&&typeof zxMember.whenReady==='function'){
+    try { await zxMember.whenReady(); } catch (_) {}
+  }
+  const accountState=memberSnapshot();
+  if(!LOCAL_DEBUG_PAGE){
+    const paidClient=window.ZxPaidAsk;
+    const inWechat=!!(paidClient&&typeof paidClient.isWeChatBrowser==='function'&&paidClient.isWeChatBrowser());
+    if(!inWechat){
+      updateDeepEcho(deepPaywall('wechat'),true);
+      return;
+    }
+    if(!accountState.authenticated||accountState.identityKind!=='wechat'||!accountState.accountRef){
+      if(!paidClient||typeof paidClient.ensureIdentity!=='function'){
+        updateDeepEcho(deepPaywall('login'),true);
+        return;
+      }
+      updateDeepEcho(`<div class="deep-echo"><b style="color:var(--gold)">正在前往微信授权</b><br>授权回来后，页面会先向后端确认会话；本次问题尚未发送，也不会扣次。</div>`,true);
+      try{await paidClient.ensureIdentity('/report.html#sec-deep')}catch(_){
+        updateDeepEcho(`<div class="deep-echo"><b style="color:var(--gold)">微信授权未完成</b><br>当前不会发送问题或扣次。请确认正式配置后重试。</div>`,true);
+      }
+      return;
+    }
+  }
+  if (!await requestAiProcessingConsent()) {
+    updateDeepEcho(`<div class="deep-echo">你没有同意发送本次资料，问星未发出请求。</div>`, true);
+    return;
+  }
+  let binding;
+  try{binding=await paidAskRequestBinding(chart,accountState)}catch(_){
+    updateDeepEcho(`<div class="deep-echo"><b style="color:var(--gold)">无法安全绑定本次问星</b><br>当前账号或命盘标识不可用，本次没有发送，也不会扣次。请刷新并重新登录后再试。</div>`,true);
+    return;
+  }
+  if(storedPending&&(storedPending.accountRef!==binding.accountRef||storedPending.chartRef!==binding.chartRef)){
+    updateDeepEcho(`<div class="deep-echo"><b style="color:var(--gold)">上一问属于另一个账号或命盘</b><br>当前不会重放、不会扣次。请返回原账号与原命盘恢复，或先在「我的 → 问答存档」核对结果后退出登录清理本机待恢复状态。</div>`,true);
+    return;
+  }
+  const q=typedQuestion||(storedPending&&storedPending.question)||'';
+  const requestHistory=storedPending?storedPending.history:deepTurns;
+  const requestStage=requestHistory.length?'followup':'initial';
+  const questionIssue=deepQuestionIssue(q);
+  if(questionIssue){
+    updateDeepEcho(`<div class="deep-echo">${esc(questionIssue)}</div>`,true);
+    return;
+  }
+  if(!LOCAL_DEBUG_PAGE){
+    await refreshPaidAskState();
+    if(!storedPending&&(!PAID_ASK_STATE.allowed||!Number.isInteger(PAID_ASK_STATE.remaining)||PAID_ASK_STATE.remaining<1)){
+      updateDeepEcho(deepPaywall('credits'),true);
+      return;
+    }
+  }
+  let pending;
+  try{pending=storedPending||pendingDeepRequest(q,deepTurns,binding)}catch(error){
+    const message=error&&error.code==='IDEMPOTENCY_STORAGE_UNAVAILABLE'
+      ?'当前浏览器无法安全保存重试标识，本次问题没有发送，也不会扣次。请关闭无痕模式或允许会话存储后重试。'
+      :'上一条问星结果还未确认。为避免重复扣次，当前不会发送新问题。请恢复原问题，或先到「我的 → 问答存档」查看结果。';
+    updateDeepEcho(`<div class="deep-echo"><b style="color:var(--gold)">无法安全发送本次问星</b><br>${esc(message)}</div>`,true);
+    return;
+  }
+  if(pending.question!==q){
+    updateDeepEcho(`<div class="deep-echo"><b style="color:var(--gold)">上一条问星结果还未确认</b><br>请保留并恢复原问题；当前不会用新问题覆盖，也不会重复扣次。</div>`,true);
+    return;
+  }
+  if(!typedQuestion)$('deepQ').value=q;
+  const btn = $('deepAsk'); const label = btn.textContent; btn.disabled = true; btn.textContent = '梳理中……';
+  trackEvent('ai_request_started',{outcome:'started',stage:requestStage});
+  const priorHtml = echo.querySelector('.deep-ans') ? echo.innerHTML : '';
+  updateDeepEcho(priorHtml + `<div class="deep-echo">正在整理图谱参照、现实条件和可验证的下一步……</div>`, false);
+  try {
+    const deepResult = await callDeepBackend(chart, q, pending.history, pending.idempotencyKey);
+    const ans = deepResult.answer;
+    if(!LOCAL_DEBUG_PAGE&&Number.isInteger(deepResult.remaining)){
+      PAID_ASK_STATE={loaded:true,remaining:deepResult.remaining,allowed:deepResult.remaining>0};
+    }
+    const acceptedHtml=priorHtml+renderDeep(ans,q)+(LOCAL_DEBUG_PAGE?'':deepArchiveNotice());
+    updateDeepEcho(acceptedHtml,true);
+    if(!deepTurns.length&&pending.history.length)deepTurns.push(...pending.history);
+    rememberDeepTurn(q,ans);
+    clearPendingDeepRequest(pending.idempotencyKey);
+    $('deepQ').value='';
+    $('deepQ').placeholder='继续追问：补充一个具体背景或新的纠结点';
+    moveDeepComposerAfterAnswer();
+    renderMemberStatus();
+    trackEvent('ai_request_completed',{outcome:'completed',stage:requestStage});
+  } catch (e) {
+    if (e && e.paywall){
+      clearPendingDeepRequest(pending.idempotencyKey);
+      trackEvent('ai_request_failed',{outcome:'failed',reason:e.paywallReason==='login'?'login':'credits',stage:requestStage});
+      updateDeepEcho(priorHtml+deepPaywall(e.paywallReason||'credits'),true);
+      return;
+    }
+    const inputRejection=deepInputRejection(e,Boolean(storedPending));
+    if(inputRejection){
+      if(inputRejection.clearPending)clearPendingDeepRequest(pending.idempotencyKey);
+      trackEvent('ai_request_failed',{outcome:'failed',reason:'validation',stage:requestStage});
+      updateDeepEcho(priorHtml+`<div class="deep-echo">${esc(inputRejection.message)}</div>`,true);
+      return;
+    }
+    if(e&&e.code==='REQUEST_IN_PROGRESS'){
+      trackEvent('ai_request_failed',{outcome:'failed',reason:'pending',stage:requestStage});
+      updateDeepEcho(priorHtml+`<div class="deep-echo"><b style="color:var(--gold)">上一条请求仍在处理</b><br>本次没有重复扣次。请保留问题原文，稍后再次提交；页面会复用同一幂等键取回结果。</div>`,true);
+      return;
+    }
+    // 只有后端明确确认 credit_restored:true，才能清掉幂等键并宣称本次不扣次。
+    // 普通 5xx 可能发生在数据库已扣次、响应却丢失的窗口；此时必须保留同一键恢复。
+    const refundedFailure=e&&e.creditRestored===true;
+    if(refundedFailure)clearPendingDeepRequest(pending.idempotencyKey);
+    trackEvent('ai_request_failed',{outcome:'failed',reason:e&&e.name==='AbortError'?'timeout':'network',stage:requestStage});
+    if(refundedFailure){
+      updateDeepEcho(priorHtml+`<div class="deep-echo">模型或答案保存未成功，系统已回补本次问星；本次不扣次。请稍后再试。</div>`,true);
+    }else{
+      updateDeepEcho(priorHtml+`<div class="deep-echo"><b style="color:var(--gold)">返回结果暂时无法确认</b><br>请先到「我的 → 问答存档」查看答案和剩余次数，不要立即改问题重复提交。保留原问题重试时会复用同一幂等键。</div>`,true);
+    }
+  } finally {
+    if(!LOCAL_DEBUG_PAGE)await refreshPaidAskState();
+    const hasCredits=LOCAL_DEBUG_PAGE||(PAID_ASK_STATE.allowed&&Number.isInteger(PAID_ASK_STATE.remaining)&&PAID_ASK_STATE.remaining>0);
+    const storedRecovery=readPendingDeepRequest();
+    const recovery=storedRecovery&&storedRecovery.accountRef===binding.accountRef&&storedRecovery.chartRef===binding.chartRef
+      ? storedRecovery
+      : null;
+    if(recovery&&!$('deepQ').value)$('deepQ').value=recovery.question;
+    btn.disabled=!(hasCredits||recovery);
+    btn.textContent=recovery?'恢复上一问 · 不重复扣次':(hasCredits?(deepTurns.length?'继续追问 · 消耗 1 次':label):'暂无可用问星次数');
+  }
+}
+
+/* ---------- 首屏流光(与主应用同语言) ---------- */
+document.addEventListener('pointerdown', e => {
+  const r = document.createElement('div'); r.className = 'rip';
+  r.style.left = e.clientX + 'px'; r.style.top = e.clientY + 'px';
+  document.body.appendChild(r); setTimeout(() => r.remove(), 900);
+});
+
+/* Private reading uses the owner's immutable server snapshot; no birth input fallback. */
+function privateReportAccountUrl(){
+  if(window.ZxPaidReports)return ZxPaidReports.loginUrl(PRIVATE_REPORT_ID||undefined);
+  const url=new URL(ACCOUNT_PAGE_HREF,location.href);
+  if(PRIVATE_REPORT_ID)url.searchParams.set('report',PRIVATE_REPORT_ID);
+  if(LOCAL_DEBUG_PAGE)url.searchParams.set('private-report','1');
+  return url.pathname+url.search;
+}
+function privateReportError(error){return String(error&&error.code||deepResponseCode(error&&error.data)||'REPORT_UNAVAILABLE');}
+function privateStatus(kind,code=''){
+  PRIVATE_REPORT_LIFECYCLE=null;PRIVATE_CORRECTION_ATTEMPT=null;PRIVATE_LIFECYCLE_BUSY=false;
+  $('reportManagement').hidden=true;$('reportLifecycleStatus').textContent='';
+  resetReportManagement();
+  PRIVATE_DOWNLOAD_READY=false;PRIVATE_DELIVERY_ID='';
+  $('reportDownload').hidden=true;
+  $('reportDownloadStatus').textContent='';
+  if(window.ZxReportDownload)ZxReportDownload.clear();
+  CHART=null;PRIVATE_SNAPSHOT=null;PRIVATE_ASK_IDS=[];PRIVATE_OWNER='';
+  document.querySelector('.endviz').hidden=true;
+  PAID_ASK_STATE={loaded:false,remaining:null,allowed:false};
+  if(PRIVATE_OWNER_TIMER){clearInterval(PRIVATE_OWNER_TIMER);PRIVATE_OWNER_TIMER=null;}
+  const out=$('out'),dock=$('reportEditDock');if(dock&&out.contains(dock))out.after(dock);
+  out.replaceChildren();if(dock)dock.hidden=true;
+  if(REPORT_NAV_OBSERVER)REPORT_NAV_OBSERVER.disconnect();
+  if(REPORT_NAV_SCROLL_HANDLER)window.removeEventListener('scroll',REPORT_NAV_SCROLL_HANDLER);
+  REPORT_NAV_OBSERVER=null;REPORT_NAV_SCROLL_HANDLER=null;
+  document.querySelector('.report-hero-nav').hidden=true;
+  $('reportPrecision').hidden=true;
+  const states={
+    loading:['正在读取你的报告','正在核对账号与报告状态。'],
+    missing:['请选择一份报告','请从“我的报告”打开已经购买的报告。'],
+    login:['请先登录报告所属的微信账号','登录后可恢复这份报告及已保存的问星答案。'],
+    unpaid:['这份报告尚未购买','完成购买并交付后，可在这里阅读完整报告。'],
+    pending:['报告正在准备中','付款状态已记录，正文尚在准备。稍后刷新即可，无需重复购买。'],
+    failed:['报告暂未交付完成','可重试交付，或到“我的”查看订单与售后进度。重试不会创建新的订单。'],
+    revoked:['这份报告的访问权已撤销','请到“我的”查看这笔订单与退款记录。'],
+    unavailable:['暂时无法读取报告','请检查网络后重试；已购记录保留在你的账号中。'],
+    notfound:['未找到这份报告','请从当前账号的“我的报告”重新打开。']
+    ,expired:['这份报告的保存期已结束','报告内容已不可读取，请到“我的”查看当前账号的其他报告。']
+    ,deleted:['这份报告已永久删除','报告及其问星记录无法恢复。已下载到设备的文件需自行保管或删除。']
+  };
+  const [title,body]=states[kind]||states.unavailable;
+  $('reportIdentity').textContent=title;$('reportJudgement').textContent=body;
+  const state=$('privateReportState');state.hidden=false;state.dataset.state=kind;state.dataset.code=code;
+  let actions='';
+  if(kind==='login')actions+=`<a class="ghost" id="privateLogin" href="${window.ZxPaidReports?ZxPaidReports.loginUrl(PRIVATE_REPORT_ID):privateReportAccountUrl()}">微信登录</a>`;
+  if(['unavailable','pending','failed'].includes(kind))actions+='<button type="button" id="privateReload" class="ghost">刷新状态</button>';
+  if(kind==='failed')actions+='<button type="button" id="privateRetryDelivery">重试交付</button>';
+  if(kind==='unpaid')actions+='<button type="button" id="privatePurchase">查看购买方式</button>';
+  if(kind!=='loading')actions+=`<a class="ghost" href="${privateReportAccountUrl()}">我的报告与订单</a><a class="ghost" href="${HOME_PAGE_HREF}">返回首页</a>`;
+  state.innerHTML=`<h2>${esc(title)}</h2><p>${esc(body)}</p><div class="member-actions">${actions}</div>`;
+  if($('privateReload'))$('privateReload').onclick=()=>loadPrivateReport();
+  if($('privateRetryDelivery'))$('privateRetryDelivery').onclick=async()=>{
+    const button=$('privateRetryDelivery');button.disabled=true;
+    try{await ZxPaidReports.retry(PRIVATE_REPORT_ID);await loadPrivateReport();}
+    catch(error){showPrivateReadError(error);}
+  };
+  if($('privatePurchase'))$('privatePurchase').onclick=()=>ZxPaidReports.checkoutReport(PRIVATE_REPORT_ID);
+}
+async function showPrivateReadError(error){
+  const revision=PRIVATE_READ_REVISION,code=privateReportError(error);
+  if(code==='REPORT_EXPIRED')return privateStatus('expired',code);
+  if(code==='REPORT_CONTENT_DELETED')return privateStatus('deleted',code);
+  if(error&&error.data&&error.data.failed)return privateStatus('failed',code);
+  if(error&&error.status===401||['REPORT_AUTH_REQUIRED','AUTH_REQUIRED','WECHAT_AUTHENTICATION_REQUIRED','PRIVACY_CONSENT_REQUIRED'].includes(code))return privateStatus('login',code);
+  if(code==='REPORT_NOT_OWNED'){
+    try{const state=await ZxPaidReports.status(PRIVATE_REPORT_ID);if(revision!==PRIVATE_READ_REVISION)return;return privateStatus(state.entitlement_status==='revoked'?'revoked':'unpaid',code);}
+    catch(_){if(revision===PRIVATE_READ_REVISION)return privateStatus('unpaid',code);}
+  }
+  if(code==='REPORT_NOT_FOUND')return privateStatus('notfound',code);
+  if(code==='REPORT_REVOKED')return privateStatus('revoked',code);
+  if(['REPORT_DELIVERY_FAILED','REPORT_DELIVERY_REVIEW_REQUIRED','REPORT_CONTENT_VERSION_UNAVAILABLE'].includes(code))return privateStatus('failed',code);
+  return privateStatus('unavailable',code);
+}
+function validPrivateSnapshot(snapshot){
+  const ids=['overview','energy','skeleton','relation','action','phase'];
+  return snapshot&&snapshot.chart&&snapshot.chart.dayMaster&&snapshot.chart.pillars&&snapshot.chart.fiveElements&&snapshot.chart.astro&&
+    snapshot.input&&Array.isArray(snapshot.sections)&&snapshot.sections.length===6&&ids.every(id=>snapshot.sections.filter(s=>s&&s.id===id&&typeof s.body==='string').length===1)&&
+    typeof snapshot.contentVersion==='string'&&typeof snapshot.revisionKey==='string'&&/^[a-f0-9]{64}$/.test(snapshot.revisionKey);
+}
+async function loadPrivateReport(){
+  const revision=++PRIVATE_READ_REVISION;
+  PRIVATE_REPORT_ID=window.ZxPaidReports?ZxPaidReports.reportId():'';
+  privateStatus('loading');
+  document.querySelector('.report-my-link').textContent='我的资料';
+  if(!PRIVATE_REPORT_ID){privateStatus('missing');return;}
+  if(!window.ZxPaidReports){privateStatus('unavailable');return;}
+  try{
+    if(window.zxMember&&typeof zxMember.whenReady==='function')await zxMember.whenReady();
+    const result=await ZxPaidReports.read(PRIVATE_REPORT_ID);
+    if(revision!==PRIVATE_READ_REVISION)return;
+    if(result.entitlement_status==='revoked')return privateStatus('revoked');
+    if(result.entitlement_status&&result.entitlement_status!=='active')return privateStatus('unpaid');
+    if(result.pending)return privateStatus('pending');
+    if(result.failed)return privateStatus('failed',result.code||'');
+    if(result.report_id!==PRIVATE_REPORT_ID||!validPrivateSnapshot(result.snapshot))throw new Error('REPORT_SNAPSHOT_INVALID');
+    PRIVATE_SNAPSHOT=result.snapshot;
+    PRIVATE_OWNER=memberSnapshot().accountRef;
+    if(!PRIVATE_OWNER||memberSnapshot().identityKind!=='wechat'||!memberSnapshot().authenticated){privateStatus('login');return;}
+    REPORT_CHAPTER_STORAGE_KEY=REPORT_CHAPTER_KEY_PREFIX+PRIVATE_OWNER+':'+PRIVATE_REPORT_ID+':'+result.snapshot.contentVersion;
+    $('privateReportState').hidden=true;
+    render(result.snapshot.chart,result.snapshot.sections);
+    PRIVATE_DELIVERY_ID=/^[a-f0-9]{48}$/.test(result.delivery_id||'')?result.delivery_id:'';
+    PRIVATE_DOWNLOAD_READY=result.readable===true&&result.entitlement_status==='active'&&result.delivery_status==='ready'&&!!PRIVATE_DELIVERY_ID;
+    $('reportDownload').hidden=!PRIVATE_DOWNLOAD_READY||!window.ZxReportDownload;
+    $('reportDownloadHtml').disabled=false;$('reportPrint').disabled=false;
+    configureReportManagement(result);
+    $('reportEditDock').hidden=true;
+    if(typeof result.snapshot.disclaimer==='string'){document.querySelector('.meta').textContent=result.snapshot.disclaimer;document.querySelector('.meta').style.whiteSpace='pre-line';}
+    await restorePrivateAnswers(revision);
+    if(revision!==PRIVATE_READ_REVISION)return;
+    PRIVATE_OWNER_TIMER=setInterval(()=>{
+      const owner=memberSnapshot();
+      if(PRIVATE_OWNER&&(!owner.authenticated||owner.identityKind!=='wechat'||owner.accountRef!==PRIVATE_OWNER)){
+        ++PRIVATE_READ_REVISION;privateStatus('login','REPORT_ACCOUNT_CHANGED');
+      }
+    },500);
+  }catch(error){if(revision===PRIVATE_READ_REVISION)await showPrivateReadError(error);}
+}
+function privateDownloadCurrent(revision,snapshot,owner,id){
+  const session=memberSnapshot();
+  return PRIVATE_REPORT_MODE&&PRIVATE_DOWNLOAD_READY&&PRIVATE_READ_REVISION===revision&&PRIVATE_SNAPSHOT===snapshot&&
+    PRIVATE_REPORT_ID===id&&PRIVATE_OWNER===owner&&session.authenticated&&session.identityKind==='wechat'&&session.accountRef===owner;
+}
+async function exportPrivateReport(kind){
+  const revision=PRIVATE_READ_REVISION,snapshot=PRIVATE_SNAPSHOT,owner=PRIVATE_OWNER,id=PRIVATE_REPORT_ID;
+  const deliveryId=PRIVATE_DELIVERY_ID;
+  const current=()=>privateDownloadCurrent(revision,snapshot,owner,id);
+  if(!current()||!window.ZxReportDownload)return;
+  $('reportDownloadHtml').disabled=true;$('reportPrint').disabled=true;
+  $('reportDownloadStatus').textContent='正在确认报告访问状态……';
+  try{
+    const status=await ZxPaidReports.status(id);
+    if(!current())return;
+    if(status.report_id!==id||status.readable!==true||status.entitlement_status!=='active'||status.delivery_status!=='ready'){
+      privateStatus(status.entitlement_status==='revoked'?'revoked':'unavailable','REPORT_DOWNLOAD_UNAVAILABLE');return;
+    }
+    if(status.delivery_id!==deliveryId){
+      await loadPrivateReport();
+      if(PRIVATE_OWNER===owner&&PRIVATE_REPORT_ID===id&&PRIVATE_SNAPSHOT)$('reportDownloadStatus').textContent='报告已在其他设备更新，已重新读取当前版本。请核对内容后再次点击下载或打印。';
+      return;
+    }
+    const overview=snapshot.sections.find(section=>section.id==='overview');
+    const identity=`${snapshot.chart.dayMaster.stem}${snapshot.chart.dayMaster.element} × 太阳${String(snapshot.chart.astro?.sun?.sign||'星座').replace(/座$/,'')}`;
+    const html=ZxReportDownload.document({identity,judgement:overview?.hero||'',asOfAt:snapshot.asOfAt,
+      disclaimer:snapshot.disclaimer,chaptersHtml:reportChapterMarkup(snapshot.chart,snapshot.sections)});
+    if(!current())return;
+    if(kind==='print'){
+      await ZxReportDownload.print(html,current);
+      if(current())$('reportDownloadStatus').textContent='请在浏览器打印窗口中选择打印机或“另存为 PDF”。若窗口未弹出，可先下载 HTML 再使用浏览器打印。';
+    }else{
+      ZxReportDownload.save(html,current);
+      if(current())$('reportDownloadStatus').textContent='已发起 HTML 下载。下载的文件可离线阅读，请妥善保管。';
+    }
+  }catch(error){
+    if(!current())return;
+    if(error&&error.status===401){privateStatus('login','REPORT_AUTH_REQUIRED');return;}
+    if(error&&error.message==='REPORT_PRINT_BLOCKED'){
+      $('reportDownloadStatus').textContent='浏览器拦截了打印窗口。请允许弹出窗口后重试，或下载 HTML 后使用浏览器打印。';return;
+    }
+    $('reportDownloadStatus').textContent='暂时无法准备下载，请联网后重试。你也可以稍后从“我的报告”重新打开。';
+  }finally{if(current()){$('reportDownloadHtml').disabled=false;$('reportPrint').disabled=false;}}
+}
+$('reportDownloadHtml').onclick=()=>exportPrivateReport('html');
+$('reportPrint').onclick=()=>exportPrivateReport('print');
+function resetReportManagement(){
+  $('reportCorrectionForm').reset();$('reportCorrectionForm').hidden=true;
+  $('reportDeleteConfirm').hidden=true;$('reportDeleteConsent').checked=false;
+  $('reportDeleteSubmit').disabled=true;$('reportCorrectionSubmit').disabled=true;
+  $('correctionPermissionRow').hidden=true;$('reportManageDetails').open=false;
+}
+function configureReportManagement(result){
+  PRIVATE_REPORT_LIFECYCLE={expiresAt:result.storage_expires_at||result.expires_at,
+    correctionsRemaining:result.corrections_remaining,correctionAllowed:result.correction_allowed===true&&result.corrections_remaining===1};
+  const available=PRIVATE_DOWNLOAD_READY&&[0,1].includes(result.corrections_remaining);
+  $('reportManagement').hidden=!available;
+  if(!available)return;
+  const expiry=PRIVATE_REPORT_LIFECYCLE.expiresAt;
+  $('reportStorageExpiry').textContent=Number.isSafeInteger(expiry)&&expiry>0
+    ?'保存至 '+new Date(expiry).toLocaleString('zh-CN',{timeZone:'Asia/Shanghai',hour12:false})+'（北京时间）'
+    :'保存到期时间暂未确认，请稍后刷新查看。';
+  $('reportCorrectionAvailability').textContent=result.corrections_remaining>0?'本报告剩余 1 次免费出生资料更正机会。':'本报告的免费出生资料更正机会已使用。';
+  $('reportCorrectionOpen').disabled=!PRIVATE_REPORT_LIFECYCLE.correctionAllowed;
+  $('reportDeleteOpen').disabled=false;
+}
+function reportManagementCurrent(revision,snapshot,owner,id){
+  const session=memberSnapshot();
+  return PRIVATE_REPORT_MODE&&PRIVATE_READ_REVISION===revision&&PRIVATE_SNAPSHOT===snapshot&&PRIVATE_OWNER===owner&&
+    PRIVATE_REPORT_ID===id&&session.authenticated&&session.identityKind==='wechat'&&session.accountRef===owner;
+}
+function updateCorrectionConsent(){
+  const subject=document.querySelector('input[name="correctionSubject"]:checked')?.value;
+  $('correctionPermissionRow').hidden=subject!=='other';
+  $('reportCorrectionSubmit').disabled=PRIVATE_LIFECYCLE_BUSY||!subject||!$('correctionStorageConsent').checked||
+    !$('correctionDiscardConsent').checked||(subject==='other'&&!$('correctionPermission').checked);
+}
+function openReportCorrection(input){
+  if(!PRIVATE_REPORT_LIFECYCLE?.correctionAllowed||PRIVATE_LIFECYCLE_BUSY||!PRIVATE_SNAPSHOT)return;
+  if(deepRequestInFlight||readPrivatePending()){$('reportLifecycleStatus').textContent='请先完成或恢复正在处理的问星，再更正出生资料。';return;}
+  resetReportManagement();$('reportManageDetails').open=true;$('reportCorrectionForm').hidden=false;
+  const value=input||PRIVATE_SNAPSHOT.input;
+  $('correctionDate').value=value.d||'';$('correctionTime').value=value.t||'';
+  $('correctionCity').value=value.c||'';$('correctionGender').value=value.g||'';
+  $('correctionDate').focus();updateCorrectionConsent();
+}
+function setReportMutationBusy(){
+  PRIVATE_LIFECYCLE_BUSY=true;PRIVATE_DOWNLOAD_READY=false;
+  $('reportDownload').hidden=true;
+  if(window.ZxReportDownload)ZxReportDownload.clear();
+  $('reportManagement').querySelectorAll('button').forEach(button=>button.disabled=true);
+  if($('deepAsk'))$('deepAsk').disabled=true;
+}
+async function recoverReportMutation(error,owner,id,attempt){
+  await loadPrivateReport();
+  if(PRIVATE_OWNER!==owner||PRIVATE_REPORT_ID!==id||!PRIVATE_SNAPSHOT)return;
+  const code=String(error?.code||'');
+  $('reportLifecycleStatus').textContent=code==='REPORT_FREE_CORRECTION_USED'
+    ?'这份报告的免费更正机会已使用，已刷新当前报告。'
+    :code==='REPORT_CORRECTION_PENDING_ASK'
+    ?'请先处理正在进行的问星，再更正出生资料。'
+    :'操作结果暂时未确认，已重新读取报告状态。请核对当前内容后再操作。';
+  if(attempt&&PRIVATE_REPORT_LIFECYCLE?.correctionAllowed){
+    PRIVATE_CORRECTION_ATTEMPT=attempt;openReportCorrection(attempt.input);
+  }
+}
+$('reportCorrectionOpen').onclick=()=>openReportCorrection();
+$('reportCorrectionCancel').onclick=()=>resetReportManagement();
+$('reportDeleteCancel').onclick=()=>resetReportManagement();
+$('reportCorrectionForm').addEventListener('change',updateCorrectionConsent);
+$('reportDeleteOpen').onclick=()=>{
+  if(PRIVATE_LIFECYCLE_BUSY||!PRIVATE_SNAPSHOT)return;
+  resetReportManagement();$('reportManageDetails').open=true;$('reportDeleteConfirm').hidden=false;
+};
+$('reportDeleteConsent').onchange=()=>{$('reportDeleteSubmit').disabled=PRIVATE_LIFECYCLE_BUSY||!$('reportDeleteConsent').checked;};
+$('reportDeleteSubmit').onclick=async()=>{
+  const revision=PRIVATE_READ_REVISION,snapshot=PRIVATE_SNAPSHOT,owner=PRIVATE_OWNER,id=PRIVATE_REPORT_ID;
+  const current=()=>reportManagementCurrent(revision,snapshot,owner,id);
+  if(PRIVATE_LIFECYCLE_BUSY||!snapshot||!current()||!$('reportDeleteConsent').checked)return;
+  setReportMutationBusy();$('reportLifecycleStatus').textContent='正在删除这份报告及其问星记录……';
+  try{
+    const result=await ZxPaidReports.remove(id,{confirmed:true});if(!current())return;
+    if(result.deleted!==true||result.report_id!==id||result.recoverable!==false)throw new Error('REPORT_DELETE_RESPONSE_INVALID');
+    try{sessionStorage.removeItem(privatePendingKey());}catch(_){}
+    ++PRIVATE_READ_REVISION;privateStatus('deleted','REPORT_CONTENT_DELETED');
+  }catch(error){if(current())await recoverReportMutation(error,owner,id);}
+};
+$('reportCorrectionForm').onsubmit=async event=>{
+  event.preventDefault();updateCorrectionConsent();
+  const revision=PRIVATE_READ_REVISION,snapshot=PRIVATE_SNAPSHOT,owner=PRIVATE_OWNER,id=PRIVATE_REPORT_ID;
+  const current=()=>reportManagementCurrent(revision,snapshot,owner,id);
+  if(PRIVATE_LIFECYCLE_BUSY||!snapshot||!current()||!PRIVATE_REPORT_LIFECYCLE?.correctionAllowed||$('reportCorrectionSubmit').disabled||!$('reportCorrectionForm').reportValidity())return;
+  const input={d:$('correctionDate').value,t:$('correctionTime').value,c:$('correctionCity').value.trim(),g:$('correctionGender').value};
+  const serialized=JSON.stringify(input);
+  if(!PRIVATE_CORRECTION_ATTEMPT||PRIVATE_CORRECTION_ATTEMPT.serialized!==serialized){
+    const bytes=crypto.getRandomValues(new Uint8Array(16));
+    PRIVATE_CORRECTION_ATTEMPT={input,serialized,key:'report-correct:'+Array.from(bytes,byte=>byte.toString(16).padStart(2,'0')).join('')};
+  }
+  const attempt=PRIVATE_CORRECTION_ATTEMPT,subject=document.querySelector('input[name="correctionSubject"]:checked').value;
+  setReportMutationBusy();$('reportLifecycleStatus').textContent='正在更正出生资料并替换原报告……';
+  try{
+    const result=await ZxPaidReports.correct(id,input,{transferConfirmed:true,storageConfirmed:true,subjectIsSelf:subject==='self',
+      permissionConfirmed:$('correctionPermission').checked,discardPreviousConfirmed:true},attempt.key);
+    if(!current())return;
+    if(result.corrected!==true||result.report_id!==id||result.corrections_remaining!==0)throw new Error('REPORT_CORRECTION_RESPONSE_INVALID');
+    try{sessionStorage.removeItem(privatePendingKey());}catch(_){}
+    await loadPrivateReport();
+    if(PRIVATE_OWNER===owner&&PRIVATE_REPORT_ID===id&&PRIVATE_SNAPSHOT)$('reportLifecycleStatus').textContent='出生资料已更正，正在阅读替换后的报告。原保存到期日和问星次数保持不变。';
+  }catch(error){if(current())await recoverReportMutation(error,owner,id,attempt);}
+};
+function privateQianCard(){return `<div class="card" id="sec-qian"><div class="pad"><h2>日主身份卡</h2><p>日主身份卡可在首页查看、保存与分享。</p><div class="member-actions"><a class="ghost" href="${currentHomeHref()}">返回日主页</a></div></div></div>`;}
+function privateDeepCard(){
+  return `<div class="card" id="sec-deep"><div class="pad"><h2>问星</h2><p class="deep-intro">根据这份已购报告提问，首问和每次追问各消耗 1 次。优先使用本报告赠送的次数，再使用已购买次数。</p>
+    ${deepMemberBox()}<div class="deep-notice"><p>${esc(MODEL_PROCESSING_NOTICE)}</p><p>${esc(MODEL_INPUT_CAUTION)}</p><div class="deep-policy"><a href="${AI_DISCLOSURE_PAGE_HREF}">AI 服务说明</a></div></div>
+    <div id="deepEcho" role="status" aria-live="polite" tabindex="-1"></div>
+    <div class="deep-composer" id="deepComposer"><label class="sr-only" for="deepQ">你的问题</label><input id="deepQ" type="text" maxlength="200" placeholder="比如：怎样安排一条主线和一个实验位？"><button id="deepAsk" type="button" class="ghost" disabled>正在读取问星次数</button></div></div></div>`;
+}
+async function refreshPrivateAskState(){
+  const revision=PRIVATE_READ_REVISION,id=PRIVATE_REPORT_ID;
+  if(!PRIVATE_SNAPSHOT)return PAID_ASK_STATE;
+  try{
+    const state=await ZxPaidReports.balance(id);
+    if(revision!==PRIVATE_READ_REVISION)return PAID_ASK_STATE;
+    const usable=state.usable===true;
+    PAID_ASK_STATE={...state,loaded:true,remaining:Number(state.remaining),allowed:usable&&state.kind==='paid_ask_credits'};
+  }catch(_){if(revision!==PRIVATE_READ_REVISION)return PAID_ASK_STATE;PAID_ASK_STATE={loaded:true,remaining:null,allowed:false};}
+  renderPrivateAskStatus();return PAID_ASK_STATE;
+}
+function privatePendingKey(){return PRIVATE_OWNER&&PRIVATE_REPORT_ID?`zx_private_ask_pending_v1:${PRIVATE_OWNER}:${PRIVATE_REPORT_ID}`:'';}
+function readPrivatePending(){
+  try{const p=JSON.parse(sessionStorage.getItem(privatePendingKey())||'null');
+    return p&&p.report_id===PRIVATE_REPORT_ID&&p.owner===PRIVATE_OWNER&&/^[a-f0-9]{32}$/.test(p.idempotency_key)&&typeof p.question==='string'&&p.question.length>0&&p.question.length<=200&&Array.isArray(p.history_ids)&&p.history_ids.length<=4&&p.history_ids.every(id=>/^[a-f0-9]{48}$/.test(id))?p:null;
+  }catch(_){return null;}
+}
+function renderPrivateAskStatus(){
+  const box=$('deepMemberBox'),button=$('deepAsk');if(!box||!button)return;
+  const pending=readPrivatePending(),remaining=PAID_ASK_STATE.remaining;
+  const loaded=PAID_ASK_STATE.loaded&&Number.isSafeInteger(remaining)&&remaining>=0;
+  const gifts=Number(PAID_ASK_STATE.gift_remaining)||0,purchases=Number(PAID_ASK_STATE.purchased_remaining)||0;
+  const title=loaded?`本报告赠送 ${gifts} 次 · 已购买 ${purchases} 次`:'暂时无法确认问星次数';
+  const body=deepComposerAvailable()?(loaded?'首问与追问各消耗 1 次。用完后可选择 ¥2.90/次，或 ¥6/3次。':'请刷新次数后再提交。'):'问星服务尚未开放，报告可以继续阅读。';
+  box.innerHTML=`<div class="member-title">${esc(title)}</div><p class="member-copy">${esc(body)}</p><div class="member-actions"><button id="privateAskRefresh" type="button" class="ghost">刷新次数</button><a id="privateAskPurchaseClosed" class="ghost" href="${esc(window.ZxPaidReports.profileUrl(PRIVATE_REPORT_ID))}#ask-section">问星充值</a><a id="privateAskHistory" href="#deepEcho">查看本盘问答</a></div>`;
+  $('privateAskRefresh').onclick=()=>refreshPrivateAskState();
+  button.disabled=PRIVATE_LIFECYCLE_BUSY||deepRequestInFlight||!deepComposerAvailable()||!(pending||(loaded&&PAID_ASK_STATE.allowed&&remaining>0));
+  button.textContent=pending?'恢复上一问 · 不重复扣次':(button.disabled?'问星暂不可用':PRIVATE_ASK_IDS.length?'继续追问 · 消耗 1 次':'提交本次问星 · 消耗 1 次');
+}
+function privateAnswerHtml(item){return `<section class="private-answer" data-answer-id="${item.result_id}">${renderDeep(item.answer,item.question)}<p class="da-more">完整答案已保存到账户。</p><div class="private-answer-actions"><button type="button" class="ghost" data-delete-private-answer="${item.result_id}">删除这条答案</button></div></section>`;}
+function wirePrivateAnswerDeletes(){
+  document.querySelectorAll('[data-delete-private-answer]').forEach(button=>button.onclick=async()=>{
+    if(deepRequestInFlight||readPrivatePending()){updatePrivateNotice('请先恢复正在处理的问星，再删除历史答案。');return;}
+    const revision=PRIVATE_READ_REVISION,id=button.dataset.deletePrivateAnswer;button.disabled=true;
+    try{await zxMember.deleteDeepAnswer(id);if(revision!==PRIVATE_READ_REVISION)return;
+      PRIVATE_ASK_IDS=PRIVATE_ASK_IDS.filter(value=>value!==id);button.closest('.private-answer').remove();renderPrivateAskStatus();
+    }catch(_){if(button.isConnected){button.disabled=false;updatePrivateNotice('删除未完成，请重试。');}}
+  });
+}
+async function restorePrivateAnswers(revision){
+  if(!window.zxMember||typeof zxMember.deepHistory!=='function')return;
+  try{const data=await zxMember.deepHistory();if(revision!==PRIVATE_READ_REVISION||!PRIVATE_SNAPSHOT)return;
+    const rows=(Array.isArray(data)?data:Array.isArray(data.items)?data.items:[]).filter(row=>row.report_id===PRIVATE_REPORT_ID&&row.persisted===true&&row.result_status==='completed'&&/^[a-f0-9]{48}$/.test(row.result_id||'')&&row.answer).slice(0,4).reverse();
+    PRIVATE_ASK_IDS=rows.map(row=>row.result_id);$('deepEcho').innerHTML=rows.map(privateAnswerHtml).join('');wirePrivateAnswerDeletes();renderPrivateAskStatus();
+  }catch(_){/* History is optional; a new question can use no prior answer IDs. */}
+}
+function updatePrivateNotice(message){
+  const echo=$('deepEcho');if(!echo)return;echo.querySelector('.private-ask-notice')?.remove();
+  const notice=document.createElement('p');notice.className='deep-echo private-ask-notice';notice.textContent=message;echo.appendChild(notice);
+}
+async function askPrivateReport(){
+  if(PRIVATE_LIFECYCLE_BUSY||deepRequestInFlight||!PRIVATE_SNAPSHOT)return;
+  const revision=PRIVATE_READ_REVISION,owner=memberSnapshot();
+  if(!owner.authenticated||owner.identityKind!=='wechat'||owner.accountRef!==PRIVATE_OWNER){++PRIVATE_READ_REVISION;privateStatus('login');return;}
+  const stored=readPrivatePending(),question=stored?stored.question:$('deepQ').value.trim();
+  const questionIssue=deepQuestionIssue(question);
+  if(questionIssue){updatePrivateNotice(questionIssue);return;}
+  if(stored&&$('deepQ').value.trim()&&$('deepQ').value.trim()!==stored.question){updatePrivateNotice('上一问尚未确认，请先恢复原问题。');return;}
+  if(!deepComposerAvailable()){updatePrivateNotice('问星服务尚未开放。');return;}
+  if(!await requestAiProcessingConsent()||revision!==PRIVATE_READ_REVISION)return;
+  deepRequestInFlight=true;renderPrivateAskStatus();
+  let pending=stored,key=privatePendingKey();
+  try{
+    if(!pending){
+      await refreshPrivateAskState();if(revision!==PRIVATE_READ_REVISION)return;
+      if(!PAID_ASK_STATE.allowed||PAID_ASK_STATE.remaining<1){updatePrivateNotice('当前没有可用问星次数。');return;}
+      pending={owner:PRIVATE_OWNER,report_id:PRIVATE_REPORT_ID,question,idempotency_key:newDeepIdempotencyKey(),history_ids:PRIVATE_ASK_IDS.slice(-4)};
+      const text=JSON.stringify(pending);sessionStorage.setItem(key,text);if(sessionStorage.getItem(key)!==text)throw new Error('REQUEST_STORAGE_UNAVAILABLE');
+    }
+    const token=await deepAccountToken();if(!token)throw Object.assign(new Error('AUTH_REQUIRED'),{status:401});
+    if(revision!==PRIVATE_READ_REVISION||memberSnapshot().accountRef!==pending.owner)return;
+    updatePrivateNotice('正在整理回答，重试会继续使用同一请求。');
+    const response=await fetchWithTimeout(CONFIGURED_DEEP_ENDPOINT,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({report_id:pending.report_id,question:pending.question,idempotency_key:pending.idempotency_key,history_ids:pending.history_ids,token})},DEEP_RESPONSE_TIMEOUT_MS);
+    const data=await response.json().catch(()=>({}));if(revision!==PRIVATE_READ_REVISION)return;
+    if(!response.ok)throw Object.assign(new Error(deepResponseCode(data)),{status:response.status,code:deepResponseCode(data),data});
+    if(data.persisted!==true||data.result_status!=='completed'||!/^[a-f0-9]{48}$/.test(data.result_id||'')||data.result_id!==data.consumption_id||typeof data.reply!=='string'||!Array.isArray(data.parts)||data.parts.length!==3||!Array.isArray(data.advice)||!Number.isSafeInteger(data.remaining)||data.remaining<0)throw new Error('RESULT_DELIVERY_UNCONFIRMED');
+    sessionStorage.removeItem(key);
+    $('deepEcho').querySelector('.private-ask-notice')?.remove();
+    if(!PRIVATE_ASK_IDS.includes(data.result_id)){$('deepEcho').insertAdjacentHTML('beforeend',privateAnswerHtml({result_id:data.result_id,question:pending.question,answer:data}));PRIVATE_ASK_IDS=[...PRIVATE_ASK_IDS,data.result_id].slice(-4);}
+    $('deepQ').value='';wirePrivateAnswerDeletes();
+    await refreshPrivateAskState();
+  }catch(error){
+    if(revision!==PRIVATE_READ_REVISION)return;
+    if(error.status===401){++PRIVATE_READ_REVISION;privateStatus('login');return;}
+    if(['ASK_REPORT_NOT_OWNED','ASK_REPORT_NOT_FOUND','ASK_REPORT_REFUND_PENDING'].includes(error.code)){await loadPrivateReport();return;}
+    const inputRejection=deepInputRejection(error,Boolean(stored));
+    if(inputRejection){if(inputRejection.clearPending)sessionStorage.removeItem(key);updatePrivateNotice(inputRejection.message);}
+    else if(error.data&&error.data.credit_restored===true){sessionStorage.removeItem(key);updatePrivateNotice('本次未完成，服务端已回补次数。可以重新提问。');}
+    else if(error.code==='ASK_RESULT_NOT_FOUND'){sessionStorage.removeItem(key);updatePrivateNotice('这条答案已删除，无法恢复；次数不会重复扣除。');}
+    else{if(pending&&$('deepQ'))$('deepQ').value=pending.question;updatePrivateNotice('结果暂未确认。请保留原问题重试，或到问答存档核对；当前不会显示未保存的答案。');}
+  }finally{
+    deepRequestInFlight=false;
+    if(revision===PRIVATE_READ_REVISION){await refreshPrivateAskState();renderPrivateAskStatus();}
+  }
+}
+
+window.addEventListener('zx-private-session-cleared',()=>{if(PRIVATE_REPORT_MODE){++PRIVATE_READ_REVISION;privateStatus('login','REPORT_SESSION_CLEARED');}});
+
+/* ---------- 初始化:本机握手；生产页不从 URL 读取明文出生资料 ---------- */
+
+if(PRIVATE_REPORT_MODE)loadPrivateReport();
+else initLocalReport();
+</script>
+
+</body>
+</html>

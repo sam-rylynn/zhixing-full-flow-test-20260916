@@ -1,0 +1,12 @@
+.managed-synastry-dialog .managed-note{font-size:13px;color:var(--mist,#aab0bd);line-height:1.85;overflow-wrap:anywhere}
+.managed-synastry-dialog h3{font-size:18px;color:var(--gold,#d8bf80);font-weight:500;line-height:1.65;overflow-wrap:anywhere}
+.managed-synastry-dialog .managed-field{display:block;font-size:14px;line-height:1.8;margin:18px 0}
+.managed-synastry-dialog select{display:block;width:100%;min-height:48px;box-sizing:border-box;padding:10px 12px;margin-top:6px;border:1px solid #c9a85c66;border-radius:8px;background:#141b2b;color:#e8e4d8;font:inherit}
+.managed-synastry-dialog .managed-check{display:flex;align-items:flex-start;gap:10px;font-size:14px;line-height:1.8;margin:20px 0 8px}
+.managed-synastry-dialog .managed-check input{flex:none;width:20px;height:20px;margin-top:3px;padding:0;accent-color:#c9a85c}
+.managed-synastry-dialog .button{margin:6px 8px 6px 0;min-height:44px;max-width:100%;white-space:normal}
+.managed-synastry-dialog [hidden]{display:none!important}
+.managed-synastry-dialog .managed-chapter{margin:20px 0;padding:16px 0;border-top:1px solid #c9a85c33;font-size:14px;line-height:1.9;overflow-wrap:anywhere}
+.managed-synastry-dialog summary{min-height:44px;box-sizing:border-box;padding:10px 0;cursor:pointer;color:#d8bf80}
+.managed-synastry-dialog .managed-confirm{margin-top:12px;padding:12px;border:1px solid #c9a85c66;border-radius:8px}
+.managed-synastry-dialog select:focus-visible,.managed-synastry-dialog summary:focus-visible{outline:2px solid #f0d695;outline-offset:3px}
