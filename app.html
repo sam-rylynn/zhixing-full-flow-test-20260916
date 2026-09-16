@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-BvR2bOARYQaI/gX9L65kpoBA5Q0EM5ugwgNojrwZE1o=' 'sha256-UEXiEg3+MWEz2UfZdIP8nYeidponiR+ABszK3h6rd1s=' 'sha256-4tV3PEdWa4XgUr/IDBHSDCVO9Mhev3qHEmtikafwan4=' 'sha256-d0/v7dQg2oDNuDUkTJWCbrb0rUDACrRHsv4pNl0n3vE='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://zhixng.cn/__test_reports_20260916; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; worker-src 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-BvR2bOARYQaI/gX9L65kpoBA5Q0EM5ugwgNojrwZE1o=' 'sha256-UEXiEg3+MWEz2UfZdIP8nYeidponiR+ABszK3h6rd1s=' 'sha256-4tV3PEdWa4XgUr/IDBHSDCVO9Mhev3qHEmtikafwan4=' 'sha256-2RqUVUwqg9+RUIpNeOFLYoMKoSNmk4DrnmI55NAxPlY='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://zhixng.cn/__test_reports_20260916; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; worker-src 'none';">
 <meta name="robots" content="noindex,nofollow">
 <link rel="stylesheet" href="./test-simulation-ui.css?v=a335787da9c8">
 <script src="./test-remote-report-client.js?v=2823f09e9689"></script><script src="./test-simulation-bootstrap.js?v=294c2f705d59"></script>
@@ -1892,9 +1892,15 @@ function drawDayMasterPosterAsset(img){
   const qr=window.ZxShareQr.drawOfficial(x,{x:qrX,y:qrY,size:qrSize,quietZone:2});
   x.strokeStyle='#C9A85C';x.lineWidth=Math.max(1,Math.round(2*scale));
   x.strokeRect(qr.left-x.lineWidth,qr.top-x.lineWidth,qr.actualSize+x.lineWidth*2,qr.actualSize+x.lineWidth*2);
+  // Keep the benefit beside the code, outside its border and quiet zone.
+  x.textAlign='right';x.fillStyle='#e8d39b';
+  x.font=`${Math.round(17*scale)}px "Songti SC","STSong",serif`;
+  const qrLabelX=qr.left-Math.round(18*scale),qrCenterY=qr.top+qr.actualSize/2;
+  x.fillText('扫码合并你的',qrLabelX,qrCenterY-Math.round(5*scale));
+  x.fillText('八字与星盘',qrLabelX,qrCenterY+Math.round(21*scale));
   const identity=CUR.home.dayMaster;
   c.setAttribute('aria-label',`知星双盘卡：${CUR.home.identity}，${identity.image}`);
-  $('posterEquivalent').textContent=`${CUR.home.identity}，${identity.image}。卡片右下角为知星体验入口二维码。`;
+  $('posterEquivalent').textContent=`${CUR.home.identity}，${identity.image}。卡片右下角为知星体验入口二维码，旁边标注：扫码合并你的八字与星盘。`;
 }
 window.ZxHomeChartBridge={
   setForm(input){for(const [id,key] of [['bDate','d'],['bTime','t'],['bCity','c'],['bGender','g']])$(id).value=input[key]||'';},
