@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-BvR2bOARYQaI/gX9L65kpoBA5Q0EM5ugwgNojrwZE1o=' 'sha256-UEXiEg3+MWEz2UfZdIP8nYeidponiR+ABszK3h6rd1s=' 'sha256-4tV3PEdWa4XgUr/IDBHSDCVO9Mhev3qHEmtikafwan4=' 'sha256-EjrBh2hhZBxYfVLYKSl2WPhL8nBZfOmdx+TEODET0Yk='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://zhixng.cn/__test_reports_20260916; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; worker-src 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-BvR2bOARYQaI/gX9L65kpoBA5Q0EM5ugwgNojrwZE1o=' 'sha256-UEXiEg3+MWEz2UfZdIP8nYeidponiR+ABszK3h6rd1s=' 'sha256-4tV3PEdWa4XgUr/IDBHSDCVO9Mhev3qHEmtikafwan4=' 'sha256-d0/v7dQg2oDNuDUkTJWCbrb0rUDACrRHsv4pNl0n3vE='; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' https://zhixng.cn/__test_reports_20260916; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'; worker-src 'none';">
 <meta name="robots" content="noindex,nofollow">
 <link rel="stylesheet" href="./test-simulation-ui.css?v=a335787da9c8">
 <script src="./test-remote-report-client.js?v=2823f09e9689"></script><script src="./test-simulation-bootstrap.js?v=294c2f705d59"></script>
@@ -69,7 +69,7 @@
   document.addEventListener('DOMContentLoaded', show, {once:true});
 })(["./public-config.js?v=7751013955c9","./privacy-consent.js?v=e9d931611689","./minimum-age.js?v=96cd776ebf44","./member.js?v=2212e56a2c7f","./chart-vault.js?v=000920572654","./display-profile.js?v=642992651d04","./paid-reports.js?v=293818756006","./profile-purchase.js?v=6d0523ef8908","./bazi-engine.js?v=2f507cc27577","./birth-location-picker.js?v=3d149d3ae64c","./content-home-v1.js?v=ee4855e88ba1","./home-decade-preview.js?v=48311f4d9963","./home-charts.js?v=970a2d73baa9"]);</script>
 <link rel="preload" as="script" href="./vendor/qrcode-generator.js?v=79ec86f82856" data-zx-runtime-preload>
-<link rel="preload" as="script" href="./share-qr.js?v=037fb5917da3" data-zx-runtime-preload>
+<link rel="preload" as="script" href="./share-qr.js?v=e04e92875254" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./public-config.js?v=7751013955c9" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./privacy-consent.js?v=e9d931611689" data-zx-runtime-preload>
 <link rel="preload" as="script" href="./analytics.js?v=2986447e1859" data-zx-runtime-preload>
@@ -401,6 +401,7 @@
   .share-gate p{margin:8px 0 0;color:#9da7b7;font-size:12px;line-height:1.75;text-align:justify}
   .share-gate-actions{display:flex;flex-wrap:wrap;gap:9px;margin-top:13px}
   .share-gate-actions .btn{min-width:135px;padding:11px 12px;font-family:var(--sans);font-size:12px;letter-spacing:.04em;text-indent:0}
+  .share-gate-actions #shareActionBtn{min-height:48px;padding:12px 24px;font-size:15px}
   .share-gate-actions .btn:disabled{cursor:not-allowed;opacity:.45}
   .share-gate-status{min-height:18px;margin-top:9px;color:var(--gold-dim);font-size:11px;line-height:1.6}
   .share-gate-status:empty{display:none}
@@ -689,6 +690,15 @@
         </div>
         <p class="confirmed-copy" id="confirmedExplanation"></p>
       </div>
+      <div class="share-gate" id="shareGate" aria-live="polite">
+        <div class="share-gate-head"><span id="shareGateTitle">你的双盘分享卡</span> <span class="share-gate-badge" id="shareGateBadge">可选分享</span></div>
+        <p id="shareGateBody">把日主与太阳星座放在一张卡里，不包含出生日期、时间或地点。</p>
+        <div class="share-gate-actions" id="shareGateActions">
+          <button class="btn gold" id="shareActionBtn" type="button">生成我的双盘卡</button>
+        </div>
+        <div class="share-gate-status" id="shareGateStatus"></div>
+      </div>
+
       <section class="confirmed-section confirmed-entry">
         <h3 class="reading-section-heading"><svg class="reading-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m16.24 7.76-1.804 5.411a2 2 0 0 1-1.265 1.265L7.76 16.24l1.804-5.411a2 2 0 0 1 1.265-1.265z"/><circle cx="12" cy="12" r="10"/></svg>三步看懂自己</h3>
         <div class="confirmed-scenes" id="homeSteps"></div>
@@ -752,14 +762,6 @@
       </section>
     </section>
 
-    <div class="share-gate" id="shareGate" aria-live="polite">
-      <div class="share-gate-head"><span id="shareGateTitle">日主身份分享卡</span> <span class="share-gate-badge" id="shareGateBadge">可选分享</span></div>
-      <p id="shareGateBody">分享卡使用对应日主的定稿图，不包含出生日期、时间或地点。</p>
-      <div class="share-gate-actions" id="shareGateActions">
-        <button class="btn ghost" id="shareActionBtn" type="button">生成我的日主身份卡</button>
-      </div>
-      <div class="share-gate-status" id="shareGateStatus"></div>
-    </div>
     
     <button class="again" id="switchChartBtn" type="button" hidden>切换图谱</button>
     <div class="divider">观 星 台</div>
@@ -793,7 +795,7 @@
 </div></div>
 
 <div id="posterLayer" role="dialog" aria-modal="true" aria-labelledby="posterLayerTitle" tabindex="-1" hidden><div class="inner">
-  <div class="poster-header"><h2 id="posterLayerTitle">日主身份卡分享预览</h2><button class="btn ghost" id="posterClose" type="button">关闭</button></div>
+  <div class="poster-header"><h2 id="posterLayerTitle">双盘卡分享预览</h2><button class="btn ghost" id="posterClose" type="button">关闭</button></div>
   <canvas id="posterCanvas" width="750" height="1000" role="img" aria-label="根据当前图谱生成的知星分享卡" aria-describedby="posterEquivalent">知星分享卡图片预览</canvas>
   <p class="poster-equivalent" id="posterEquivalent"></p>
   <button class="btn gold" style="width:100%;margin-bottom:10px" id="sharePosterBtn" type="button">分享这张卡</button>
@@ -801,7 +803,7 @@
 </div></div>
 
 <script src="./vendor/qrcode-generator.js?v=79ec86f82856"></script>
-<script src="./share-qr.js?v=037fb5917da3"></script>
+<script src="./share-qr.js?v=e04e92875254"></script>
 <script src="./public-config.js?v=7751013955c9"></script>
 <script src="./privacy-consent.js?v=e9d931611689"></script>
 <script src="./analytics.js?v=2986447e1859"></script>
@@ -1105,12 +1107,12 @@ function reportUrl(){
 
 function renderShareGate(message){
   const provisional=CUR&&CUR.chart&&CUR.chart.meta&&CUR.chart.meta.inputPrecision&&CUR.chart.meta.inputPrecision.birthTime==='missing';
-  $('shareGateTitle').textContent='保存这张日主卡';
+  $('shareGateTitle').textContent='把你的双盘带走';
   $('shareGateBadge').textContent='可选分享';
   $('shareGateBody').textContent=provisional
-    ? '出生时间未填，日主按正午暂排；补充准确时间后再生成日主卡更稳妥。'
-    : '想留住这次结果，可以生成一张适合保存或转发的图片。';
-  $('shareActionBtn').textContent='生成我的日主身份卡';
+    ? '出生时间未填，日主按正午暂排；补充准确时间后再生成双盘卡更稳妥。'
+    : '把日主与太阳星座放在一张卡里，保存下来，也分享给朋友。';
+  $('shareActionBtn').textContent='生成我的双盘卡';
   $('shareGateActions').hidden=false;
   $('sharePosterBtn').hidden=false;
   
@@ -1127,7 +1129,7 @@ function posterBlob(){
 
 function downloadCurrentPoster(){
   const link=document.createElement('a');
-  link.download='知星-日主身份卡.jpg';
+  link.download='知星-双盘卡.jpg';
   link.href=$('posterCanvas').toDataURL('image/jpeg',.92);
   document.body.appendChild(link);
   link.click();
@@ -1136,12 +1138,12 @@ function downloadCurrentPoster(){
 
 async function handoffPoster(status){
   const blob=await posterBlob();
-  const filename='知星-日主身份卡.jpg';
+  const filename='知星-双盘卡.jpg';
   const file=blob&&typeof File==='function'?new File([blob],filename,{type:'image/jpeg'}):null;
   const provisional=CUR.chart&&CUR.chart.meta&&CUR.chart.meta.inputPrecision&&CUR.chart.meta.inputPrecision.birthTime==='missing';
-  const text=(provisional?'[缺时暂排] ':'')+'这是我的知星日主身份卡：'+CUR.home.dayMaster.label+'。';
+  const text=(provisional?'[缺时暂排] ':'')+'这是我的知星双盘卡：'+CUR.home.identity+'。';
   const fileShare={title:'知星',text,files:file?[file]:[]};
-  const linkShare={title:'知星',text,url:window.ZXTestBootstrap.baseUrl};
+  const linkShare={title:'知星',text,url:new URL('experience.html',window.ZXTestBootstrap.baseUrl).href};
   const shareData=navigator.canShare&&navigator.canShare(fileShare)
     ? fileShare
     : navigator.share?linkShare:null;
@@ -1159,11 +1161,11 @@ async function handoffPoster(status){
 async function openCurrentPosterPreview(){
   if(!CUR)return;
   const status=$('shareGateStatus');
-  status.textContent='正在生成日主身份卡……';
+  status.textContent='正在生成双盘卡……';
   try{
     await preparePoster();
     openPosterLayer();
-    status.textContent='日主身份卡已生成。';
+    status.textContent='双盘卡已生成。';
   }catch(error){
     trackEvent('share_failed',{outcome:'failed',reason:'unknown'});
     status.textContent='海报暂时没有准备好，请刷新后重试。';
@@ -1788,7 +1790,7 @@ $('switchChartBtn').onclick=()=>{if(window.ZxHomeCharts)ZxHomeCharts.choose();};
 /* ============ 本机审核入口：不是购买权益，也不作为公开付费校验 ============ */
 
 
-/* ============ 分享卡：恢复十张已确认日主身份卡 ============ */
+/* ============ 双盘分享卡：沿用十张已确认日主主视觉 ============ */
 let posterReturnFocus=null;
 let posterPreviousOverflow='';
 function posterFocusable(){
@@ -1825,7 +1827,7 @@ $('sharePosterBtn').onclick=sharePreparedPoster;
 $('savePosterBtn').onclick=savePreparedPoster;
 confirmInboundShare();
 
-/* 视觉只认 2026-07-10 审核通过的十张日主身份卡；Canvas 仅负责导出与官网二维码，不再生成另一套卡面。 */
+/* 主视觉沿用 2026-07-10 的十张日主定稿图；导出补充本次双盘身份与体验入口二维码。 */
 const DAY_MASTER_CARD_FILES={
   甲:'day-master-jia-wood.webp',乙:'day-master-yi-wood.webp',丙:'day-master-bing-fire.webp',丁:'day-master-ding-fire.webp',
   戊:'day-master-wu-earth.webp',己:'day-master-ji-earth.webp',庚:'day-master-geng-metal.webp',辛:'day-master-xin-metal.webp',
@@ -1859,8 +1861,8 @@ async function preparePoster(){
   c.dataset.renderMode='asset';
   c.dataset.qrMode='official';
   c.dataset.shareLinkMode='none';
-  $('posterLayerTitle').textContent='日主身份卡分享预览';
-  $('sharePosterBtn').textContent='分享这张日主身份卡';
+  $('posterLayerTitle').textContent='双盘卡分享预览';
+  $('sharePosterBtn').textContent='分享这张双盘卡';
   return 'asset';
 }
 function drawDayMasterPosterAsset(img){
@@ -1880,17 +1882,19 @@ function drawDayMasterPosterAsset(img){
   x.textAlign='left';x.fillStyle='#d7b766';x.font=`700 ${Math.round(22*scale)}px "Songti SC","STSong",serif`;
   x.fillText('知 星',Math.round(W*.17),brandTop+Math.round(48*scale));
   x.fillStyle='rgba(232,228,216,.84)';x.font=`${Math.round(13*scale)}px "Songti SC","STSong",serif`;
-  x.fillText('以易理观己，以星盘为证',Math.round(W*.17),brandTop+Math.round(77*scale));
+  x.fillText(CUR.home.identity,Math.round(W*.17),brandTop+Math.round(77*scale),Math.round(W*.53));
+  x.font=`${Math.round(11*scale)}px "Songti SC","STSong",serif`;
+  x.fillText('以易理观己，以星盘为证',Math.round(W*.17),brandTop+Math.round(99*scale));
 
-  // 卡面不再叠加日柱、星座、来源或额外说明；仅在既定右下角绘制与品牌标识同量级的官网入口码。
+  // 双盘卡保留日主定稿主视觉，底部呈现本次日主与太阳星座；二维码只承载体验入口。
   if(!window.ZxShareQr)throw new Error('share qr unavailable');
-  const qrSize=Math.round(W*.116),qrX=Math.round(W*.755),qrY=H-qrSize-Math.round(H*.048);
+  const qrSize=Math.max(Math.round(W*.116),Math.round(110*scale)),qrX=Math.round(W*.755),qrY=H-qrSize-Math.round(H*.048);
   const qr=window.ZxShareQr.drawOfficial(x,{x:qrX,y:qrY,size:qrSize,quietZone:2});
   x.strokeStyle='#C9A85C';x.lineWidth=Math.max(1,Math.round(2*scale));
   x.strokeRect(qr.left-x.lineWidth,qr.top-x.lineWidth,qr.actualSize+x.lineWidth*2,qr.actualSize+x.lineWidth*2);
   const identity=CUR.home.dayMaster;
-  c.setAttribute('aria-label',`知星日主身份卡：${identity.label}，${identity.image}`);
-  $('posterEquivalent').textContent=`日主 ${identity.label}，${identity.image}。卡片右下角为知星官网入口二维码。`;
+  c.setAttribute('aria-label',`知星双盘卡：${CUR.home.identity}，${identity.image}`);
+  $('posterEquivalent').textContent=`${CUR.home.identity}，${identity.image}。卡片右下角为知星体验入口二维码。`;
 }
 window.ZxHomeChartBridge={
   setForm(input){for(const [id,key] of [['bDate','d'],['bTime','t'],['bCity','c'],['bGender','g']])$(id).value=input[key]||'';},

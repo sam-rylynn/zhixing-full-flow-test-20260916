@@ -2,7 +2,7 @@
 (function (global) {
   'use strict';
 
-  var OFFICIAL_SITE_URL = window.ZXTestBootstrap.baseUrl;
+  var OFFICIAL_SITE_URL = new URL('experience.html',window.ZXTestBootstrap.baseUrl).href;
 
   function signedShareUrl(value) {
     var url;
