@@ -1,7 +1,7 @@
 /* TEST ONLY. Same-origin simulated API; no payments, model calls or cloud storage. */
 (function (root) {
   'use strict';
-  const BUILD_ID = 'zhixing-online-simulation-20260916-v1';
+  const BUILD_ID = 'zhixing-online-simulation-20260916-remote-v2';
   if (root.ZX_TEST_SIMULATION !== true || root.ZX_TEST_SIMULATION_BUILD_ID !== BUILD_ID) return;
   if (root.ZXTestSim) return;
   const KEY = 'zx_test_simulation_v1';
